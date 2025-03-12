@@ -38,6 +38,7 @@ class DeliverManager {
 	private actor: ThinUser;
 	private activity: IActivity | null;
 	private recipes: IRecipe[] = [];
+	private bridgeHomeVisibility: boolean;
 
 	/**
 	 * Constructor
@@ -46,6 +47,7 @@ class DeliverManager {
 	 * @param queueService
 	 * @param actor Actor
 	 * @param activity Activity to deliver
+	 * @param bridgeHomeVisibility option to change visibility `home` to `public` for brid.gy
 	 */
 	constructor(
 		private userEntityService: UserEntityService,
@@ -54,6 +56,7 @@ class DeliverManager {
 
 		actor: { id: MiUser['id']; host: null; },
 		activity: IActivity | null,
+		bridgeHomeVisibility = false,
 	) {
 		// 型で弾いてはいるが一応ローカルユーザーかチェック
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -64,6 +67,7 @@ class DeliverManager {
 			id: actor.id,
 		};
 		this.activity = activity;
+		this.bridgeHomeVisibility = bridgeHomeVisibility;
 	}
 
 	/**
@@ -145,29 +149,31 @@ class DeliverManager {
 		}
 
 		// deliver to bsky.brid.gy sharedInbox with changes visibility `home` to `public`
-		const bskyBridgySharedInbox = 'https://bsky.brid.gy/ap/sharedInbox';
-		const isCreateNote = this.activity !== null && isCreate(this.activity) && isNote(this.activity.object);
-		const isHomeVisibility = toArray(this.activity?.cc)[0] === 'https://www.w3.org/ns/activitystreams#Public';
-		const hasBridgySharedInbox = inboxes.has(bskyBridgySharedInbox);
+		if (this.bridgeHomeVisibility) {
+			const bskyBridgySharedInbox = 'https://bsky.brid.gy/ap/sharedInbox';
+			const isCreateNote = this.activity !== null && isCreate(this.activity) && isNote(this.activity.object);
+			const isHomeVisibility = toArray(this.activity?.cc)[0] === 'https://www.w3.org/ns/activitystreams#Public';
+			const hasBridgySharedInbox = inboxes.has(bskyBridgySharedInbox);
 
-		if (isCreateNote && isHomeVisibility && hasBridgySharedInbox) {
-			const homeToPublicObject: IObject = {
-				...this.activity.object,
-				to: this.activity.object.cc,
-				cc: this.activity.object.to,
-			};
+			if (isCreateNote && isHomeVisibility && hasBridgySharedInbox) {
+				const homeToPublicObject: IObject = {
+					...this.activity.object,
+					to: this.activity.object.cc,
+					cc: this.activity.object.to,
+				};
 
-			const homeToPublicActivity: IActivity = {
-				...this.activity,
-				object: homeToPublicObject,
-				to: this.activity.cc,
-				cc: this.activity.to,
-			};
+				const homeToPublicActivity: IActivity = {
+					...this.activity,
+					object: homeToPublicObject,
+					to: this.activity.cc,
+					cc: this.activity.to,
+				};
 
-			await this.queueService.deliver(this.actor, homeToPublicActivity, bskyBridgySharedInbox, true);
+				await this.queueService.deliver(this.actor, homeToPublicActivity, bskyBridgySharedInbox, true);
 
-			// remove bsky.brid.gy sharedInbox from inboxes
-			inboxes.delete(bskyBridgySharedInbox);
+				// remove bsky.brid.gy sharedInbox from inboxes
+				inboxes.delete(bskyBridgySharedInbox);
+			}
 		}
 
 		// deliver
@@ -243,7 +249,7 @@ export class ApDeliverManagerService {
 	}
 
 	@bindThis
-	public createDeliverManager(actor: { id: MiUser['id']; host: null; }, activity: IActivity | null): DeliverManager {
+	public createDeliverManager(actor: { id: MiUser['id']; host: null; }, activity: IActivity | null, bridgeHomeVisibility?: boolean): DeliverManager {
 		return new DeliverManager(
 			this.userEntityService,
 			this.followingsRepository,
@@ -251,6 +257,7 @@ export class ApDeliverManagerService {
 
 			actor,
 			activity,
+			bridgeHomeVisibility ?? false,
 		);
 	}
 }

@@ -204,6 +204,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<template #label><SearchLabel>{{ i18n.ts.keepCw }}</SearchLabel></template>
 			</MkSwitch>
 		</SearchMarker>
+
+		<SearchMarker :keywords="['bluesky', 'bridge', 'note', 'visibility']">
+			<MkSwitch v-model="bridgeHomeVisibility" @update:modelValue="save()">
+				<template #label><SearchLabel>{{ i18n.ts.bridgeHomeVisibility }}</SearchLabel></template>
+				<template #caption>
+					<div>{{ i18n.ts.bridgeHomeVisibilityDescription1 }}</div>
+					<div><i class="ti ti-alert-triangle" style="color: var(--MI_THEME-warn);"></i> {{ i18n.ts.bridgeHomeVisibilityDescription2 }}</div>
+				</template>
+			</MkSwitch>
+		</SearchMarker>
 	</div>
 </SearchMarker>
 </template>
@@ -240,6 +250,7 @@ const hideOnlineStatus = ref($i.hideOnlineStatus);
 const publicReactions = ref($i.publicReactions);
 const followingVisibility = ref($i.followingVisibility);
 const followersVisibility = ref($i.followersVisibility);
+const bridgeHomeVisibility = ref($i.bridgeHomeVisibility);
 
 const defaultNoteVisibility = computed(defaultStore.makeGetterSetter('defaultNoteVisibility'));
 const defaultNoteLocalOnly = computed(defaultStore.makeGetterSetter('defaultNoteLocalOnly'));
@@ -297,6 +308,7 @@ function save() {
 		publicReactions: !!publicReactions.value,
 		followingVisibility: followingVisibility.value,
 		followersVisibility: followersVisibility.value,
+		bridgeHomeVisibility: !!bridgeHomeVisibility.value,
 	});
 }
 

@@ -2267,7 +2267,7 @@ export type paths = {
      * **Credential required**: *Yes*
      */
     post: operations['i___export-antennas'];
-	};
+  };
   '/i/export-blocking': {
     /**
      * i/export-blocking
@@ -2590,7 +2590,7 @@ export type paths = {
      * **Credential required**: *Yes*
      */
     post: operations['i___signin-history'];
-	};
+  };
   '/i/truncate-account': {
     /**
      * i/truncate-account
@@ -2600,7 +2600,7 @@ export type paths = {
      * **Credential required**: *Yes*
      */
     post: operations['i___truncate-account'];
-	};
+  };
   '/i/unpin': {
     /**
      * i/unpin
@@ -3874,6 +3874,7 @@ export type components = {
       twoFactorEnabled?: boolean;
       usePasswordLessLogin?: boolean;
       securityKeys?: boolean;
+      bridgeHomeVisibility: boolean;
       isFollowing?: boolean;
       isFollowed?: boolean;
       hasPendingFollowRequestFromYou?: boolean;
@@ -8299,7 +8300,6 @@ export type operations = {
             enableEmail: boolean;
             enableServiceWorker: boolean;
             translatorAvailable: boolean;
-            silencedHosts?: string[];
             mediaSilencedHosts: string[];
             pinnedUsers: string[];
             hiddenTags: string[];
@@ -9885,6 +9885,7 @@ export type operations = {
                 expiresAt: string | null;
                 roleId: string;
               })[];
+            bridgeHomeVisibility: boolean;
           };
         };
       };
@@ -10717,7 +10718,6 @@ export type operations = {
           perUserListTimelineCacheMax?: number;
           enableReactionsBuffering?: boolean;
           notesPerOneAd?: number;
-          silencedHosts?: string[] | null;
           mediaSilencedHosts?: string[] | null;
           /** @description [Deprecated] Use "urlPreviewSummaryProxyUrl" instead. */
           summalyProxy?: string | null;
@@ -21166,6 +21166,7 @@ export type operations = {
           followingVisibility?: 'public' | 'followers' | 'private';
           /** @enum {string} */
           followersVisibility?: 'public' | 'followers' | 'private';
+          bridgeHomeVisibility?: boolean;
           /** Format: misskey:id */
           pinnedPageId?: string | null;
           mutedWords?: (string[] | string)[];
@@ -24158,7 +24159,7 @@ export type operations = {
           'application/json': components['schemas']['Error'];
         };
       };
-      /** @description To many requests */
+      /** @description Too many requests */
       429: {
         content: {
           'application/json': components['schemas']['Error'];
@@ -28444,3 +28445,4 @@ export type operations = {
     };
   };
 };
+

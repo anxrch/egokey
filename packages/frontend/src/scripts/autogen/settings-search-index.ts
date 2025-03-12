@@ -276,6 +276,11 @@ export const searchIndexes: SearchIndexItem[] = [
 				label: i18n.ts.keepCw,
 				keywords: ['remember', 'keep', 'note', 'cw'],
 			},
+			{
+				id: 'EMf3FWTMu',
+				label: i18n.ts.bridgeHomeVisibility,
+				keywords: ['bluesky', 'bridge', 'note', 'visibility'],
+			},
 		],
 		label: i18n.ts.privacy,
 		keywords: ['privacy'],
@@ -469,11 +474,16 @@ export const searchIndexes: SearchIndexItem[] = [
 			},
 			{
 				id: '2qI6ruPgi',
+				label: i18n.ts.truncateAccount,
+				keywords: ['account', 'clear', 'truncate'],
+			},
+			{
+				id: '8EUotF3an',
 				label: i18n.ts.experimentalFeatures,
 				keywords: ['experimental', 'feature', 'flags'],
 			},
 			{
-				id: 'cIeaax47o',
+				id: 'E45OUH2Bu',
 				label: i18n.ts.developer,
 				keywords: ['developer', 'mode', 'debug'],
 			},
@@ -519,7 +529,7 @@ export const searchIndexes: SearchIndexItem[] = [
 				keywords: ['note', 'mute', 'hide', 'user'],
 			},
 			{
-				id: 'bPAE4lfno',
+				id: '8s1jiGyHQ',
 				label: i18n.ts.blockedUsers,
 				keywords: ['block', 'user'],
 			},
