@@ -5,7 +5,7 @@
 
 import { randomUUID } from 'node:crypto';
 import { Inject, Injectable } from '@nestjs/common';
-import type { IActivity } from '@/core/activitypub/type.js';
+import { isDelete, type IActivity } from '@/core/activitypub/type.js';
 import type { MiDriveFile } from '@/models/DriveFile.js';
 import type { MiWebhook, WebhookEventTypes } from '@/models/Webhook.js';
 import type { MiSystemWebhook, SystemWebhookEventType } from '@/models/SystemWebhook.js';
@@ -122,6 +122,8 @@ export class QueueService {
 			isSharedInbox,
 		};
 
+		const priority = isDelete(content) ? 10 : 0;
+
 		return this.deliverQueue.add(to, data, {
 			attempts: this.config.deliverJobMaxAttempts ?? 12,
 			backoff: {
@@ -129,6 +131,7 @@ export class QueueService {
 			},
 			removeOnComplete: true,
 			removeOnFail: true,
+			priority: priority,
 		});
 	}
 
