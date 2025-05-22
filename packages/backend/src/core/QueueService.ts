@@ -148,6 +148,8 @@ export class QueueService {
 		const contentBody = JSON.stringify(content);
 		const digest = ApRequestCreator.createDigest(contentBody);
 
+		const priority = isDelete(content) ? 10 : 0;
+
 		const opts = {
 			attempts: this.config.deliverJobMaxAttempts ?? 12,
 			backoff: {
@@ -155,6 +157,7 @@ export class QueueService {
 			},
 			removeOnComplete: true,
 			removeOnFail: true,
+			priority: priority,
 		};
 
 		await this.deliverQueue.addBulk(Array.from(inboxes.entries(), d => ({
