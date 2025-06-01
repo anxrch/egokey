@@ -66,7 +66,13 @@ export class NoteUpdateService implements OnApplicationShutdown {
 	) { }
 
 	@bindThis
-	public async update(user: { id: MiUser['id']; uri: MiUser['uri']; host: MiUser['host']; username: MiUser['username']; isBot: MiUser['isBot']; }, note: MiNote, data: Option, silent = false, updater?: MiUser) {
+	public async update(user: {
+		id: MiUser['id'];
+		uri: MiUser['uri'];
+		host: MiUser['host'];
+		username: MiUser['username'];
+		isBot: MiUser['isBot'];
+	}, note: MiNote, data: Option, silent = false, updater?: MiUser): Promise<MiNote> {
 		this.globalEventService.publishNoteStream(note.id, 'updated', data);
 
 		if (data.visibility !== undefined) {
@@ -109,12 +115,14 @@ export class NoteUpdateService implements OnApplicationShutdown {
 				});
 			}
 		}
+
+		return updatedNote;
 	}
 
 	@bindThis
 	private async updateNote(note: MiNote, data: Option): Promise<MiNote> {
 		const update = {
-			cw: data.cw ?? undefined,
+			cw: data.cw === null ? null : data.cw?.trim() ?? undefined,
 			text: data.text ?? undefined,
 			visibility: data.visibility ?? undefined,
 			updatedAt: data.updatedAt,

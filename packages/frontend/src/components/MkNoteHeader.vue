@@ -17,17 +17,17 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<img v-for="(role, i) in note.user.badgeRoles" :key="i" v-tooltip="role.name" :class="$style.badgeRole" :src="role.iconUrl!"/>
 	</div>
 	<div :class="$style.info">
-		<span v-if="note.updatedAt" style="margin-right: 0.5em;" :title="i18n.ts.edited"><i class="ti ti-pencil"></i></span>
+		<span v-if="updatedAt" style="margin-right: 0.5em;" :title="i18n.ts.edited"><i class="ti ti-pencil"></i></span>
 		<div v-if="mock">
 			<MkTime :time="note.createdAt" colored/>
 		</div>
 		<MkA v-else :to="notePage(note)">
 			<MkTime :time="note.createdAt" colored/>
 		</MkA>
-		<span v-if="note.visibility !== 'public'" style="margin-left: 0.5em;" :title="i18n.ts._visibility[note.visibility]">
-			<i v-if="note.visibility === 'home'" class="ti ti-home"></i>
-			<i v-else-if="note.visibility === 'followers'" class="ti ti-lock"></i>
-			<i v-else-if="note.visibility === 'specified'" ref="specified" class="ti ti-mail"></i>
+		<span v-if="visibility !== 'public'" style="margin-left: 0.5em;" :title="i18n.ts._visibility[visibility]">
+			<i v-if="visibility === 'home'" class="ti ti-home"></i>
+			<i v-else-if="visibility === 'followers'" class="ti ti-lock"></i>
+			<i v-else-if="visibility === 'specified'" ref="specified" class="ti ti-mail"></i>
 		</span>
 		<span v-if="note.localOnly" style="margin-left: 0.5em;" :title="i18n.ts._visibility['disableFederation']"><i class="ti ti-rocket-off"></i></span>
 		<span v-if="note.channel" style="margin-left: 0.5em;" :title="note.channel.name"><i class="ti ti-device-tv"></i></span>
@@ -41,13 +41,15 @@ import * as Misskey from 'misskey-js';
 import { i18n } from '@/i18n.js';
 import { notePage } from '@/filters/note.js';
 import { userPage } from '@/filters/user.js';
-import { defaultStore } from '@/store.js';
+import { DI } from '@/di.js';
 
 defineProps<{
 	note: Misskey.entities.Note;
+	updatedAt?: string | null;
+	visibility: Misskey.entities.Note['visibility'];
 }>();
 
-const mock = inject<boolean>('mock', false);
+const mock = inject(DI.mock, false);
 </script>
 
 <style lang="scss" module>

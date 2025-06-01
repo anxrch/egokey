@@ -7,6 +7,7 @@ import { DI } from '@/di-symbols.js';
 import { GetterService } from '@/server/api/GetterService.js';
 import { RoleService } from '@/core/RoleService.js';
 import { MAX_NOTE_TEXT_LENGTH } from '@/const.js';
+import { NoteEntityService } from '@/core/entities/NoteEntityService.js';
 import { ApiError } from '../../error.js';
 
 export const meta = {
@@ -15,12 +16,26 @@ export const meta = {
 	requireCredential: true,
 	requireRolePolicy: 'canEditNote',
 
+	prohibitMoved: true,
+
 	kind: 'write:notes',
 
 	limit: {
 		duration: ms('1hour'),
 		max: 300,
 		minInterval: ms('1sec'),
+	},
+
+	res: {
+		type: 'object',
+		optional: false, nullable: false,
+		properties: {
+			createdNote: {
+				type: 'object',
+				optional: false, nullable: false,
+				ref: 'Note',
+			},
+		},
 	},
 
 	errors: {
@@ -64,15 +79,15 @@ export const paramDef = {
 	],
 } as const;
 
-// eslint-disable-next-line import/no-default-export
 @Injectable()
-export default class extends Endpoint<typeof meta, typeof paramDef> {
+export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-disable-line import/no-default-export
 	constructor(
 		@Inject(DI.usersRepository)
 		private usersRepository: UsersRepository,
 
 		private getterService: GetterService,
 		private roleService: RoleService,
+		private noteEntityService: NoteEntityService,
 		private noteUpdateService: NoteUpdateService,
 	) {
 		super(meta, paramDef, async (ps, me) => {
@@ -90,12 +105,16 @@ export default class extends Endpoint<typeof meta, typeof paramDef> {
 			}
 
 			// この操作を行うのが投稿者とは限らない(例えばモデレーター)ため
-			await this.noteUpdateService.update(await this.usersRepository.findOneByOrFail({ id: note.userId }), note, {
+			const updatedNote = await this.noteUpdateService.update(await this.usersRepository.findOneByOrFail({ id: note.userId }), note, {
 				cw: ps.cw,
 				text: ps.text,
 				visibility: ps.visibility,
 				updatedAt: new Date(),
 			}, false, me);
+
+			return {
+				createdNote: await this.noteEntityService.pack(updatedNote, me),
+			};
 		});
 	}
 }

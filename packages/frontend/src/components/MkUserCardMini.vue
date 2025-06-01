@@ -6,24 +6,24 @@ SPDX-License-Identifier: AGPL-3.0-only
 <template>
 <div v-adaptive-bg :class="[$style.root]">
 	<MkAvatar :class="$style.avatar" :user="user" indicator/>
-	<div v-if="defaultStore.state.deidentifyMutedUsers && user.isMuted" :class="$style.body">
+	<div v-if="store.s.deidentifyMutedUsers && user.isMuted" :class="$style.body">
 		<span :class="$style.name">{{ i18n.ts.mutedUsers }}</span>
 	</div>
 	<div v-else :class="$style.body">
 		<span :class="$style.name"><MkUserName :user="user"/></span>
 		<span :class="$style.sub"><span class="_monospace">@{{ acct(user) }}</span></span>
 	</div>
-	<MkMiniChart v-if="!(defaultStore.state.deidentifyMutedUsers && user.isMuted) && chartValues" :class="$style.chart" :src="chartValues"/>
+	<MkMiniChart v-if="!(store.s.deidentifyMutedUsers && user.isMuted) && chartValues" :class="$style.chart" :src="chartValues"/>
 </div>
 </template>
 
 <script lang="ts" setup>
 import * as Misskey from 'misskey-js';
 import { onMounted, ref } from 'vue';
-import { defaultStore } from '@/store.js';
+import { store } from '@/store.js';
 import { i18n } from '@/i18n.js';
 import MkMiniChart from '@/components/MkMiniChart.vue';
-import { misskeyApiGet } from '@/scripts/misskey-api.js';
+import { misskeyApiGet } from '@/utility/misskey-api.js';
 import { acct } from '@/filters/user.js';
 
 const props = withDefaults(defineProps<{
