@@ -623,6 +623,14 @@ export interface Locale extends ILocale {
      */
     "renoteMute": string;
     /**
+     * アバター装飾をミュート
+     */
+    "avatarDecoMute": string;
+    /**
+     * アバター装飾のミュートを解除
+     */
+    "avatarDecoUnmute": string;
+    /**
      * リノートのミュートを解除
      */
     "renoteUnmute": string;
@@ -5058,6 +5066,7 @@ export interface Locale extends ILocale {
      * 季節に応じた画面の演出
      */
     "seasonalScreenEffect": string;
+
     /**
      * デコる
      */
