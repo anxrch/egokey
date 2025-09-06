@@ -46,6 +46,7 @@ import { NoteCreateService } from './NoteCreateService.js';
 import { NoteDeleteService } from './NoteDeleteService.js';
 import { NotePiningService } from './NotePiningService.js';
 import { NoteUpdateService } from './NoteUpdateService.js';
+import { NoteDraftService } from './NoteDraftService.js';
 import { NotificationService } from './NotificationService.js';
 import { PollService } from './PollService.js';
 import { PushNotificationService } from './PushNotificationService.js';
@@ -79,6 +80,7 @@ import { ChannelFollowingService } from './ChannelFollowingService.js';
 import { ChatService } from './ChatService.js';
 import { RegistryApiService } from './RegistryApiService.js';
 import { ReversiService } from './ReversiService.js';
+import { PageService } from './PageService.js';
 
 import { ChartLoggerService } from './chart/ChartLoggerService.js';
 import FederationChart from './chart/charts/federation.js';
@@ -120,6 +122,7 @@ import { RenoteMutingEntityService } from './entities/RenoteMutingEntityService.
 import { NoteEntityService } from './entities/NoteEntityService.js';
 import { NoteFavoriteEntityService } from './entities/NoteFavoriteEntityService.js';
 import { NoteReactionEntityService } from './entities/NoteReactionEntityService.js';
+import { NoteDraftEntityService } from './entities/NoteDraftEntityService.js';
 import { NotificationEntityService } from './entities/NotificationEntityService.js';
 import { PageEntityService } from './entities/PageEntityService.js';
 import { PageLikeEntityService } from './entities/PageLikeEntityService.js';
@@ -189,6 +192,7 @@ const $NoteCreateService: Provider = { provide: 'NoteCreateService', useExisting
 const $NoteDeleteService: Provider = { provide: 'NoteDeleteService', useExisting: NoteDeleteService };
 const $NotePiningService: Provider = { provide: 'NotePiningService', useExisting: NotePiningService };
 const $NoteUpdateService: Provider = { provide: 'NoteUpdateService', useExisting: NoteUpdateService };
+const $NoteDraftService: Provider = { provide: 'NoteDraftService', useExisting: NoteDraftService };
 const $NotificationService: Provider = { provide: 'NotificationService', useExisting: NotificationService };
 const $PollService: Provider = { provide: 'PollService', useExisting: PollService };
 const $SystemAccountService: Provider = { provide: 'SystemAccountService', useExisting: SystemAccountService };
@@ -228,6 +232,7 @@ const $ChannelFollowingService: Provider = { provide: 'ChannelFollowingService',
 const $ChatService: Provider = { provide: 'ChatService', useExisting: ChatService };
 const $RegistryApiService: Provider = { provide: 'RegistryApiService', useExisting: RegistryApiService };
 const $ReversiService: Provider = { provide: 'ReversiService', useExisting: ReversiService };
+const $PageService: Provider = { provide: 'PageService', useExisting: PageService };
 
 const $ChartLoggerService: Provider = { provide: 'ChartLoggerService', useExisting: ChartLoggerService };
 const $FederationChart: Provider = { provide: 'FederationChart', useExisting: FederationChart };
@@ -270,6 +275,7 @@ const $RenoteMutingEntityService: Provider = { provide: 'RenoteMutingEntityServi
 const $NoteEntityService: Provider = { provide: 'NoteEntityService', useExisting: NoteEntityService };
 const $NoteFavoriteEntityService: Provider = { provide: 'NoteFavoriteEntityService', useExisting: NoteFavoriteEntityService };
 const $NoteReactionEntityService: Provider = { provide: 'NoteReactionEntityService', useExisting: NoteReactionEntityService };
+const $NoteDraftEntityService: Provider = { provide: 'NoteDraftEntityService', useExisting: NoteDraftEntityService };
 const $NotificationEntityService: Provider = { provide: 'NotificationEntityService', useExisting: NotificationEntityService };
 const $PageEntityService: Provider = { provide: 'PageEntityService', useExisting: PageEntityService };
 const $PageLikeEntityService: Provider = { provide: 'PageLikeEntityService', useExisting: PageLikeEntityService };
@@ -341,6 +347,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		NoteDeleteService,
 		NotePiningService,
 		NoteUpdateService,
+		NoteDraftService,
 		NotificationService,
 		PollService,
 		SystemAccountService,
@@ -380,6 +387,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		ChatService,
 		RegistryApiService,
 		ReversiService,
+		PageService,
 
 		ChartLoggerService,
 		FederationChart,
@@ -422,6 +430,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		NoteEntityService,
 		NoteFavoriteEntityService,
 		NoteReactionEntityService,
+		NoteDraftEntityService,
 		NotificationEntityService,
 		PageEntityService,
 		PageLikeEntityService,
@@ -489,6 +498,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$NoteDeleteService,
 		$NotePiningService,
 		$NoteUpdateService,
+		$NoteDraftService,
 		$NotificationService,
 		$PollService,
 		$SystemAccountService,
@@ -528,6 +538,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$ChatService,
 		$RegistryApiService,
 		$ReversiService,
+		$PageService,
 
 		$ChartLoggerService,
 		$FederationChart,
@@ -570,6 +581,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$NoteEntityService,
 		$NoteFavoriteEntityService,
 		$NoteReactionEntityService,
+		$NoteDraftEntityService,
 		$NotificationEntityService,
 		$PageEntityService,
 		$PageLikeEntityService,
@@ -638,6 +650,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		NoteDeleteService,
 		NotePiningService,
 		NoteUpdateService,
+		NoteDraftService,
 		NotificationService,
 		PollService,
 		SystemAccountService,
@@ -677,6 +690,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		ChatService,
 		RegistryApiService,
 		ReversiService,
+		PageService,
 
 		FederationChart,
 		NotesChart,
@@ -718,6 +732,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		NoteEntityService,
 		NoteFavoriteEntityService,
 		NoteReactionEntityService,
+		NoteDraftEntityService,
 		NotificationEntityService,
 		PageEntityService,
 		PageLikeEntityService,
@@ -785,6 +800,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$NoteDeleteService,
 		$NotePiningService,
 		$NoteUpdateService,
+		$NoteDraftService,
 		$NotificationService,
 		$PollService,
 		$SystemAccountService,
@@ -823,6 +839,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$ChatService,
 		$RegistryApiService,
 		$ReversiService,
+		$PageService,
 
 		$FederationChart,
 		$NotesChart,
@@ -864,6 +881,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$NoteEntityService,
 		$NoteFavoriteEntityService,
 		$NoteReactionEntityService,
+		$NoteDraftEntityService,
 		$NotificationEntityService,
 		$PageEntityService,
 		$PageLikeEntityService,

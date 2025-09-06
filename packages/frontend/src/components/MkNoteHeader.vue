@@ -43,13 +43,15 @@ import { notePage } from '@/filters/note.js';
 import { userPage } from '@/filters/user.js';
 import { DI } from '@/di.js';
 
-defineProps<{
+const props = defineProps<{
 	note: Misskey.entities.Note;
 	updatedAt?: string | null;
-	visibility: Misskey.entities.Note['visibility'];
+	visibility?: Misskey.entities.Note['visibility'];
 }>();
 
 const mock = inject(DI.mock, false);
+
+const visibility = props.visibility ?? props.note.visibility;
 </script>
 
 <style lang="scss" module>
