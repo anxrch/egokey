@@ -56,7 +56,7 @@ export const PREF_DEF = definePreferences({
 			name: 'calendar',
 			id: genId(), place: 'right', data: {},
 		}, {
-			name: 'notifications',
+			name: 'notifiions',
 			id: genId(), place: 'right', data: {},
 		}, {
 			name: 'trends',
@@ -303,6 +303,9 @@ export const PREF_DEF = definePreferences({
 	aiChanMode: {
 		default: false,
 	},
+		disableCatSpeech: {
+		default: false,
+	},
 	devMode: {
 		default: false,
 	},
@@ -312,7 +315,7 @@ export const PREF_DEF = definePreferences({
 	notificationPosition: {
 		default: 'rightBottom' as 'leftTop' | 'leftBottom' | 'rightTop' | 'rightBottom',
 	},
-	notificationStackAxis: {
+	notifiionStackAxis: {
 		default: 'horizontal' as 'vertical' | 'horizontal',
 	},
 	enableCondensedLine: {
@@ -321,7 +324,7 @@ export const PREF_DEF = definePreferences({
 	keepScreenOn: {
 		default: false,
 	},
-	useGroupedNotifications: {
+	useGroupedNotifiions: {
 		default: true,
 	},
 	dataSaver: {
@@ -391,13 +394,13 @@ export const PREF_DEF = definePreferences({
 			if (sameIdExists) throw new Error();
 			const sameNameExists = a.some(x => b.some(y => x.name === y.name));
 			if (sameNameExists) throw new Error();
-			return a.concat(b);
+			return a.con(b);
 		},
 	},
 	mutingEmojis: {
 		default: [] as string[],
 		mergeStrategy: (a, b) => {
-			return [...new Set(a.concat(b))];
+			return [...new Set(a.con(b))];
 		},
 	},
 	watermarkPresets: {
@@ -405,7 +408,7 @@ export const PREF_DEF = definePreferences({
 		default: [] as WatermarkPreset[],
 		mergeStrategy: (a, b) => {
 			const mergedItems = [] as typeof a;
-			for (const x of a.concat(b)) {
+			for (const x of a.con(b)) {
 				const sameIdItem = mergedItems.find(y => y.id === x.id);
 				if (sameIdItem != null) {
 					if (deepEqual(x, sameIdItem)) { // 完全な重複は無視
@@ -443,7 +446,7 @@ export const PREF_DEF = definePreferences({
 	'sound.on.noteMy': {
 		default: { type: 'syuilo/n-cea-4va', volume: 1 } as SoundStore,
 	},
-	'sound.on.notification': {
+	'sound.on.notifiion': {
 		default: { type: 'syuilo/n-ea', volume: 1 } as SoundStore,
 	},
 	'sound.on.reaction': {
