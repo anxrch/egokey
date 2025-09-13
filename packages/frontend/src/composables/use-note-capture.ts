@@ -69,9 +69,9 @@ const CAPTURE_MAX = 30;
 const MIN_POLLING_INTERVAL = 1000 * 10;
 const POLLING_INTERVAL =
 	prefer.s.pollingInterval === 1 ? MIN_POLLING_INTERVAL * 1.5 * 1.5 :
-		prefer.s.pollingInterval === 2 ? MIN_POLLING_INTERVAL * 1.5 :
-			prefer.s.pollingInterval === 3 ? MIN_POLLING_INTERVAL :
-				MIN_POLLING_INTERVAL;
+	prefer.s.pollingInterval === 2 ? MIN_POLLING_INTERVAL * 1.5 :
+	prefer.s.pollingInterval === 3 ? MIN_POLLING_INTERVAL :
+	MIN_POLLING_INTERVAL;
 
 window.setInterval(() => {
 	const ids = [...pollingQueue.entries()]
@@ -246,7 +246,7 @@ export function useNoteCapture(props: {
 
 		cw: note.cw ?? null,
 		text: note.text ?? '',
-		visibility: note.visibility ?? 'public',
+		visibility: note.visibility,
 		updatedAt: note.updatedAt,
 	});
 

@@ -67,6 +67,14 @@ export class TruncateAccountProcessorService {
 			return note?.fileIds;
 		}))).flat().filter((fileId) => fileId !== undefined);
 
+		if (user.avatarId) {
+			keepFileIds.push(user.avatarId);
+		}
+
+		if (user.bannerId) {
+			keepFileIds.push(user.bannerId);
+		}
+
 		{ // Delete notes
 			let cursor: MiNote['id'] | null = null;
 

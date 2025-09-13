@@ -59,7 +59,7 @@ export class MiMeta {
 	public maintainerEmail: string | null;
 
 	@Column('boolean', {
-		default: false,
+		default: true,
 	})
 	public disableRegistration: boolean;
 
@@ -565,7 +565,7 @@ export class MiMeta {
 	public bannedEmailDomains: string[];
 
 	@Column('varchar', {
-		length: 1024, array: true, default: '{ "admin", "administrator", "root", "system", "maintainer", "host", "mod", "moderator", "owner", "superuser", "staff", "auth", "i", "me", "everyone", "all", "mention", "mentions", "example", "user", "users", "account", "accounts", "official", "help", "helps", "support", "supports", "info", "information", "informations", "announce", "announces", "announcement", "announcements", "notice", "notification", "notifications", "dev", "developer", "developers", "tech", "misskey" }',
+		length: 1024, array: true, default: ['admin', 'administrator', 'root', 'system', 'maintainer', 'host', 'mod', 'moderator', 'owner', 'superuser', 'staff', 'auth', 'i', 'me', 'everyone', 'all', 'mention', 'mentions', 'example', 'user', 'users', 'account', 'accounts', 'official', 'help', 'helps', 'support', 'supports', 'info', 'information', 'informations', 'announce', 'announces', 'announcement', 'announcements', 'notice', 'notification', 'notifications', 'dev', 'developer', 'developers', 'tech', 'misskey'],
 	})
 	public preservedUsernames: string[];
 
@@ -630,7 +630,7 @@ export class MiMeta {
 	public urlPreviewMaximumContentLength: number;
 
 	@Column('boolean', {
-		default: true,
+		default: false,
 	})
 	public urlPreviewRequireContentLength: boolean;
 
@@ -643,12 +643,13 @@ export class MiMeta {
 	@Column('varchar', {
 		length: 1024,
 		nullable: true,
+		default: null,
 	})
 	public urlPreviewUserAgent: string | null;
 
 	@Column('varchar', {
 		length: 128,
-		default: 'all',
+		default: 'none',
 	})
 	public federation: 'all' | 'specified' | 'none';
 
@@ -695,6 +696,26 @@ export class MiMeta {
 		default: true,
 	})
 	public allowExternalApRedirect: boolean;
+
+	@Column('boolean', {
+		default: false,
+	})
+	public enableRemoteNotesCleaning: boolean;
+
+	@Column('integer', {
+		default: 60, // minutes
+	})
+	public remoteNotesCleaningMaxProcessingDurationInMinutes: number;
+
+	@Column('integer', {
+		default: 90, // days
+	})
+	public remoteNotesCleaningExpiryDaysForEachNotes: number;
+
+	@Column('jsonb', {
+		default: { },
+	})
+	public clientOptions: Record<string, any>;
 }
 
 export type SoftwareSuspension = {
