@@ -101,11 +101,6 @@ export class MiMeta {
 	@Column('varchar', {
 		length: 1024, array: true, default: '{}',
 	})
-	public silencedHosts: string[];
-
-	@Column('varchar', {
-		length: 1024, array: true, default: '{}',
-	})
 	public mediaSilencedHosts: string[];
 
 	@Column('varchar', {
@@ -545,7 +540,7 @@ export class MiMeta {
 	public enableIdenticonGeneration: boolean;
 
 	@Column('jsonb', {
-		default: { },
+		default: {},
 	})
 	public policies: Record<string, any>;
 

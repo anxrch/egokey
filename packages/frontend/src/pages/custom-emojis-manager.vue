@@ -54,7 +54,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<template #empty><span>{{ i18n.ts.noCustomEmojis }}</span></template>
 					<template #default="{items}">
 						<div class="ldhfsamy">
-							<div v-for="emoji in items" :key="emoji.id" class="emoji _panel _button" @click="remoteMenu(emoji, $event)">
+							<div v-for="emoji in items" :key="emoji.id" class="emoji _panel _button" :class="{ sensitive: emoji.isSensitive }" @click="remoteMenu(emoji, $event)">
 								<img :src="getProxiedImageUrl(emoji.url, 'emoji')" class="img" :alt="emoji.name"/>
 								<div class="body">
 									<div class="name _monospace">{{ emoji.name }}</div>
@@ -358,6 +358,10 @@ definePage(() => ({
 					border-color: var(--MI_THEME-accent);
 				}
 
+				&.sensitive {
+					background: var(--infoWarnBg);
+				}
+
 				> .img {
 					width: 42px;
 					height: 42px;
@@ -403,6 +407,10 @@ definePage(() => ({
 
 				&:hover {
 					color: var(--MI_THEME-accent);
+				}
+
+				&.sensitive {
+					background: var(--infoWarnBg);
 				}
 
 				> .img {

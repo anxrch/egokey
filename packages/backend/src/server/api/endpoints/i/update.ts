@@ -131,10 +131,14 @@ export const meta = {
 	},
 } as const;
 
-const muteWords = { type: 'array', items: { oneOf: [
-	{ type: 'array', items: { type: 'string' } },
-	{ type: 'string' },
-] } } as const;
+const muteWords = {
+	type: 'array', items: {
+		oneOf: [
+			{ type: 'array', items: { type: 'string' } },
+			{ type: 'string' },
+		]
+	}
+} as const;
 
 export const paramDef = {
 	type: 'object',
@@ -146,17 +150,19 @@ export const paramDef = {
 		birthday: { ...birthdaySchema, nullable: true },
 		lang: { type: 'string', enum: [null, ...Object.keys(langmap)] as string[], nullable: true },
 		avatarId: { type: 'string', format: 'misskey:id', nullable: true },
-		avatarDecorations: { type: 'array', maxItems: 16, items: {
-			type: 'object',
-			properties: {
-				id: { type: 'string', format: 'misskey:id' },
-				angle: { type: 'number', nullable: true, maximum: 0.5, minimum: -0.5 },
-				flipH: { type: 'boolean', nullable: true },
-				offsetX: { type: 'number', nullable: true, maximum: 0.25, minimum: -0.25 },
-				offsetY: { type: 'number', nullable: true, maximum: 0.25, minimum: -0.25 },
-			},
-			required: ['id'],
-		} },
+		avatarDecorations: {
+			type: 'array', maxItems: 16, items: {
+				type: 'object',
+				properties: {
+					id: { type: 'string', format: 'misskey:id' },
+					angle: { type: 'number', nullable: true, maximum: 0.5, minimum: -0.5 },
+					flipH: { type: 'boolean', nullable: true },
+					offsetX: { type: 'number', nullable: true, maximum: 0.25, minimum: -0.25 },
+					offsetY: { type: 'number', nullable: true, maximum: 0.25, minimum: -0.25 },
+				},
+				required: ['id'],
+			}
+		},
 		bannerId: { type: 'string', format: 'misskey:id', nullable: true },
 		fields: {
 			type: 'array',
@@ -190,13 +196,16 @@ export const paramDef = {
 		autoSensitive: { type: 'boolean' },
 		followingVisibility: { type: 'string', enum: ['public', 'followers', 'private'] },
 		followersVisibility: { type: 'string', enum: ['public', 'followers', 'private'] },
+		bridgeHomeVisibility: { type: 'boolean' },
 		chatScope: { type: 'string', enum: ['everyone', 'followers', 'following', 'mutual', 'none'] },
 		pinnedPageId: { type: 'string', format: 'misskey:id', nullable: true },
 		mutedWords: muteWords,
 		hardMutedWords: muteWords,
-		mutedInstances: { type: 'array', items: {
-			type: 'string',
-		} },
+		mutedInstances: {
+			type: 'array', items: {
+				type: 'string',
+			}
+		},
 		notificationRecieveConfig: {
 			type: 'object',
 			nullable: false,
@@ -220,9 +229,11 @@ export const paramDef = {
 				test: notificationRecieveConfig,
 			},
 		},
-		emailNotificationTypes: { type: 'array', items: {
-			type: 'string',
-		} },
+		emailNotificationTypes: {
+			type: 'array', items: {
+				type: 'string',
+			}
+		},
 		alsoKnownAs: {
 			type: 'array',
 			maxItems: 10,
@@ -354,6 +365,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				profileUpdates.alwaysMarkNsfw = ps.alwaysMarkNsfw;
 			}
 			if (typeof ps.autoSensitive === 'boolean') profileUpdates.autoSensitive = ps.autoSensitive;
+			if (typeof ps.bridgeHomeVisibility === 'boolean') profileUpdates.bridgeHomeVisibility = ps.bridgeHomeVisibility;
 			if (ps.emailNotificationTypes !== undefined) profileUpdates.emailNotificationTypes = ps.emailNotificationTypes;
 
 			if (ps.avatarId) {

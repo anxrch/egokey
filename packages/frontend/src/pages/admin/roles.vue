@@ -41,10 +41,26 @@ SPDX-License-Identifier: AGPL-3.0-only
 						</MkSwitch>
 					</MkFolder>
 
+					<MkFolder v-if="matchQuery([i18n.ts._role._options.ignoreServerSilence, 'ignoreServerSilence'])">
+						<template #label>{{ i18n.ts._role._options.ignoreServerSilence }}</template>
+						<template #suffix>{{ policies.ignoreServerSilence ? i18n.ts.yes : i18n.ts.no }}</template>
+						<MkSwitch v-model="policies.ignoreServerSilence">
+							<template #label>{{ i18n.ts.enable }}</template>
+						</MkSwitch>
+					</MkFolder>
+
 					<MkFolder v-if="matchQuery([i18n.ts._role._options.canPublicNote, 'canPublicNote'])">
 						<template #label>{{ i18n.ts._role._options.canPublicNote }}</template>
 						<template #suffix>{{ policies.canPublicNote ? i18n.ts.yes : i18n.ts.no }}</template>
 						<MkSwitch v-model="policies.canPublicNote">
+							<template #label>{{ i18n.ts.enable }}</template>
+						</MkSwitch>
+					</MkFolder>
+
+					<MkFolder v-if="matchQuery([i18n.ts._role._options.canEditNote, 'canEditNote'])">
+						<template #label>{{ i18n.ts._role._options.canEditNote }}</template>
+						<template #suffix>{{ policies.canEditNote ? i18n.ts.yes : i18n.ts.no }}</template>
+						<MkSwitch v-model="policies.canEditNote">
 							<template #label>{{ i18n.ts.enable }}</template>
 						</MkSwitch>
 					</MkFolder>

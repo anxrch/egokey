@@ -7,7 +7,7 @@ import { randomUUID } from 'node:crypto';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { MetricsTime, type JobType } from 'bullmq';
 import { parse as parseRedisInfo } from 'redis-info';
-import type { IActivity } from '@/core/activitypub/type.js';
+import { isDelete, type IActivity } from '@/core/activitypub/type.js';
 import type { MiDriveFile } from '@/models/DriveFile.js';
 import type { MiWebhook, WebhookEventTypes } from '@/models/Webhook.js';
 import type { MiSystemWebhook, SystemWebhookEventType } from '@/models/SystemWebhook.js';
@@ -164,6 +164,8 @@ export class QueueService implements OnModuleInit {
 			isSharedInbox,
 		};
 
+		const priority = isDelete(content) ? 10 : 0;
+
 		const label = to.replace('https://', '').replace('/inbox', '');
 
 		return this.deliverQueue.add(label, data, {
@@ -171,6 +173,7 @@ export class QueueService implements OnModuleInit {
 			backoff: {
 				type: 'custom',
 			},
+			priority: priority,
 			removeOnComplete: {
 				age: 3600 * 24 * 7, // keep up to 7 days
 				count: 30,
@@ -195,11 +198,14 @@ export class QueueService implements OnModuleInit {
 		const contentBody = JSON.stringify(content);
 		const digest = ApRequestCreator.createDigest(contentBody);
 
+		const priority = isDelete(content) ? 10 : 0;
+
 		const opts = {
 			attempts: this.config.deliverJobMaxAttempts ?? 12,
 			backoff: {
 				type: 'custom',
 			},
+			priority: priority,
 			removeOnComplete: {
 				age: 3600 * 24 * 7, // keep up to 7 days
 				count: 30,
@@ -563,6 +569,16 @@ export class QueueService implements OnModuleInit {
 				age: 3600 * 24 * 7, // keep up to 7 days
 				count: 100,
 			},
+		});
+	}
+
+	@bindThis
+	public createTruncateAccountJob(user: ThinUser, opts = {}) {
+		return this.dbQueue.add('truncateAccount', {
+			user: { id: user.id },
+		}, {
+			removeOnComplete: true,
+			removeOnFail: true,
 		});
 	}
 

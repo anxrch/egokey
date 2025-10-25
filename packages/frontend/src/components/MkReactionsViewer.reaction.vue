@@ -9,7 +9,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	v-ripple="canToggle"
 	class="_button"
 	:class="[$style.root, { [$style.reacted]: myReaction == reaction, [$style.canToggle]: canToggle, [$style.small]: prefer.s.reactionsDisplaySize === 'small', [$style.large]: prefer.s.reactionsDisplaySize === 'large' }]"
-	@click="toggleReaction()"
+	@click.stop="toggleReaction()"
 	@contextmenu.prevent.stop="menu"
 >
 	<MkReactionIcon style="pointer-events: none;" :class="prefer.s.limitWidthOfReaction ? $style.limitWidth : ''" :reaction="reaction" :emojiUrl="reactionEmojis[reaction.substring(1, reaction.length - 1)]"/>
@@ -228,11 +228,11 @@ if (!mock) {
 	useTooltip(buttonEl, async (showing) => {
 		if (buttonEl.value == null) return;
 
-		const reactions = await misskeyApiGet('notes/reactions', {
+		const reactions = await misskeyApi('notes/reactions', {
 			noteId: props.noteId,
 			type: props.reaction,
 			limit: 10,
-			_cacheKey_: props.count,
+			// _cacheKey_: props.count,
 		});
 
 		const users = reactions.map(x => x.user);

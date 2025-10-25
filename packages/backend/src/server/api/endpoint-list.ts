@@ -287,6 +287,7 @@ export * as 'i/registry/scopes-with-domain' from './endpoints/i/registry/scopes-
 export * as 'i/registry/set' from './endpoints/i/registry/set.js';
 export * as 'i/revoke-token' from './endpoints/i/revoke-token.js';
 export * as 'i/signin-history' from './endpoints/i/signin-history.js';
+export * as 'i/truncate-account' from './endpoints/i/truncate-account.js';
 export * as 'i/unpin' from './endpoints/i/unpin.js';
 export * as 'i/update' from './endpoints/i/update.js';
 export * as 'i/update-email' from './endpoints/i/update-email.js';
@@ -341,6 +342,7 @@ export * as 'notes/thread-muting/delete' from './endpoints/notes/thread-muting/d
 export * as 'notes/timeline' from './endpoints/notes/timeline.js';
 export * as 'notes/translate' from './endpoints/notes/translate.js';
 export * as 'notes/unrenote' from './endpoints/notes/unrenote.js';
+export * as 'notes/update' from './endpoints/notes/update.js';
 export * as 'notes/user-list-timeline' from './endpoints/notes/user-list-timeline.js';
 export * as 'notifications/create' from './endpoints/notifications/create.js';
 export * as 'notifications/flush' from './endpoints/notifications/flush.js';

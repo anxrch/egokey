@@ -2756,6 +2756,16 @@ export type paths = {
          */
         post: operations['i___signin-history'];
     };
+    '/i/truncate-account': {
+        /**
+         * i/truncate-account
+         * @description No description provided.
+         *
+         *     **Internal Endpoint**: This endpoint is an API for the misskey mainframe and is not intended for use by third parties.
+         *     **Credential required**: *Yes*
+         */
+        post: operations['i___truncate-account'];
+    };
     '/i/unpin': {
         /**
          * i/unpin
@@ -3253,6 +3263,15 @@ export type paths = {
          *     **Credential required**: *Yes* / **Permission**: *write:notes*
          */
         post: operations['notes___unrenote'];
+    };
+    '/notes/update': {
+        /**
+         * notes/update
+         * @description No description provided.
+         *
+         *     **Credential required**: *Yes* / **Permission**: *write:notes*
+         */
+        post: operations['notes___update'];
     };
     '/notes/user-list-timeline': {
         /**
@@ -4058,6 +4077,7 @@ export type components = {
             twoFactorEnabled?: boolean;
             usePasswordLessLogin?: boolean;
             securityKeys?: boolean;
+            bridgeHomeVisibility: boolean;
             isFollowing?: boolean;
             isFollowed?: boolean;
             hasPendingFollowRequestFromYou?: boolean;
@@ -4363,6 +4383,8 @@ export type components = {
             id: string;
             /** Format: date-time */
             createdAt: string;
+            /** Format: date-time */
+            updatedAt?: string | null;
             /** Format: date-time */
             deletedAt?: string | null;
             text: string | null;
@@ -5046,6 +5068,7 @@ export type components = {
             followingCount: number;
             followersCount: number;
             isNotResponding: boolean;
+            isSilenced: boolean;
             isSuspended: boolean;
             /** @enum {string} */
             suspensionState: 'none' | 'manuallySuspended' | 'goneSuspended' | 'autoSuspendedForNotResponding' | 'softwareSuspended';
@@ -5059,7 +5082,6 @@ export type components = {
             description: string | null;
             maintainerName: string | null;
             maintainerEmail: string | null;
-            isSilenced: boolean;
             isMediaSilenced: boolean;
             /** Format: url */
             iconUrl: string | null;
@@ -5263,7 +5285,9 @@ export type components = {
         RolePolicies: {
             gtlAvailable: boolean;
             ltlAvailable: boolean;
+            ignoreServerSilence: boolean;
             canPublicNote: boolean;
+            canEditNote: boolean;
             mentionLimit: number;
             canInvite: boolean;
             inviteLimit: number;
@@ -8303,6 +8327,7 @@ export interface operations {
                         /** @description The local host is represented with `null`. */
                         host: string | null;
                         url: string;
+                        isSensitive?: boolean | null;
                     }[];
                 };
             };
@@ -8873,6 +8898,7 @@ export interface operations {
             content: {
                 'application/json': {
                     host: string;
+                    isSilenced?: boolean;
                     isSuspended?: boolean;
                     moderationNote?: string;
                 };
@@ -9367,7 +9393,6 @@ export interface operations {
                         enableEmail: boolean;
                         enableServiceWorker: boolean;
                         translatorAvailable: boolean;
-                        silencedHosts?: string[];
                         mediaSilencedHosts: string[];
                         pinnedUsers: string[];
                         hiddenTags: string[];
@@ -11796,6 +11821,7 @@ export interface operations {
                             expiresAt: string | null;
                             roleId: string;
                         }[];
+                        bridgeHomeVisibility: boolean;
                     };
                 };
             };
@@ -12774,7 +12800,6 @@ export interface operations {
                     perUserListTimelineCacheMax?: number;
                     enableReactionsBuffering?: boolean;
                     notesPerOneAd?: number;
-                    silencedHosts?: string[] | null;
                     mediaSilencedHosts?: string[] | null;
                     /** @description [Deprecated] Use "urlPreviewSummaryProxyUrl" instead. */
                     summalyProxy?: string | null;
@@ -20806,8 +20831,8 @@ export interface operations {
                     host?: string | null;
                     blocked?: boolean | null;
                     notResponding?: boolean | null;
-                    suspended?: boolean | null;
                     silenced?: boolean | null;
+                    suspended?: boolean | null;
                     federating?: boolean | null;
                     subscribing?: boolean | null;
                     publishing?: boolean | null;
@@ -27247,6 +27272,69 @@ export interface operations {
             };
         };
     };
+    'i___truncate-account': {
+        requestBody: {
+            content: {
+                'application/json': {
+                    password: string;
+                    token?: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description OK (without any results) */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+            };
+            /** @description Client error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Authentication error */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Forbidden error */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description I'm Ai */
+            418: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+        };
+    };
     i___unpin: {
         requestBody: {
             content: {
@@ -27361,6 +27449,7 @@ export interface operations {
                     followingVisibility?: 'public' | 'followers' | 'private';
                     /** @enum {string} */
                     followersVisibility?: 'public' | 'followers' | 'private';
+                    bridgeHomeVisibility?: boolean;
                     /** @enum {string} */
                     chatScope?: 'everyone' | 'followers' | 'following' | 'mutual' | 'none';
                     /** Format: misskey:id */
@@ -31394,6 +31483,87 @@ export interface operations {
             204: {
                 headers: {
                     [name: string]: unknown;
+                };
+            };
+            /** @description Client error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Authentication error */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Forbidden error */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description I'm Ai */
+            418: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+        };
+    };
+    notes___update: {
+        requestBody: {
+            content: {
+                'application/json': {
+                    /** Format: misskey:id */
+                    noteId: string;
+                    text?: string;
+                    cw?: string | null;
+                    /** @enum {string} */
+                    visibility?: 'public' | 'home' | 'followers' | 'specified';
+                } | unknown | unknown;
+            };
+        };
+        responses: {
+            /** @description OK (with results) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': {
+                        createdNote: components['schemas']['Note'];
+                    };
                 };
             };
             /** @description Client error */

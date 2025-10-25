@@ -23,6 +23,7 @@ export const paramDef = {
 	type: 'object',
 	properties: {
 		host: { type: 'string' },
+		isSilenced: { type: 'boolean' },
 		isSuspended: { type: 'boolean' },
 		moderationNote: { type: 'string' },
 	},
@@ -54,6 +55,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			}
 
 			await this.federatedInstanceService.update(instance.id, {
+				isSilenced: ps.isSilenced,
 				suspensionState,
 				moderationNote: ps.moderationNote,
 			});

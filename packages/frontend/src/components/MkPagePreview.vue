@@ -127,6 +127,7 @@ const props = defineProps<{
 			position: relative;
 			width: 100%;
 			height: 100px;
+			overflow: hidden;
 
 			& + article {
 				left: 0;

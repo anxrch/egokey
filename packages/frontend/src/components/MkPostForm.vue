@@ -162,6 +162,7 @@ const props = withDefaults(defineProps<PostFormProps & {
 	fixed?: boolean;
 	autofocus?: boolean;
 	freezeAfterPosted?: boolean;
+	updateMode?: boolean;
 	mock?: boolean;
 }>(), {
 	initialVisibleUsers: () => [],
@@ -189,6 +190,7 @@ const otherSettingsButton = useTemplateRef('otherSettingsButton');
 
 const posting = ref(false);
 const posted = ref(false);
+const noteId = ref(props.initialNote ? props.initialNote.id : null);
 const text = ref(props.initialText ?? '');
 const files = ref(props.initialFiles ?? []);
 const poll = ref<PollEditorModelValue | null>(null);
@@ -965,6 +967,7 @@ async function post(ev?: MouseEvent) {
 	}
 
 	let postData = {
+		noteId: noteId.value,
 		text: text.value === '' ? null : text.value,
 		fileIds: files.value.length > 0 ? files.value.map(f => f.id) : undefined,
 		replyId: replyTargetNote.value ? replyTargetNote.value.id : undefined,
@@ -1022,14 +1025,16 @@ async function post(ev?: MouseEvent) {
 	}
 
 	posting.value = true;
-	misskeyApi('notes/create', postData, token).then((res) => {
+	misskeyApi(props.updateMode ? 'notes/update' : 'notes/create', postData, token).then((res) => {
 		if (props.freezeAfterPosted) {
 			posted.value = true;
 		} else {
 			clear();
 		}
 
-		globalEvents.emit('notePosted', res.createdNote);
+		if (!props.updateMode) {
+			globalEvents.emit('notePosted', res.createdNote);
+		}
 
 		nextTick(() => {
 			deleteDraft();
@@ -1327,6 +1332,7 @@ onMounted(() => {
 		// 削除して編集
 		if (props.initialNote) {
 			const init = props.initialNote;
+			noteId.value = init.id;
 			text.value = init.text ? init.text : '';
 			useCw.value = init.cw != null;
 			cw.value = init.cw ?? null;

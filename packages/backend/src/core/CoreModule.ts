@@ -26,6 +26,7 @@ import { AvatarDecorationService } from './AvatarDecorationService.js';
 import { CaptchaService } from './CaptchaService.js';
 import { CustomEmojiService } from './CustomEmojiService.js';
 import { DeleteAccountService } from './DeleteAccountService.js';
+import { TruncateAccountService } from './TruncateAccountService.js';
 import { DownloadService } from './DownloadService.js';
 import { DriveService } from './DriveService.js';
 import { EmailService } from './EmailService.js';
@@ -44,6 +45,7 @@ import { ModerationLogService } from './ModerationLogService.js';
 import { NoteCreateService } from './NoteCreateService.js';
 import { NoteDeleteService } from './NoteDeleteService.js';
 import { NotePiningService } from './NotePiningService.js';
+import { NoteUpdateService } from './NoteUpdateService.js';
 import { NoteDraftService } from './NoteDraftService.js';
 import { NotificationService } from './NotificationService.js';
 import { PollService } from './PollService.js';
@@ -171,6 +173,7 @@ const $AvatarDecorationService: Provider = { provide: 'AvatarDecorationService',
 const $CaptchaService: Provider = { provide: 'CaptchaService', useExisting: CaptchaService };
 const $CustomEmojiService: Provider = { provide: 'CustomEmojiService', useExisting: CustomEmojiService };
 const $DeleteAccountService: Provider = { provide: 'DeleteAccountService', useExisting: DeleteAccountService };
+const $TruncateAccountService: Provider = { provide: 'TruncateAccountService', useExisting: TruncateAccountService };
 const $DownloadService: Provider = { provide: 'DownloadService', useExisting: DownloadService };
 const $DriveService: Provider = { provide: 'DriveService', useExisting: DriveService };
 const $EmailService: Provider = { provide: 'EmailService', useExisting: EmailService };
@@ -188,6 +191,7 @@ const $ModerationLogService: Provider = { provide: 'ModerationLogService', useEx
 const $NoteCreateService: Provider = { provide: 'NoteCreateService', useExisting: NoteCreateService };
 const $NoteDeleteService: Provider = { provide: 'NoteDeleteService', useExisting: NoteDeleteService };
 const $NotePiningService: Provider = { provide: 'NotePiningService', useExisting: NotePiningService };
+const $NoteUpdateService: Provider = { provide: 'NoteUpdateService', useExisting: NoteUpdateService };
 const $NoteDraftService: Provider = { provide: 'NoteDraftService', useExisting: NoteDraftService };
 const $NotificationService: Provider = { provide: 'NotificationService', useExisting: NotificationService };
 const $PollService: Provider = { provide: 'PollService', useExisting: PollService };
@@ -324,6 +328,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		CaptchaService,
 		CustomEmojiService,
 		DeleteAccountService,
+		TruncateAccountService,
 		DownloadService,
 		DriveService,
 		EmailService,
@@ -341,6 +346,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		NoteCreateService,
 		NoteDeleteService,
 		NotePiningService,
+		NoteUpdateService,
 		NoteDraftService,
 		NotificationService,
 		PollService,
@@ -473,6 +479,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$CaptchaService,
 		$CustomEmojiService,
 		$DeleteAccountService,
+		$TruncateAccountService,
 		$DownloadService,
 		$DriveService,
 		$EmailService,
@@ -490,6 +497,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$NoteCreateService,
 		$NoteDeleteService,
 		$NotePiningService,
+		$NoteUpdateService,
 		$NoteDraftService,
 		$NotificationService,
 		$PollService,
@@ -623,6 +631,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		CaptchaService,
 		CustomEmojiService,
 		DeleteAccountService,
+		TruncateAccountService,
 		DownloadService,
 		DriveService,
 		EmailService,
@@ -640,6 +649,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		NoteCreateService,
 		NoteDeleteService,
 		NotePiningService,
+		NoteUpdateService,
 		NoteDraftService,
 		NotificationService,
 		PollService,
@@ -771,6 +781,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$CaptchaService,
 		$CustomEmojiService,
 		$DeleteAccountService,
+		$TruncateAccountService,
 		$DownloadService,
 		$DriveService,
 		$EmailService,
@@ -788,6 +799,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$NoteCreateService,
 		$NoteDeleteService,
 		$NotePiningService,
+		$NoteUpdateService,
 		$NoteDraftService,
 		$NotificationService,
 		$PollService,

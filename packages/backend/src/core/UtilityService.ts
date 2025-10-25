@@ -56,8 +56,8 @@ export class UtilityService {
 
 	@bindThis
 	public isSilencedHost(silencedHosts: string[] | undefined, host: string | null): boolean {
-		if (!silencedHosts || host == null) return false;
-		return silencedHosts.some(x => `.${host.toLowerCase()}`.endsWith(`.${x}`));
+		// ZerglingGo: not implemented in bscone build
+		return false;
 	}
 
 	@bindThis

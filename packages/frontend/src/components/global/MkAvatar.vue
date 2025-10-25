@@ -4,11 +4,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<component :is="link ? MkA : 'span'" v-user-preview="preview ? user.id : undefined" v-bind="bound" class="_noSelect" :class="[$style.root, { [$style.animation]: animation, [$style.cat]: user.isCat, [$style.square]: squareAvatars }]" :style="{ color }" :title="acct(user)" @click="onClick">
-	<MkImgWithBlurhash v-if="prefer.s.enableHighQualityImagePlaceholders" :class="$style.inner" :src="url" :hash="user.avatarBlurhash" :cover="true" :onlyAvgColor="true"/>
-	<img v-else :class="$style.inner" :src="url" alt="" decoding="async" style="pointer-events: none;"/>
-	<MkUserOnlineIndicator v-if="indicator" :class="$style.indicator" :user="user"/>
-	<div v-if="user.isCat" :class="[$style.ears]">
+<component :is="link ? MkA : 'span'" v-user-preview="preview ? user.id : undefined" v-bind="bound" class="_noSelect" :class="[$style.root, { [$style.animation]: animation, [$style.cat]: user.isCat, [$style.square]: squareAvatars }]" :style="{ color }" :title="acct(user)" @click.stop="onClick">
+	<MkImgWithBlurhash v-if="prefer.s.enableHighQualityImagePlaceholders" :class="$style.inner" :src="(prefer.s.deidentifyMutedUsers && user.isMuted) ? (instance.iconUrl || '/favicon.ico') : url" :hash="user.avatarBlurhash" :cover="true" :onlyAvgColor="true"/>
+	<img v-else :class="$style.inner" :src="(prefer.s.deidentifyMutedUsers && user.isMuted) ? (instance.iconUrl || '/favicon.ico') : url" alt="" decoding="async" style="pointer-events: none;"/>
+	<MkUserOnlineIndicator v-if="!(prefer.s.deidentifyMutedUsers && user.isMuted) && indicator" :class="$style.indicator" :user="user"/>
+	<div v-if="!(prefer.s.deidentifyMutedUsers && user.isMuted) && user.isCat" :class="[$style.ears]">
 		<div :class="$style.earLeft">
 			<div v-if="false" :class="$style.layer">
 				<div :class="$style.plot" :style="{ backgroundImage: `url(${JSON.stringify(url)})` }"/>
@@ -52,12 +52,13 @@ import { getStaticImageUrl } from '@/utility/media-proxy.js';
 import { acct, userPage } from '@/filters/user.js';
 import MkUserOnlineIndicator from '@/components/MkUserOnlineIndicator.vue';
 import { prefer } from '@/preferences.js';
+import { instance } from '@/instance.js';
 
 const animation = ref(prefer.s.animation);
 const squareAvatars = ref(prefer.s.squareAvatars);
 
 const props = withDefaults(defineProps<{
-	user: Misskey.entities.User;
+	user: Misskey.entities.UserDetailed;
 	target?: string | null;
 	link?: boolean;
 	preview?: boolean;

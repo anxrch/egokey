@@ -400,6 +400,10 @@ export const packedUserDetailedNotMeOnlySchema = {
 			type: 'boolean',
 			nullable: false, optional: true,
 		},
+		bridgeHomeVisibility: {
+			type: 'boolean',
+			nullable: false, optional: false,
+		},
 		//#region relations
 		isFollowing: {
 			type: 'boolean',

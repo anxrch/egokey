@@ -5,6 +5,7 @@
 
 import { Inject, Injectable } from '@nestjs/common';
 import type { Packed } from '@/misc/json-schema.js';
+import type { } from '@/models/Blocking.js';
 import type { MiInstance } from '@/models/Instance.js';
 import { bindThis } from '@/decorators.js';
 import { UtilityService } from '@/core/UtilityService.js';
@@ -42,6 +43,7 @@ export class InstanceEntityService {
 			followingCount: instance.followingCount,
 			followersCount: instance.followersCount,
 			isNotResponding: instance.isNotResponding,
+			isSilenced: instance.isSilenced,
 			isSuspended: instance.suspensionState !== 'none' || Boolean(softwareSuspended),
 			suspensionState: instance.suspensionState === 'none' && softwareSuspended ? 'softwareSuspended' : instance.suspensionState,
 			isBlocked: this.utilityService.isBlockedHost(this.meta.blockedHosts, instance.host),
@@ -52,7 +54,6 @@ export class InstanceEntityService {
 			description: instance.description,
 			maintainerName: instance.maintainerName,
 			maintainerEmail: instance.maintainerEmail,
-			isSilenced: this.utilityService.isSilencedHost(this.meta.silencedHosts, instance.host),
 			isMediaSilenced: this.utilityService.isMediaSilencedHost(this.meta.mediaSilencedHosts, instance.host),
 			iconUrl: instance.iconUrl,
 			faviconUrl: instance.faviconUrl,
@@ -71,4 +72,3 @@ export class InstanceEntityService {
 		return Promise.all(instances.map(x => this.pack(x, me)));
 	}
 }
-

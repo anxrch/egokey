@@ -176,6 +176,9 @@ export const PREF_DEF = definePreferences({
 	rememberNoteVisibility: {
 		default: false,
 	},
+	deidentifyMutedUsers: {
+		default: true,
+	},
 	reportError: {
 		default: false,
 	},

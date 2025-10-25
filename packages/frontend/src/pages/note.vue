@@ -8,6 +8,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div class="_spacer" style="--MI_SPACER-w: 800px;">
 		<Transition :name="prefer.s.animation ? 'fade' : ''" mode="out-in">
 			<div v-if="note">
+				<MkButton rounded @click="goBack()"><i class="ti ti-arrow-left"></i> {{ i18n.ts.goBack }}</MkButton>
+
 				<div v-if="showNext" class="_margin">
 					<MkNotesTimeline direction="up" :withControl="false" :pullToRefresh="false" class="" :paginator="showNext === 'channel' ? nextChannelPaginator : nextUserPaginator" :noGap="true"/>
 				</div>
@@ -111,6 +113,10 @@ const nextChannelPaginator = markRaw(new Paginator('channels/timeline', {
 		channelId: note.value.channelId,
 	}) : undefined),
 }));
+
+function goBack(): void {
+	history.back();
+}
 
 function fetchNote() {
 	showPrev.value = false;

@@ -248,6 +248,12 @@ export class MiNote {
 	})
 	public renoteUserHost: string | null;
 
+	@Column('timestamp with time zone', {
+		nullable: true,
+		comment: 'The updated date of the Note.',
+	})
+	public updatedAt: Date | null;
+
 	constructor(data: Partial<MiNote>) {
 		if (data == null) return;
 

@@ -456,6 +456,7 @@ import type {
 	IRevokeTokenRequest,
 	ISigninHistoryRequest,
 	ISigninHistoryResponse,
+	ITruncateAccountRequest,
 	IUnpinRequest,
 	IUnpinResponse,
 	IUpdateRequest,
@@ -545,6 +546,8 @@ import type {
 	NotesTranslateRequest,
 	NotesTranslateResponse,
 	NotesUnrenoteRequest,
+	NotesUpdateRequest,
+	NotesUpdateResponse,
 	NotesUserListTimelineRequest,
 	NotesUserListTimelineResponse,
 	NotificationsCreateRequest,
@@ -960,6 +963,7 @@ export type Endpoints = {
 	'i/registry/set': { req: IRegistrySetRequest; res: EmptyResponse };
 	'i/revoke-token': { req: IRevokeTokenRequest; res: EmptyResponse };
 	'i/signin-history': { req: ISigninHistoryRequest; res: ISigninHistoryResponse };
+	'i/truncate-account': { req: ITruncateAccountRequest; res: EmptyResponse };
 	'i/unpin': { req: IUnpinRequest; res: IUnpinResponse };
 	'i/update': { req: IUpdateRequest; res: IUpdateResponse };
 	'i/update-auto-delete-settings': { req: IUpdateAutoDeleteSettingsRequest; res: EmptyResponse };
@@ -1015,6 +1019,7 @@ export type Endpoints = {
 	'notes/timeline': { req: NotesTimelineRequest; res: NotesTimelineResponse };
 	'notes/translate': { req: NotesTranslateRequest; res: NotesTranslateResponse };
 	'notes/unrenote': { req: NotesUnrenoteRequest; res: EmptyResponse };
+	'notes/update': { req: NotesUpdateRequest; res: NotesUpdateResponse };
 	'notes/user-list-timeline': { req: NotesUserListTimelineRequest; res: NotesUserListTimelineResponse };
 	'notifications/create': { req: NotificationsCreateRequest; res: EmptyResponse };
 	'notifications/flush': { req: EmptyRequest; res: EmptyResponse };

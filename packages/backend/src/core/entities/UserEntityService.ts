@@ -376,8 +376,8 @@ export class UserEntityService implements OnModuleInit {
 		const elapsed = Date.now() - user.lastActiveDate.getTime();
 		return (
 			elapsed < USER_ONLINE_THRESHOLD ? 'online' :
-			elapsed < USER_ACTIVE_THRESHOLD ? 'active' :
-			'offline'
+				elapsed < USER_ACTIVE_THRESHOLD ? 'active' :
+					'offline'
 		);
 	}
 
@@ -463,13 +463,13 @@ export class UserEntityService implements OnModuleInit {
 
 		const followingCount = profile == null ? null :
 			(profile.followingVisibility === 'public') || isMe || iAmModerator ? user.followingCount :
-			(profile.followingVisibility === 'followers') && (relation && relation.isFollowing) ? user.followingCount :
-			null;
+				(profile.followingVisibility === 'followers') && (relation && relation.isFollowing) ? user.followingCount :
+					null;
 
 		const followersCount = profile == null ? null :
 			(profile.followersVisibility === 'public') || isMe || iAmModerator ? user.followersCount :
-			(profile.followersVisibility === 'followers') && (relation && relation.isFollowing) ? user.followersCount :
-			null;
+				(profile.followersVisibility === 'followers') && (relation && relation.isFollowing) ? user.followersCount :
+					null;
 
 		const isModerator = isMe && isDetailed ? this.roleService.isModerator(user) : undefined;
 		const isAdmin = isMe && isDetailed ? this.roleService.isAdministrator(user) : undefined;
@@ -557,6 +557,7 @@ export class UserEntityService implements OnModuleInit {
 				publicReactions: this.isLocalUser(user) ? profile!.publicReactions : false, // https://github.com/misskey-dev/misskey/issues/12964
 				followersVisibility: profile!.followersVisibility,
 				followingVisibility: profile!.followingVisibility,
+				bridgeHomeVisibility: profile!.bridgeHomeVisibility,
 				chatScope: user.chatScope,
 				canChat: this.roleService.getUserPolicies(user.id).then(r => r.chatAvailability === 'available'),
 				roles: this.roleService.getUserRoles(user.id).then(roles => roles.filter(role => role.isPublic).sort((a, b) => b.displayOrder - a.displayOrder).map(role => ({
@@ -595,6 +596,7 @@ export class UserEntityService implements OnModuleInit {
 				autoAcceptFollowed: profile!.autoAcceptFollowed,
 				noCrawle: profile!.noCrawle,
 				preventAiLearning: profile!.preventAiLearning,
+				bridgeHomeVisibility: profile!.bridgeHomeVisibility,
 				isExplorable: user.isExplorable,
 				isDeleted: user.isDeleted,
 				twoFactorBackupCodesStock: profile?.twoFactorBackupSecret?.length === 5 ? 'full' : (profile?.twoFactorBackupSecret?.length ?? 0) > 0 ? 'partial' : 'none',

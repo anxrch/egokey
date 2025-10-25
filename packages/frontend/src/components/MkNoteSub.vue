@@ -8,18 +8,19 @@ SPDX-License-Identifier: AGPL-3.0-only
 	{{ i18n.ts.deletedNote }}
 </div>
 <div v-else-if="!muted" :class="[$style.root, { [$style.children]: depth > 1 }]">
+	<div :class="[{[$style.bar]: depth === 1}]"></div>
 	<div :class="$style.main">
 		<div v-if="note.channel" :class="$style.colorBar" :style="{ background: note.channel.color }"></div>
 		<MkAvatar :class="$style.avatar" :user="note.user" link preview/>
 		<div :class="$style.body">
-			<MkNoteHeader :class="$style.header" :note="note" :mini="true"/>
+			<MkNoteHeader :class="$style.header" :note="note" :mini="true" @click.stop/>
 			<div>
 				<p v-if="note.cw != null" :class="$style.cw">
 					<Mfm v-if="note.cw != ''" style="margin-right: 8px;" :text="note.cw" :author="note.user" :nyaize="'respect'"/>
-					<MkCwButton v-model="showContent" :text="note.text" :files="note.files" :poll="note.poll"/>
+					<MkCwButton v-model="showContent" :text="note.text" :files="note.files" :poll="note.poll" @click.stop/>
 				</p>
 				<div v-show="note.cw == null || showContent">
-					<MkSubNoteContent :class="$style.text" :note="note"/>
+					<MkSubNoteContent :class="$style.text" :note="note" @click.stop/>
 				</div>
 			</div>
 		</div>
@@ -87,9 +88,17 @@ if (props.detail && props.note) {
 	position: relative;
 
 	&.children {
-		padding: 10px 0 0 16px;
+		padding: 10px 0 0 0;
 		font-size: 1em;
 	}
+}
+
+.bar {
+	top: 16px;
+	bottom: 16px;
+	left: 51px;
+	position: absolute;
+	border-left: solid 0.5px var(--divider);
 }
 
 .main {
@@ -125,7 +134,6 @@ if (props.detail && props.note) {
 }
 
 .cw {
-	cursor: default;
 	display: block;
 	margin: 0;
 	padding: 0;
@@ -135,15 +143,16 @@ if (props.detail && props.note) {
 .text {
 	margin: 0;
 	padding: 0;
+	cursor: text;
 }
 
-.reply, .more {
-	border-left: solid 0.5px var(--MI_THEME-divider);
-	margin-top: 10px;
+.reply {
+	margin: 10px 0 0;
 }
 
 .more {
-	padding: 10px 0 0 16px;
+	margin: 10px 0;
+	padding: 10px 0 0 32px;
 }
 
 @container (max-width: 450px) {
@@ -151,8 +160,12 @@ if (props.detail && props.note) {
 		padding: 14px 16px;
 
 		&.children {
-			padding: 10px 0 0 8px;
+			padding: 10px 0 0 0;
 		}
+	}
+
+	.bar {
+		left: 35px;
 	}
 }
 

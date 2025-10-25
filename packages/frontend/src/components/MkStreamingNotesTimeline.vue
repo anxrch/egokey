@@ -266,6 +266,12 @@ if (!store.s.realtimeMode) {
 	});
 }
 
+useGlobalEvent('noteUpdated', (note) => {
+	if (note.visibility !== 'public' && (props.src === 'global' || props.src === 'local')) {
+		paginator.removeItem(note.id);
+	}
+});
+
 useGlobalEvent('noteDeleted', (noteId) => {
 	paginator.removeItem(noteId);
 });

@@ -188,6 +188,20 @@ export function getNoteMenu(props: {
 
 	const cleanups = [] as (() => void)[];
 
+	function changeVisibility(visibility): void {
+		os.confirm({
+			type: 'warning',
+			text: i18n.ts.changeVisibilityConfirm,
+		}).then(({ canceled }) => {
+			if (canceled) return;
+
+			misskeyApi('notes/update', {
+				noteId: appearNote.id,
+				visibility: visibility,
+			});
+		});
+	}
+
 	function del(): void {
 		os.confirm({
 			type: 'warning',
@@ -228,6 +242,10 @@ export function getNoteMenu(props: {
 				claimAchievement('noteDeletedWithin1min');
 			}
 		});
+	}
+
+	function edit(): void {
+		os.post({ initialNote: appearNote, renote: appearNote.renote, reply: appearNote.reply, channel: appearNote.channel, updateMode: true });
 	}
 
 	function toggleFavorite(favorite: boolean): void {
@@ -493,9 +511,42 @@ export function getNoteMenu(props: {
 			});
 		}
 
+		if ($i.isModerator || $i.isAdmin) {
+			menuItems.push({ type: 'divider' });
+			menuItems.push({
+				type: 'parent',
+				icon: 'ti ti-world',
+				text: i18n.ts.changeVisibility,
+				children: [{
+					icon: 'ti ti-world',
+					text: i18n.ts._visibility.public,
+					action: () => changeVisibility('public'),
+				}, {
+					icon: 'ti ti-home',
+					text: i18n.ts._visibility.home,
+					action: () => changeVisibility('home'),
+				}, {
+					icon: 'ti ti-lock',
+					text: i18n.ts._visibility.followers,
+					action: () => changeVisibility('followers'),
+				}, {
+					icon: 'ti ti-mail',
+					text: i18n.ts._visibility.specified,
+					action: () => changeVisibility('specified'),
+				}],
+			});
+		}
+
 		if (appearNote.userId === $i.id || $i.isModerator || $i.isAdmin) {
 			menuItems.push({ type: 'divider' });
 			if (appearNote.userId === $i.id) {
+				if ($i.policies.canEditNote) {
+					menuItems.push({
+						icon: 'ti ti-edit',
+						text: i18n.ts.edit,
+						action: edit,
+					});
+				}
 				menuItems.push({
 					icon: 'ti ti-edit',
 					text: i18n.ts.deleteAndEdit,

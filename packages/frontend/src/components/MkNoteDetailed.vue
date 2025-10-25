@@ -53,10 +53,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 					</MkA>
 					<span v-if="appearNote.user.isBot" :class="$style.isBot">bot</span>
 					<div :class="$style.noteHeaderInfo">
-						<span v-if="appearNote.visibility !== 'public'" style="margin-left: 0.5em;" :title="i18n.ts._visibility[appearNote.visibility]">
-							<i v-if="appearNote.visibility === 'home'" class="ti ti-home"></i>
-							<i v-else-if="appearNote.visibility === 'followers'" class="ti ti-lock"></i>
-							<i v-else-if="appearNote.visibility === 'specified'" ref="specified" class="ti ti-mail"></i>
+						<span v-if="$appearNote.visibility !== 'public'" style="margin-left: 0.5em;" :title="i18n.ts._visibility[$appearNote.visibility]">
+							<i v-if="$appearNote.visibility === 'home'" class="ti ti-home"></i>
+							<i v-else-if="$appearNote.visibility === 'followers'" class="ti ti-lock"></i>
+							<i v-else-if="$appearNote.visibility === 'specified'" ref="specified" class="ti ti-mail"></i>
 						</span>
 						<span v-if="appearNote.localOnly" style="margin-left: 0.5em;" :title="i18n.ts._visibility['disableFederation']"><i class="ti ti-rocket-off"></i></span>
 					</div>
@@ -73,24 +73,24 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</div>
 		</header>
 		<div :class="$style.noteContent">
-			<p v-if="appearNote.cw != null" :class="$style.cw">
+			<p v-if="$appearNote.cw != null" :class="$style.cw">
 				<Mfm
-					v-if="appearNote.cw != ''"
-					:text="appearNote.cw"
+					v-if="$appearNote.cw != ''"
+					:text="$appearNote.cw"
 					:author="appearNote.user"
 					:nyaize="'respect'"
 					:enableEmojiMenu="true"
 					:enableEmojiMenuReaction="true"
 				/>
-				<MkCwButton v-model="showContent" :text="appearNote.text" :renote="appearNote.renote" :files="appearNote.files" :poll="appearNote.poll"/>
+				<MkCwButton v-model="showContent" :text="$appearNote.text" :renote="appearNote.renote" :files="appearNote.files" :poll="appearNote.poll"/>
 			</p>
-			<div v-show="appearNote.cw == null || showContent">
+			<div v-show="$appearNote.cw == null || showContent">
 				<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ i18n.ts.private }})</span>
 				<MkA v-if="appearNote.replyId" :class="$style.noteReplyTarget" :to="`/notes/${appearNote.replyId}`"><i class="ti ti-arrow-back-up"></i></MkA>
 				<Mfm
-					v-if="appearNote.text"
+					v-if="$appearNote.text"
 					:parsedNodes="parsed"
-					:text="appearNote.text"
+					:text="$appearNote.text"
 					:author="appearNote.user"
 					:nyaize="'respect'"
 					:emojiUrls="appearNote.emojis"
@@ -128,6 +128,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</div>
 		<footer>
 			<div :class="$style.noteFooterInfo">
+				<div v-if="$appearNote.updatedAt">
+					{{ i18n.ts.edited }}: <MkTime :time="$appearNote.updatedAt" mode="detail"/>
+				</div>
 				<MkA :to="notePage(appearNote)">
 					<MkTime :time="appearNote.createdAt" mode="detail" colored/>
 				</MkA>
@@ -321,12 +324,12 @@ const isDeleted = ref(false);
 const muted = ref($i ? checkWordMute(appearNote, $i, $i.mutedWords) : false);
 const translation = ref<Misskey.entities.NotesTranslateResponse | null>(null);
 const translating = ref(false);
-const parsed = appearNote.text ? mfm.parse(appearNote.text) : null;
-const urls = parsed ? extractUrlFromMfm(parsed).filter((url) => appearNote.renote?.url !== url && appearNote.renote?.uri !== url) : null;
+const parsed = computed(() => $appearNote.text ? mfm.parse($appearNote.text) : null);
+const urls = parsed.value ? extractUrlFromMfm(parsed.value).filter((url) => appearNote.renote?.url !== url && appearNote.renote?.uri !== url) : null;
 const showTicker = (prefer.s.instanceTicker === 'always') || (prefer.s.instanceTicker === 'remote' && appearNote.user.instance);
 const conversation = ref<Misskey.entities.Note[]>([]);
 const replies = ref<Misskey.entities.Note[]>([]);
-const canRenote = computed(() => ['public', 'home'].includes(appearNote.visibility) || appearNote.userId === $i?.id);
+const canRenote = computed(() => ['public', 'home'].includes($appearNote.visibility) || appearNote.userId === $i?.id);
 
 useGlobalEvent('noteDeleted', (noteId) => {
 	if (noteId === note.id || noteId === appearNote.id) {
@@ -607,6 +610,9 @@ function loadConversation() {
 		conversation.value = res.reverse();
 	});
 }
+
+loadReplies();
+loadConversation();
 </script>
 
 <style lang="scss" module>

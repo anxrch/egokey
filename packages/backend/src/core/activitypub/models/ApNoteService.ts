@@ -6,7 +6,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { In } from 'typeorm';
 import { DI } from '@/di-symbols.js';
-import type { PollsRepository, EmojisRepository, MiMeta } from '@/models/_.js';
+import type { NotesRepository, PollsRepository, EmojisRepository, MiMeta } from '@/models/_.js';
 import type { Config } from '@/config.js';
 import type { MiRemoteUser } from '@/models/User.js';
 import type { MiNote } from '@/models/Note.js';
@@ -15,6 +15,7 @@ import type { MiEmoji } from '@/models/Emoji.js';
 import { AppLockService } from '@/core/AppLockService.js';
 import type { MiDriveFile } from '@/models/DriveFile.js';
 import { NoteCreateService } from '@/core/NoteCreateService.js';
+import { NoteUpdateService } from '@/core/NoteUpdateService.js';
 import type Logger from '@/logger.js';
 import { IdService } from '@/core/IdService.js';
 import { PollService } from '@/core/PollService.js';
@@ -54,6 +55,9 @@ export class ApNoteService {
 		@Inject(DI.emojisRepository)
 		private emojisRepository: EmojisRepository,
 
+		@Inject(DI.notesRepository)
+		private notesRepository: NotesRepository,
+
 		private idService: IdService,
 		private apMfmService: ApMfmService,
 		private apResolverService: ApResolverService,
@@ -70,6 +74,7 @@ export class ApNoteService {
 		private appLockService: AppLockService,
 		private pollService: PollService,
 		private noteCreateService: NoteCreateService,
+		private noteUpdateService: NoteUpdateService,
 		private apDbResolverService: ApDbResolverService,
 		private apLoggerService: ApLoggerService,
 	) {
@@ -340,6 +345,84 @@ export class ApNoteService {
 		}
 	}
 
+	@bindThis
+	public async updateNote(value: string | IObject, resolver?: Resolver, silent = false): Promise<boolean> {
+		const uri = typeof value === 'string' ? value : value.id;
+		if (uri == null) throw new Error('uri is null');
+
+		// URIがこのサーバーを指しているならスキップ
+		if (uri.startsWith(this.config.url + '/')) throw new Error('uri points local');
+
+		//#region このサーバーに既に登録されているか
+		const oldNote = await this.notesRepository.findOneBy({ uri });
+		if (oldNote == null) throw new Error('Note is not registed');
+		//#endregion
+
+		// eslint-disable-next-line no-param-reassign
+		if (resolver == null) resolver = this.apResolverService.createResolver();
+
+		const object = await resolver.resolve(value);
+
+		const entryUri = getApId(value);
+		const err = this.validateNote(object, entryUri);
+		if (err) {
+			this.logger.error(err.message, {
+				resolver: { history: resolver.getHistory() },
+				value,
+				object,
+			});
+			throw new Error('invalid note');
+		}
+
+		const note = object as IPost;
+
+		this.logger.debug(`Note fetched: ${JSON.stringify(note, null, 2)}`);
+
+		if (note.id && !checkHttps(note.id)) {
+			throw new Error('unexpected schema of note.id: ' + note.id);
+		}
+
+		const url = getOneApHrefNullable(object.url);
+
+		if (url && !checkHttps(url)) {
+			throw new Error('unexpected schema of note url: ' + url);
+		}
+
+		this.logger.info(`Updating the Note: ${note.id}`);
+
+		// 投稿者をフェッチ
+		if (note.attributedTo == null) {
+			throw new Error('invalid note.attributedTo: ' + note.attributedTo);
+		}
+
+		const actor = await this.apPersonService.resolvePerson(getOneApId(note.attributedTo), resolver) as MiRemoteUser;
+
+		// 投稿者が凍結されていたらスキップ
+		if (actor.isSuspended) {
+			throw new Error('actor has been suspended');
+		}
+
+		const cw = note.summary === '' ? null : note.summary;
+
+		// テキストのパース
+		let text: string | null = null;
+		if (note.source?.mediaType === 'text/x.misskeymarkdown' && typeof note.source.content === 'string') {
+			text = note.source.content;
+		} else if (typeof note._misskey_content !== 'undefined') {
+			text = note._misskey_content;
+		} else if (typeof note.content === 'string') {
+			text = this.apMfmService.htmlToMfm(note.content, note.tag);
+		}
+
+		await this.noteUpdateService.update(actor, oldNote, {
+			cw,
+			text,
+			updatedAt: note.updated ? new Date(note.updated) : new Date(),
+		}, silent);
+
+		return true;
+	}
+
 	/**
 	 * Noteを解決します。
 	 *
@@ -408,8 +491,9 @@ export class ApNoteService {
 						originalUrl: tag.icon.url,
 						publicUrl: tag.icon.url,
 						updatedAt: new Date(),
+						isSensitive: tag.sensitive,
 						// _misskey_license が存在しなければ `null`
-						license: (tag._misskey_license?.freeText ?? null)
+						license: (tag._misskey_license?.freeText ?? null),
 					});
 
 					const emoji = await this.emojisRepository.findOneBy({ host, name });
@@ -430,9 +514,10 @@ export class ApNoteService {
 				originalUrl: tag.icon.url,
 				publicUrl: tag.icon.url,
 				updatedAt: new Date(),
+				isSensitive: tag.sensitive,
 				aliases: [],
 				// _misskey_license が存在しなければ `null`
-				license: (tag._misskey_license?.freeText ?? null)
+				license: (tag._misskey_license?.freeText ?? null),
 			});
 		}));
 	}

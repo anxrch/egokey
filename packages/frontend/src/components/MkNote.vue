@@ -9,7 +9,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	ref="rootEl"
 	v-hotkey="keymap"
 	:class="[$style.root, { [$style.showActionsOnlyHover]: prefer.s.showNoteActionsOnlyHover, [$style.skipRender]: prefer.s.skipNoteRender }]"
-	tabindex="0"
+	@click="nav($event, notePage(appearNote))"
 >
 	<MkNoteSub v-if="appearNote.replyId && !renoteCollapsed" :note="appearNote?.reply ?? null" :class="$style.replyTo"/>
 	<div v-if="pinned" :class="$style.tip"><i class="ti ti-pin"></i> {{ i18n.ts.pinnedNote }}</div>
@@ -19,7 +19,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<i class="ti ti-repeat" style="margin-right: 4px;"></i>
 		<I18n :src="i18n.ts.renotedBy" tag="span" :class="$style.renoteText">
 			<template #user>
-				<MkA v-user-preview="note.userId" :class="$style.renoteUserName" :to="userPage(note.user)">
+				<MkA v-user-preview="note.userId" :class="$style.renoteUserName" :to="userPage(note.user)" @click.stop>
 					<MkUserName :user="note.user"/>
 				</MkA>
 			</template>
@@ -46,28 +46,28 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<div v-if="appearNote.channel" :class="$style.colorBar" :style="{ background: appearNote.channel.color }"></div>
 		<MkAvatar :class="[$style.avatar, prefer.s.useStickyIcons ? $style.useSticky : null]" :user="appearNote.user" :link="!mock" :preview="!mock"/>
 		<div :class="$style.main">
-			<MkNoteHeader :note="appearNote" :mini="true"/>
+			<MkNoteHeader :note="appearNote" :updatedAt="$appearNote.updatedAt" :visibility="$appearNote.visibility" :mini="true" @click.stop/>
 			<MkInstanceTicker v-if="showTicker" :host="appearNote.user.host" :instance="appearNote.user.instance"/>
 			<div style="container-type: inline-size;">
-				<p v-if="appearNote.cw != null" :class="$style.cw">
+				<p v-if="$appearNote.cw != null" :class="$style.cw">
 					<Mfm
-						v-if="appearNote.cw != ''"
-						:text="appearNote.cw"
+						v-if="$appearNote.cw != ''"
+						:text="$appearNote.cw"
 						:author="appearNote.user"
 						:nyaize="'respect'"
 						:enableEmojiMenu="true"
 						:enableEmojiMenuReaction="true"
 					/>
-					<MkCwButton v-model="showContent" :text="appearNote.text" :renote="appearNote.renote" :files="appearNote.files" :poll="appearNote.poll" style="margin: 4px 0;"/>
+					<MkCwButton v-model="showContent" :text="$appearNote.text" :renote="appearNote.renote" :files="appearNote.files" :poll="appearNote.poll" style="margin: 4px 0;" @click.stop/>
 				</p>
-				<div v-show="appearNote.cw == null || showContent" :class="[{ [$style.contentCollapsed]: collapsed }]">
+				<div v-show="$appearNote.cw == null || showContent" :class="[{ [$style.contentCollapsed]: collapsed }]">
 					<div :class="$style.text">
 						<span v-if="appearNote.isHidden" style="opacity: 0.5">({{ i18n.ts.private }})</span>
 						<MkA v-if="appearNote.replyId" :class="$style.replyIcon" :to="`/notes/${appearNote.replyId}`"><i class="ti ti-arrow-back-up"></i></MkA>
 						<Mfm
-							v-if="appearNote.text"
+							v-if="$appearNote.text"
 							:parsedNodes="parsed"
-							:text="appearNote.text"
+							:text="$appearNote.text"
 							:author="appearNote.user"
 							:nyaize="'respect'"
 							:emojiUrls="appearNote.emojis"
@@ -83,7 +83,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 							</div>
 						</div>
 					</div>
-					<div v-if="appearNote.files && appearNote.files.length > 0" style="margin-top: 8px;">
+					<div v-if="appearNote.files && appearNote.files.length > 0" style="margin-top: 8px;" @click.stop>
 						<MkMediaList ref="galleryEl" :mediaList="appearNote.files"/>
 					</div>
 					<MkPoll
@@ -95,19 +95,20 @@ SPDX-License-Identifier: AGPL-3.0-only
 						:author="appearNote.user"
 						:emojiUrls="appearNote.emojis"
 						:class="$style.poll"
+						@click.stop
 					/>
 					<div v-if="isEnabledUrlPreview">
-						<MkUrlPreview v-for="url in urls" :key="url" :url="url" :compact="true" :detail="false" :class="$style.urlPreview"/>
+						<MkUrlPreview v-for="url in urls" :key="url" :url="url" :compact="true" :detail="false" :class="$style.urlPreview" @click.stop/>
 					</div>
-					<div v-if="appearNote.renoteId" :class="$style.quote"><MkNoteSimple :note="appearNote?.renote ?? null" :class="$style.quoteNote"/></div>
-					<button v-if="isLong && collapsed" :class="$style.collapsed" class="_button" @click="collapsed = false">
+					<div v-if="appearNote.renoteId" :class="$style.quote"><MkNoteSimple :note="appearNote?.renote ?? null" :class="$style.quoteNote" @click.stop/></div>
+					<button v-if="isLong && collapsed" :class="$style.collapsed" class="_button" @click.stop="collapsed = false">
 						<span :class="$style.collapsedLabel">{{ i18n.ts.showMore }}</span>
 					</button>
-					<button v-else-if="isLong && !collapsed" :class="$style.showLess" class="_button" @click="collapsed = true">
+					<button v-else-if="isLong && !collapsed" :class="$style.showLess" class="_button" @click.stop="collapsed = true">
 						<span :class="$style.showLessLabel">{{ i18n.ts.showLess }}</span>
 					</button>
 				</div>
-				<MkA v-if="appearNote.channel && !inChannel" :class="$style.channel" :to="`/channels/${appearNote.channel.id}`"><i class="ti ti-device-tv"></i> {{ appearNote.channel.name }}</MkA>
+				<MkA v-if="appearNote.channel && !inChannel" :class="$style.channel" :to="`/channels/${appearNote.channel.id}`" @click.stop><i class="ti ti-device-tv"></i> {{ appearNote.channel.name }}</MkA>
 			</div>
 			<MkReactionsViewer
 				v-if="appearNote.reactionAcceptance !== 'likeOnly'"
@@ -124,7 +125,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</template>
 			</MkReactionsViewer>
 			<footer :class="$style.footer">
-				<button :class="$style.footerButton" class="_button" @click="reply()">
+				<button :class="$style.footerButton" class="_button" @click.stop="reply()">
 					<i class="ti ti-arrow-back-up"></i>
 					<p v-if="appearNote.repliesCount > 0" :class="$style.footerButtonCount">{{ number(appearNote.repliesCount) }}</p>
 				</button>
@@ -141,7 +142,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<button v-else :class="$style.footerButton" class="_button" disabled>
 					<i class="ti ti-ban"></i>
 				</button>
-				<button ref="reactButton" :class="$style.footerButton" class="_button" @click="toggleReact()">
+				<button ref="reactButton" :class="$style.footerButton" class="_button" @click.stop="toggleReact()">
 					<i v-if="appearNote.reactionAcceptance === 'likeOnly' && $appearNote.myReaction != null" class="ti ti-heart-filled" style="color: var(--MI_THEME-love);"></i>
 					<i v-else-if="$appearNote.myReaction != null" class="ti ti-minus" style="color: var(--MI_THEME-accent);"></i>
 					<i v-else-if="appearNote.reactionAcceptance === 'likeOnly'" class="ti ti-heart"></i>
@@ -241,6 +242,7 @@ import { prefer } from '@/preferences.js';
 import { getPluginHandlers } from '@/plugin.js';
 import { DI } from '@/di.js';
 import { globalEvents } from '@/events.js';
+import { useRouter } from '@/router.js';
 
 const props = withDefaults(defineProps<{
 	note: Misskey.entities.Note;
@@ -296,17 +298,17 @@ const clipButton = useTemplateRef('clipButton');
 const galleryEl = useTemplateRef('galleryEl');
 const isMyRenote = $i && ($i.id === note.userId);
 const showContent = ref(false);
-const parsed = computed(() => appearNote.text ? mfm.parse(appearNote.text) : null);
-const urls = computed(() => parsed.value ? extractUrlFromMfm(parsed.value).filter((url) => appearNote.renote?.url !== url && appearNote.renote?.uri !== url) : null);
-const isLong = shouldCollapsed(appearNote, urls.value ?? []);
-const collapsed = ref(appearNote.cw == null && isLong);
+const parsed = computed(() => $appearNote.text ? mfm.parse($appearNote.text) : null);
+const urls = parsed.value ? extractUrlFromMfm(parsed.value).filter((url) => appearNote.renote?.url !== url && appearNote.renote?.uri !== url) : null;
+const isLong = shouldCollapsed(appearNote, urls ?? []);
+const collapsed = ref($appearNote.cw == null && isLong);
 const muted = ref(checkMute(appearNote, $i?.mutedWords));
 const hardMuted = ref(props.withHardMute && checkMute(appearNote, $i?.hardMutedWords, true));
 const showSoftWordMutedWord = computed(() => prefer.s.showSoftWordMutedWord);
 const translation = ref<Misskey.entities.NotesTranslateResponse | null>(null);
 const translating = ref(false);
 const showTicker = (prefer.s.instanceTicker === 'always') || (prefer.s.instanceTicker === 'remote' && appearNote.user.instance);
-const canRenote = computed(() => ['public', 'home'].includes(appearNote.visibility) || (appearNote.visibility === 'followers' && appearNote.userId === $i?.id));
+const canRenote = computed(() => ['public', 'home'].includes($appearNote.visibility) || ($appearNote.visibility === 'followers' && appearNote.userId === $i?.id));
 const renoteCollapsed = ref(
 	prefer.s.collapseRenotes && isRenote && (
 		($i && ($i.id === note.userId || $i.id === appearNote.userId)) || // `||` must be `||`! See https://github.com/misskey-dev/misskey/issues/13131
@@ -688,6 +690,20 @@ function emitUpdReaction(emoji: string, delta: number) {
 		emit('reaction', emoji);
 	}
 }
+
+const router = useRouter();
+
+function openWindow(to) {
+	os.pageWindow(to);
+}
+
+function nav(ev: MouseEvent, to) {
+	if (ev.shiftKey) {
+		return openWindow(to);
+	}
+
+	router.push(to, ev.ctrlKey ? 'forcePage' : null);
+}
 </script>
 
 <style lang="scss" module>
@@ -697,8 +713,11 @@ function emitUpdReaction(emoji: string, delta: number) {
 	overflow: clip;
 	contain: content;
 
-	&:focus-visible {
+	&:focus-visible,
+	&:hover {
 		outline: none;
+		text-decoration: none;
+		cursor: pointer;
 
 		&::after {
 			content: "";

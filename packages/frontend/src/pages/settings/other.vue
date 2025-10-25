@@ -58,6 +58,19 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</MkFolder>
 			</SearchMarker>
 
+			<SearchMarker :keywords="['account', 'clear', 'truncate']">
+				<MkFolder>
+					<template #icon><i class="ti ti-recycle"></i></template>
+					<template #label><SearchLabel>{{ i18n.ts.truncateAccount }}</SearchLabel></template>
+
+					<div class="_gaps_m">
+						<FormInfo warn>{{ i18n.ts._accountTruncate.mayTakeTime }}</FormInfo>
+						<MkButton v-if="!$i.isDeleted" danger @click="truncateAccount">{{ i18n.ts._accountTruncate.requestAccountTruncate }}</MkButton>
+						<MkButton v-else disabled>{{ i18n.ts._accountTruncate.inProgress }}</MkButton>
+					</div>
+				</MkFolder>
+			</SearchMarker>
+
 			<SearchMarker :keywords="['account', 'move', 'migration']">
 				<MkFolder>
 					<template #icon><SearchIcon><i class="ti ti-plane"></i></SearchIcon></template>
@@ -213,6 +226,28 @@ async function deleteAccount() {
 	});
 
 	await signout();
+}
+
+async function truncateAccount() {
+	{
+		const { canceled } = await os.confirm({
+			type: 'warning',
+			text: i18n.ts.truncateAccountConfirm,
+		});
+		if (canceled) return;
+	}
+
+	const auth = await os.authenticateDialog();
+	if (auth.canceled) return;
+
+	await os.apiWithDialog('i/truncate-account', {
+		password: auth.result.password,
+		token: auth.result.token,
+	});
+
+	await os.alert({
+		title: i18n.ts._accountTruncate.started,
+	});
 }
 
 function migrate() {

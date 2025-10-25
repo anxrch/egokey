@@ -44,6 +44,16 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</MkSelect>
 		</SearchMarker>
 
+		<SearchMarker :keywords="['bluesky', 'bridge', 'note', 'visibility']">
+			<MkSwitch v-model="bridgeHomeVisibility" @update:modelValue="save()">
+				<template #label><SearchLabel>{{ i18n.ts.bridgeHomeVisibility }}</SearchLabel></template>
+				<template #caption>
+					<div>{{ i18n.ts.bridgeHomeVisibilityDescription1 }}</div>
+					<div><i class="ti ti-alert-triangle" style="color: var(--MI_THEME-warn);"></i> {{ i18n.ts.bridgeHomeVisibilityDescription2 }}</div>
+				</template>
+			</MkSwitch>
+		</SearchMarker>
+
 		<SearchMarker :keywords="['online', 'status']">
 			<MkSwitch v-model="hideOnlineStatus" @update:modelValue="save()">
 				<template #label><SearchLabel>{{ i18n.ts.hideOnlineStatus }}</SearchLabel></template>
@@ -470,6 +480,7 @@ function save() {
 		publicReactions: !!publicReactions.value,
 		followingVisibility: followingVisibility.value,
 		followersVisibility: followersVisibility.value,
+		bridgeHomeVisibility: !!bridgeHomeVisibility.value,
 		chatScope: chatScope.value,
 	});
 }

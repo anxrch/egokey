@@ -152,13 +152,6 @@ export const paramDef = {
 		perUserListTimelineCacheMax: { type: 'integer' },
 		enableReactionsBuffering: { type: 'boolean' },
 		notesPerOneAd: { type: 'integer' },
-		silencedHosts: {
-			type: 'array',
-			nullable: true,
-			items: {
-				type: 'string',
-			},
-		},
 		mediaSilencedHosts: {
 			type: 'array',
 			nullable: true,
@@ -242,19 +235,12 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			if (Array.isArray(ps.sensitiveWords)) {
 				set.sensitiveWords = ps.sensitiveWords.filter(Boolean);
 			}
+
 			if (Array.isArray(ps.prohibitedWords)) {
 				set.prohibitedWords = ps.prohibitedWords.filter(Boolean);
 			}
 			if (Array.isArray(ps.prohibitedWordsForNameOfUser)) {
 				set.prohibitedWordsForNameOfUser = ps.prohibitedWordsForNameOfUser.filter(Boolean);
-			}
-			if (Array.isArray(ps.silencedHosts)) {
-				let lastValue = '';
-				set.silencedHosts = ps.silencedHosts.sort().filter((h) => {
-					const lv = lastValue;
-					lastValue = h;
-					return h !== '' && h !== lv && !set.blockedHosts?.includes(h);
-				});
 			}
 			if (Array.isArray(ps.mediaSilencedHosts)) {
 				let lastValue = '';
@@ -264,6 +250,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 					return h !== '' && h !== lv && !set.blockedHosts?.includes(h);
 				});
 			}
+
 			if (ps.themeColor !== undefined) {
 				set.themeColor = ps.themeColor;
 			}

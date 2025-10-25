@@ -223,6 +223,14 @@ export interface Locale extends ILocale {
      */
     "copyLinkRenote": string;
     /**
+     * 公開範囲を変更
+     */
+    "changeVisibility": string;
+    /**
+     * このノートの公開範囲を変更しますか？
+     */
+    "changeVisibilityConfirm": string;
+    /**
      * 削除
      */
     "delete": string;
@@ -438,6 +446,18 @@ export interface Locale extends ILocale {
      * デフォルトの公開範囲
      */
     "defaultNoteVisibility": string;
+    /**
+     * Bridgy Fed(bsky.brid.gy)にホーム公開範囲の投稿を伝える
+     */
+    "bridgeHomeVisibility": string;
+    /**
+     * デフォルトでは、Bridgy Fedはホーム公開範囲ノートをBlueskyに転送しないように実装されています。この設定を有効にすると、ホーム公開範囲ノートがBridgy Fedに転送されます。
+     */
+    "bridgeHomeVisibilityDescription1": string;
+    /**
+     * Bridgy Fedにホーム公開範囲ノートを転送する場合、フル公開範囲に切り替えられて転送されることに注意してください。
+     */
+    "bridgeHomeVisibilityDescription2": string;
     /**
      * フォロー
      */
@@ -1003,6 +1023,10 @@ export interface Locale extends ILocale {
      */
     "mutedUsers": string;
     /**
+     * ミュートしたユーザーを匿名化
+     */
+    "deidentifyMutedUsers": string;
+    /**
      * ブロックしたユーザー
      */
     "blockedUsers": string;
@@ -1066,6 +1090,10 @@ export interface Locale extends ILocale {
      * 配信停止
      */
     "suspended": string;
+    /**
+     * サイレンス
+     */
+    "silenced": string;
     /**
      * 全て
      */
@@ -3455,7 +3483,7 @@ export interface Locale extends ILocale {
      */
     "botProtection": string;
     /**
-     * サーバーブロック・サイレンス
+     * サーバーブロック
      */
     "instanceBlocking": string;
     /**
@@ -3755,6 +3783,10 @@ export interface Locale extends ILocale {
      */
     "deleteAccountConfirm": string;
     /**
+     * ダイレクトとピン留めされたノート、関連ドライブのファイルを除くすべてのノートとドライブのファイルが削除されます。続行しますか？
+     */
+    "truncateAccountConfirm": string;
+    /**
      * パスワードが間違っています。
      */
     "incorrectPassword": string;
@@ -3950,6 +3982,10 @@ export interface Locale extends ILocale {
      * アカウント削除
      */
     "deleteAccount": string;
+    /**
+     * アカウント整理
+     */
+    "truncateAccount": string;
     /**
      * ドキュメント
      */
@@ -7866,9 +7902,17 @@ export interface Locale extends ILocale {
              */
             "ltlAvailable": string;
             /**
+             * サーバーサイレンス無視
+             */
+            "ignoreServerSilence": string;
+            /**
              * パブリック投稿の許可
              */
             "canPublicNote": string;
+            /**
+             * ノートの編集
+             */
+            "canEditNote": string;
             /**
              * ノート内の最大メンション数
              */
@@ -8212,6 +8256,28 @@ export interface Locale extends ILocale {
         "started": string;
         /**
          * 削除が進行中
+         */
+        "inProgress": string;
+    };
+    "_accountTruncate": {
+        /**
+         * アカウントの整理
+         */
+        "accountDelete": string;
+        /**
+         * アカウントの整理は負荷のかかる処理であるため、作成したコンテンツの数やアップロードしたファイルの数が多いと完了までに時間がかかることがあります。
+         */
+        "mayTakeTime": string;
+        /**
+         * アカウント整理をリクエスト
+         */
+        "requestAccountTruncate": string;
+        /**
+         * 整理処理が開始されました。
+         */
+        "started": string;
+        /**
+         * 整理が進行中
          */
         "inProgress": string;
     };

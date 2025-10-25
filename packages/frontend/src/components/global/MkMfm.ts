@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import { h } from 'vue';
+import { h, withModifiers } from 'vue';
 import * as mfm from 'mfm-js';
 import * as Misskey from 'misskey-js';
 import { host } from '@@/js/config.js';
@@ -155,12 +155,12 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 					case 'spin': {
 						const direction =
 							token.props.args.left ? 'reverse' :
-							token.props.args.alternate ? 'alternate' :
-							'normal';
+								token.props.args.alternate ? 'alternate' :
+									'normal';
 						const anime =
 							token.props.args.x ? 'mfm-spinX' :
-							token.props.args.y ? 'mfm-spinY' :
-							'mfm-spin';
+								token.props.args.y ? 'mfm-spinY' :
+									'mfm-spin';
 						const speed = validTime(token.props.args.speed) ?? '1.5s';
 						const delay = validTime(token.props.args.delay) ?? '0s';
 						style = useAnim ? `animation: ${anime} ${speed} linear infinite; animation-direction: ${direction}; animation-delay: ${delay};` : '';
@@ -181,8 +181,8 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 					case 'flip': {
 						const transform =
 							(token.props.args.h && token.props.args.v) ? 'scale(-1, -1)' :
-							token.props.args.v ? 'scaleY(-1)' :
-							'scaleX(-1)';
+								token.props.args.v ? 'scaleY(-1)' :
+									'scaleX(-1)';
 						style = `transform: ${transform};`;
 						break;
 					}
@@ -204,12 +204,12 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 					case 'font': {
 						const family =
 							token.props.args.serif ? 'serif' :
-							token.props.args.monospace ? 'monospace' :
-							token.props.args.cursive ? 'cursive' :
-							token.props.args.fantasy ? 'fantasy' :
-							token.props.args.emoji ? 'emoji' :
-							token.props.args.math ? 'math' :
-							null;
+								token.props.args.monospace ? 'monospace' :
+									token.props.args.cursive ? 'cursive' :
+										token.props.args.fantasy ? 'fantasy' :
+											token.props.args.emoji ? 'emoji' :
+												token.props.args.math ? 'math' :
+													null;
 						if (family) style = `font-family: ${family};`;
 						break;
 					}
@@ -319,12 +319,14 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 						]);
 					}
 					case 'clickable': {
-						return h('span', { onClick(ev: MouseEvent): void {
-							ev.stopPropagation();
-							ev.preventDefault();
-							const clickEv = typeof token.props.args.ev === 'string' ? token.props.args.ev : '';
-							emit('clickEv', clickEv);
-						} }, genEl(token.children, scale));
+						return h('span', {
+							onClick(ev: MouseEvent): void {
+								ev.stopPropagation();
+								ev.preventDefault();
+								const clickEv = typeof token.props.args.ev === 'string' ? token.props.args.ev : '';
+								emit('clickEv', clickEv);
+							},
+						}, genEl(token.children, scale));
 					}
 				}
 				if (style === undefined) {
@@ -353,6 +355,7 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 					key: Math.random(),
 					url: token.props.url,
 					rel: 'nofollow noopener',
+					onClick: withModifiers(() => { }, ['stop']),
 					navigationBehavior: props.linkNavigationBehavior,
 				})];
 			}
@@ -362,6 +365,7 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 					key: Math.random(),
 					url: token.props.url,
 					rel: 'nofollow noopener',
+					onClick: withModifiers(() => { }, ['stop']),
 					navigationBehavior: props.linkNavigationBehavior,
 				}, genEl(token.children, scale, true))];
 			}
@@ -371,6 +375,7 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 					key: Math.random(),
 					host: (token.props.host == null && props.author && props.author.host != null ? props.author.host : token.props.host) ?? host,
 					username: token.props.username,
+					onClick: withModifiers(() => { }, ['stop']),
 					navigationBehavior: props.linkNavigationBehavior,
 				})];
 			}
@@ -380,6 +385,7 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 					key: Math.random(),
 					to: isNote ? `/tags/${encodeURIComponent(token.props.hashtag)}` : `/user-tags/${encodeURIComponent(token.props.hashtag)}`,
 					style: 'color:var(--MI_THEME-hashtag);',
+					onClick: withModifiers(() => { }, ['stop']),
 					behavior: props.linkNavigationBehavior,
 				}, `#${token.props.hashtag}`)];
 			}

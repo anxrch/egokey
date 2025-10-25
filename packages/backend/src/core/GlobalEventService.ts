@@ -114,8 +114,10 @@ export interface NoteEventTypes {
 		deletedAt: Date;
 	};
 	updated: {
-		cw: string | null;
-		text: string;
+		cw?: string | null;
+		text?: string | null;
+		visibility?: string;
+		updatedAt: Date;
 	};
 	reacted: {
 		reaction: string;

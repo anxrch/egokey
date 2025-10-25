@@ -153,6 +153,7 @@ export const moderationLogTypes = [
 	'promoteQueue',
 	'deleteDriveFile',
 	'deleteNote',
+	'updateNote',
 	'createGlobalAnnouncement',
 	'createUserAnnouncement',
 	'updateGlobalAnnouncement',
@@ -194,7 +195,9 @@ export const moderationLogTypes = [
 export const rolePolicies = [
 	'gtlAvailable',
 	'ltlAvailable',
+	'ignoreServerSilence',
 	'canPublicNote',
+	'canEditNote',
 	'mentionLimit',
 	'canInvite',
 	'inviteLimit',
@@ -350,6 +353,13 @@ export type ModerationLogPayloads = {
 		noteUserUsername: string;
 		noteUserHost: string | null;
 		note: Note;
+	};
+	updateNote: {
+		noteId: string;
+		noteUserId: string;
+		noteUserUsername: string;
+		noteUserHost: string | null;
+		note: any;
 	};
 	createGlobalAnnouncement: {
 		announcementId: string;

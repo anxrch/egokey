@@ -31,6 +31,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					'deleteUserAnnouncement',
 					'deleteCustomEmoji',
 					'deleteNote',
+					'updateNote',
 					'deleteDriveFile',
 					'deleteAd',
 					'deleteAvatarDecoration',
@@ -67,6 +68,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<span v-else-if="log.type === 'updateUserAnnouncement'">: @{{ log.info.userUsername }}{{ log.info.userHost ? '@' + log.info.userHost : '' }}</span>
 		<span v-else-if="log.type === 'deleteUserAnnouncement'">: @{{ log.info.userUsername }}{{ log.info.userHost ? '@' + log.info.userHost : '' }}</span>
 		<span v-else-if="log.type === 'deleteNote'">: @{{ log.info.noteUserUsername }}{{ log.info.noteUserHost ? '@' + log.info.noteUserHost : '' }}</span>
+		<span v-else-if="log.type === 'updateNote'">: @{{ log.info.noteUserUsername }}{{ log.info.noteUserHost ? '@' + log.info.noteUserHost : '' }}</span>
 		<span v-else-if="log.type === 'deleteDriveFile'">: @{{ log.info.fileUserUsername }}{{ log.info.fileUserHost ? '@' + log.info.fileUserHost : '' }}</span>
 		<span v-else-if="log.type === 'createAvatarDecoration'">: {{ log.info.avatarDecoration.name }}</span>
 		<span v-else-if="log.type === 'updateAvatarDecoration'">: {{ log.info.before.name }}</span>

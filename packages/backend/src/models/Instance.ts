@@ -80,6 +80,12 @@ export class MiInstance {
 	})
 	public isNotResponding: boolean;
 
+	@Index()
+	@Column('boolean', {
+		default: false,
+	})
+	public isSilenced: boolean;
+
 	/**
 	 * このインスタンスと不通になった日時
 	 */

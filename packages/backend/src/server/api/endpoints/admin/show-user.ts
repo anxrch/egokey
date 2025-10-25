@@ -179,6 +179,10 @@ export const meta = {
 					},
 				},
 			},
+			bridgeHomeVisibility: {
+				type: 'boolean',
+				nullable: false, optional: false,
+			},
 		},
 	},
 } as const;
@@ -259,6 +263,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 					expiresAt: a.expiresAt ? a.expiresAt.toISOString() : null,
 					roleId: a.roleId,
 				})),
+				bridgeHomeVisibility: profile.bridgeHomeVisibility,
 			};
 		});
 	}

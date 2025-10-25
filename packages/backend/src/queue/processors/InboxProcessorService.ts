@@ -66,6 +66,9 @@ export class InboxProcessorService implements OnApplicationShutdown {
 	public async process(job: Bull.Job<InboxJobData>): Promise<string> {
 		const signature = job.data.signature;	// HTTP-signature
 		let activity = job.data.activity;
+		if (activity === null) {
+			return 'Empty activity data';
+		}
 
 		//#region Log
 		const info = Object.assign({}, activity);

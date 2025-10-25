@@ -306,6 +306,14 @@ export type NoteUpdatedEvent = { id: Note['id'] } & ({
 		deletedAt: string;
 	};
 } | {
+	type: 'updated';
+	body: {
+		cw?: string | null;
+		text?: string;
+		visibility?: string;
+		updatedAt: Date;
+	};
+} | {
 	type: 'pollVoted';
 	body: {
 		choice: number;

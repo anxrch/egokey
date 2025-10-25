@@ -188,6 +188,7 @@ export class ApRendererService {
 				// || emoji.originalUrl してるのは後方互換性のため（publicUrlはstringなので??はだめ）
 				url: emoji.publicUrl || emoji.originalUrl,
 			},
+			sensitive: emoji.isSensitive,
 			_misskey_license: {
 				freeText: emoji.license,
 			},
@@ -492,6 +493,7 @@ export class ApRendererService {
 			_misskey_quote: quote,
 			quoteUrl: quote,
 			published: this.idService.parse(note.id).date.toISOString(),
+			updated: note.updatedAt?.toISOString() ?? undefined,
 			to,
 			cc,
 			inReplyTo,

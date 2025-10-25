@@ -176,6 +176,10 @@ export const store = markRaw(new Pizzax('base', {
 		where: 'account',
 		default: false,
 	},
+	deidentifyMutedUsers: {
+		where: 'account',
+		default: true,
+	},
 	menu: {
 		where: 'deviceAccount',
 		default: [
