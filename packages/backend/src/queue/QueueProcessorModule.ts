@@ -22,6 +22,7 @@ import { CleanRemoteNotesProcessorService } from './processors/CleanRemoteNotesP
 import { CleanRemoteFilesProcessorService } from './processors/CleanRemoteFilesProcessorService.js';
 import { DeleteAccountProcessorService } from './processors/DeleteAccountProcessorService.js';
 import { TruncateAccountProcessorService } from './processors/TruncateAccountProcessorService.js';
+import { TruncateAccountKeepDriveProcessorService } from './processors/TruncateAccountKeepDriveProcessorService.js';
 import { DeleteDriveFilesProcessorService } from './processors/DeleteDriveFilesProcessorService.js';
 import { DeleteFileProcessorService } from './processors/DeleteFileProcessorService.js';
 import { ExportBlockingProcessorService } from './processors/ExportBlockingProcessorService.js';
@@ -74,7 +75,8 @@ import { RelationshipProcessorService } from './processors/RelationshipProcessor
 		ImportCustomEmojisProcessorService,
 		ImportAntennasProcessorService,
 		DeleteAccountProcessorService,
-		TruncateAccountProcessorService,
+        TruncateAccountProcessorService,
+        TruncateAccountKeepDriveProcessorService,
 		DeleteFileProcessorService,
 		CleanRemoteFilesProcessorService,
 		RelationshipProcessorService,
