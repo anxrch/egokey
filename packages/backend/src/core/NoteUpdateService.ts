@@ -146,10 +146,11 @@ export class NoteUpdateService implements OnApplicationShutdown {
         const updatedNote = await this.updateNote(note, data, files);
 
         this.globalEventService.publishNoteStream(note.id, 'updated', {
-            ...data,
-            revisionId: revision.id,
-            version: revision.version,
-        });
+            cw: data.cw,
+            text: data.text,
+            visibility: data.visibility,
+            updatedAt: data.updatedAt,
+        } as any);
 
         setImmediate('post updating', { signal: this.#shutdownController.signal }).then(
             () => this.postNoteUpdated(updatedNote, user, silent),
@@ -205,7 +206,7 @@ export class NoteUpdateService implements OnApplicationShutdown {
 
         // Update localOnly
         if (data.localOnly !== undefined) {
-            update.localOnly = data.localOnly;
+            update.localOnly = data.localOnly ?? false;
         }
 
         // Update files
@@ -311,9 +312,12 @@ export class NoteUpdateService implements OnApplicationShutdown {
 
     @bindThis
     private async renderNoteActivity(user: { id: MiLocalUser['id']; }, note: MiNote) {
+        // Skip local-only notes and specified visibility notes from federation
         if (note.localOnly) return null;
+        if (note.visibility === 'specified') return null;
 
-        const content = this.apRendererService.renderUpdate(await this.apRendererService.renderNote(note, false), user);
+        const noteObject = await this.apRendererService.renderNote(note, false);
+        const content = this.apRendererService.renderUpdate(noteObject, user);
 
         return this.apRendererService.addContext(content);
     }
