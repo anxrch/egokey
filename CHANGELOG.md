@@ -13,6 +13,7 @@
 - Enhance: Note edit metadata (`isEdited`, `editCount`, `latestEditedAt`) is now exposed in API responses and SDK types
   - The `notes/update` endpoint response now includes the updated note with edit metadata
   - misskey-js SDK types have been regenerated to include these fields in the `Note` entity type
+- Fix: Added migration `1761474107567-AlignNoteUpdatedAtComment` to align the `note.updatedAt` column comment so TypeORM schema checks pass cleanly
 
 
 ## 2025.10.1
