@@ -3048,6 +3048,15 @@ export type paths = {
          */
         post: operations['notes___drafts___update'];
     };
+    '/notes/edit-history': {
+        /**
+         * notes/edit-history
+         * @description No description provided.
+         *
+         *     **Credential required**: *No*
+         */
+        post: operations['notes___edit-history'];
+    };
     '/notes/favorites/create': {
         /**
          * notes/favorites/create
@@ -4456,6 +4465,10 @@ export type components = {
             clippedCount?: number;
             hasPoll?: boolean;
             myReaction?: string | null;
+            isEdited?: boolean;
+            editCount?: number;
+            /** Format: date-time */
+            latestEditedAt?: string | null;
         };
         NoteDraft: {
             /**
@@ -29776,6 +29789,87 @@ export interface operations {
             };
         };
     };
+    'notes___edit-history': {
+        requestBody: {
+            content: {
+                'application/json': {
+                    /** Format: misskey:id */
+                    noteId: string;
+                    /** @default 10 */
+                    limit?: number;
+                    /** Format: misskey:id */
+                    sinceId?: string;
+                    /** Format: misskey:id */
+                    untilId?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK (with results) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': {
+                        /** Format: id */
+                        id: string;
+                        version: number;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: id */
+                        editorId: string;
+                        payload: Record<string, never>;
+                    }[];
+                };
+            };
+            /** @description Client error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Authentication error */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Forbidden error */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description I'm Ai */
+            418: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+        };
+    };
     notes___favorites___create: {
         requestBody: {
             content: {
@@ -31551,7 +31645,14 @@ export interface operations {
                     cw?: string | null;
                     /** @enum {string} */
                     visibility?: 'public' | 'home' | 'followers' | 'specified';
-                } | unknown | unknown;
+                    localOnly?: boolean;
+                    fileIds?: string[];
+                    poll?: {
+                        choices: string[];
+                        multiple?: boolean;
+                        expiresAt?: number | null;
+                    } | null;
+                } | unknown | unknown | unknown | unknown | unknown | unknown;
             };
         };
         responses: {
@@ -31562,7 +31663,7 @@ export interface operations {
                 };
                 content: {
                     'application/json': {
-                        createdNote: components['schemas']['Note'];
+                        updatedNote: components['schemas']['Note'];
                     };
                 };
             };
