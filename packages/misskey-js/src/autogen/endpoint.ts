@@ -506,6 +506,8 @@ import type {
 	NotesDraftsListResponse,
 	NotesDraftsUpdateRequest,
 	NotesDraftsUpdateResponse,
+	NotesEditHistoryRequest,
+	NotesEditHistoryResponse,
 	NotesFavoritesCreateRequest,
 	NotesFavoritesDeleteRequest,
 	NotesFeaturedRequest,
@@ -995,6 +997,7 @@ export type Endpoints = {
 	'notes/drafts/delete': { req: NotesDraftsDeleteRequest; res: EmptyResponse };
 	'notes/drafts/list': { req: NotesDraftsListRequest; res: NotesDraftsListResponse };
 	'notes/drafts/update': { req: NotesDraftsUpdateRequest; res: NotesDraftsUpdateResponse };
+	'notes/edit-history': { req: NotesEditHistoryRequest; res: NotesEditHistoryResponse };
 	'notes/favorites/create': { req: NotesFavoritesCreateRequest; res: EmptyResponse };
 	'notes/favorites/delete': { req: NotesFavoritesDeleteRequest; res: EmptyResponse };
 	'notes/featured': { req: NotesFeaturedRequest; res: NotesFeaturedResponse };
