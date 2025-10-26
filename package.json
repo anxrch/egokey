@@ -85,7 +85,16 @@
     },
     "pnpm": {
         "overrides": {
-            "@aiscript-dev/aiscript-languageserver": "-"
+            "@aiscript-dev/aiscript-languageserver": "-",
+            "axios": ">=1.12.2"
+        },
+        "patchedDependencies": {
+            "@misskey-dev/summaly@5.2.4": "patches/@misskey-dev__summaly@5.2.4.patch"
+        },
+        "auditConfig": {
+            "ignoreCves": [
+                "GHSA-9h3q-32c7-r533"
+            ]
         }
     }
 }
