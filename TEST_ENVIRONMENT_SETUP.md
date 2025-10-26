@@ -2,7 +2,211 @@
 
 ## Overview
 
-This document describes how the frontend test environment is configured to run tests in isolation without requiring external services or network connectivity.
+This document describes how to set up and run all types of tests in Misskey, including frontend unit tests, backend unit tests, backend e2e tests, and Cypress e2e tests.
+
+## Quick Start - Running E2E Tests
+
+### Prerequisites
+
+- Docker and Docker Compose installed
+- Node.js 22.15.0 or later
+- pnpm 10.18.2 (will be used automatically via packageManager field)
+
+### One-Command E2E Test Setup
+
+To run the complete e2e test suite:
+
+```bash
+# 1. Start test databases (PostgreSQL and Redis)
+./scripts/start-test-db.sh
+
+# 2. Run backend e2e tests
+pnpm --filter backend test:e2e
+
+# 3. Run Cypress e2e tests (starts backend server automatically)
+pnpm e2e
+
+# 4. Clean up test databases when done
+./scripts/stop-test-db.sh
+```
+
+### Test Database Management Scripts
+
+Three helper scripts are provided to manage test databases:
+
+- **`./scripts/start-test-db.sh`**: Starts PostgreSQL (port 54312) and Redis (port 56312) containers, waits until they're ready
+- **`./scripts/stop-test-db.sh`**: Stops the test database containers
+- **`./scripts/clean-test-db.sh`**: Stops containers and removes all volumes (complete cleanup)
+
+## Backend E2E Tests
+
+### Configuration
+
+Backend e2e tests use the configuration file at `.config/test.yml`, which is committed to the repository. This configuration specifies:
+
+- Test server port: 61812
+- PostgreSQL: localhost:54312, database `test-misskey`
+- Redis: localhost:56312
+- Test ID algorithm: `aidx`
+
+### Running Backend E2E Tests
+
+```bash
+# Start test databases
+./scripts/start-test-db.sh
+
+# Build and run backend e2e tests
+pnpm --filter backend test:e2e
+
+# Stop test databases when done
+./scripts/stop-test-db.sh
+```
+
+The `test:e2e` script automatically:
+1. Builds the backend (`pnpm build`)
+2. Builds the test server (`pnpm build:test`)
+3. Runs Jest with the e2e configuration
+
+### Test Database Details
+
+The test databases run in Docker containers defined in `packages/backend/test/compose.yml`:
+
+- **PostgreSQL 15**: 
+  - Port mapping: 127.0.0.1:54312 → container:5432
+  - Database: test-misskey
+  - Auth: trust method (no password required)
+  
+- **Redis 7**:
+  - Port mapping: 127.0.0.1:56312 → container:6379
+
+## Cypress E2E Tests
+
+Cypress tests verify the full application stack, including the frontend UI.
+
+### Running Cypress Tests
+
+```bash
+# Start test databases
+./scripts/start-test-db.sh
+
+# Run Cypress tests (headless)
+pnpm e2e
+
+# Or open Cypress UI for interactive testing
+pnpm cy:open
+
+# Stop test databases when done
+./scripts/stop-test-db.sh
+```
+
+The `pnpm e2e` command uses `start-server-and-test` to:
+1. Copy `.config/test.yml` to the correct location (if needed)
+2. Start the backend server in test mode on port 61812
+3. Wait for the server to respond at http://localhost:61812
+4. Run Cypress tests against the server
+5. Shut down the server after tests complete
+
+### Cypress Configuration
+
+- Base URL: http://localhost:61812 (configured in `cypress.config.ts`)
+- Test files: Located in `cypress/` directory
+- Screenshots and videos: Saved to `cypress/screenshots` and `cypress/videos` (gitignored)
+
+### Browser Requirements
+
+Cypress requires a browser to be installed. If running in a headless environment (e.g., CI), ensure Chromium or Firefox is available:
+
+```bash
+# Ubuntu/Debian
+sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev \
+  libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+
+# Or use the Cypress Docker image
+docker run -it -v $PWD:/e2e -w /e2e cypress/included:15.4.0
+```
+
+## Package.json Scripts
+
+The root `package.json` provides convenience scripts for managing test databases:
+
+```bash
+# Start test databases
+pnpm test-db:start
+
+# Stop test databases
+pnpm test-db:stop
+
+# Clean test databases (stop and remove volumes)
+pnpm test-db:clean
+```
+
+## Troubleshooting E2E Tests
+
+### Connection Errors
+
+**Issue**: Tests fail with "ECONNREFUSED" or connection timeout errors.
+
+**Solutions**:
+1. Ensure test databases are running: `pnpm test-db:start`
+2. Check Docker is running: `docker ps`
+3. Verify ports are not in use: `lsof -i :54312` and `lsof -i :56312`
+4. Check database logs: `cd packages/backend/test && docker compose logs`
+
+### Missing Configuration
+
+**Issue**: Tests fail with "Cannot find configuration" errors.
+
+**Solution**: The `.config/test.yml` file should be committed to the repository. If it's missing, copy it from `.github/misskey/test.yml`:
+```bash
+cp .github/misskey/test.yml .config/test.yml
+```
+
+### Build Errors
+
+**Issue**: Tests fail with missing module errors (e.g., `Cannot find module 'misskey-js'`).
+
+**Solution**: Build all required packages:
+```bash
+pnpm build-pre
+pnpm --filter misskey-js build
+pnpm --filter misskey-reversi build
+pnpm --filter misskey-bubble-game build
+pnpm --filter backend build
+pnpm --filter backend build:test
+```
+
+Or use the full build command:
+```bash
+pnpm build
+```
+
+### Database Migration Issues
+
+**Issue**: Tests fail with database schema errors.
+
+**Solution**: The test database schema is automatically managed by the test server. If you encounter persistent issues:
+```bash
+# Clean the database completely
+pnpm test-db:clean
+
+# Start fresh
+pnpm test-db:start
+```
+
+### Port Conflicts
+
+**Issue**: Tests fail because ports 54312, 56312, or 61812 are already in use.
+
+**Solution**:
+1. Find what's using the port: `lsof -i :54312`
+2. Either stop the conflicting process or update port numbers in:
+   - `.config/test.yml`
+   - `packages/backend/test/compose.yml`
+   - `cypress.config.ts` (if applicable)
+
+## Frontend Unit Tests (Vitest)
+
+Frontend unit tests run in isolation without requiring external services or network connectivity.
 
 ## Network Request Mocking
 
