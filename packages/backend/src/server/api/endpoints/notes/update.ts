@@ -30,7 +30,7 @@ export const meta = {
         type: 'object',
         optional: false, nullable: false,
         properties: {
-            createdNote: {
+            updatedNote: {
                 type: 'object',
                 optional: false, nullable: false,
                 ref: 'Note',
@@ -99,6 +99,7 @@ export const paramDef = {
     required: ['noteId'],
     anyOf: [
         { required: ['text'] },
+        { required: ['cw'] },
         { required: ['visibility'] },
         { required: ['fileIds'] },
         { required: ['poll'] },
@@ -123,11 +124,20 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
                 throw err;
             });
 
-            if (ps.visibility !== note.visibility && !await this.roleService.isModerator(me) && !await this.roleService.isAdministrator(me)) {
+            const isModerator = await this.roleService.isModerator(me);
+            const isAdministrator = await this.roleService.isAdministrator(me);
+
+            // Check if user is the note author or has moderator/admin privileges
+            if (note.userId !== me.id && !isModerator && !isAdministrator) {
                 throw new ApiError(meta.errors.accessDenied);
             }
 
-            if (ps.text === undefined && ps.visibility === undefined && ps.fileIds === undefined && ps.poll === undefined && ps.localOnly === undefined) {
+            // Moderators/admins can change visibility, but regular users cannot change it if they're not the author
+            if (ps.visibility !== undefined && ps.visibility !== note.visibility && !isModerator && !isAdministrator) {
+                throw new ApiError(meta.errors.accessDenied);
+            }
+
+            if (ps.text === undefined && ps.cw === undefined && ps.visibility === undefined && ps.fileIds === undefined && ps.poll === undefined && ps.localOnly === undefined) {
                 throw new ApiError(meta.errors.invalidParam);
             }
 
@@ -157,7 +167,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
             }, false, me);
 
             return {
-                createdNote: await this.noteEntityService.pack(updatedNote, me),
+                updatedNote: await this.noteEntityService.pack(updatedNote, me),
             };
         });
     }
