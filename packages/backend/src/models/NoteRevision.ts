@@ -35,12 +35,12 @@ import { MiUser } from './User.js';
  * - used to order revisions chronologically
  */
 @Entity('note_revision')
-@Index(['noteId', 'version'], { unique: true })
+@Index('IDX_note_revision_noteId_version', ['noteId', 'version'], { unique: true })
 export class MiNoteRevision {
 	@PrimaryColumn(id())
 	public id: string;
 
-	@Index()
+	@Index('IDX_note_revision_noteId')
 	@Column({
 		...id(),
 		comment: 'The ID of the note this revision belongs to.',
@@ -50,10 +50,10 @@ export class MiNoteRevision {
 	@ManyToOne(type => MiNote, {
 		onDelete: 'CASCADE',
 	})
-	@JoinColumn()
+	@JoinColumn({ name: 'noteId', foreignKeyConstraintName: 'FK_note_revision_noteId' })
 	public note: MiNote | null;
 
-	@Index()
+	@Index('IDX_note_revision_editorId')
 	@Column({
 		...id(),
 		comment: 'The ID of the user who created this revision (editor).',
@@ -63,7 +63,7 @@ export class MiNoteRevision {
 	@ManyToOne(type => MiUser, {
 		onDelete: 'CASCADE',
 	})
-	@JoinColumn()
+	@JoinColumn({ name: 'editorId', foreignKeyConstraintName: 'FK_note_revision_editorId' })
 	public editor: MiUser | null;
 
 	@Column('integer', {
@@ -71,7 +71,7 @@ export class MiNoteRevision {
 	})
 	public version: number;
 
-	@Index()
+	@Index('IDX_note_revision_createdAt')
 	@Column('timestamp with time zone', {
 		comment: 'The date this revision was created.',
 	})
