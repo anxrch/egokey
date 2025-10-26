@@ -81,7 +81,19 @@ export async function common(createVue: () => Promise<App<Element>>) {
 	//#endregion
 
 	//#region Detect language & fetch translations
-	storeBootloaderErrors({ ...i18n.ts._bootErrors, reload: i18n.ts.reload });
+	const localeVersion = miLocalStorage.getItem('localeVersion');
+	const localeOutdated = (localeVersion == null || localeVersion !== version || locale == null);
+	if (localeOutdated) {
+		const res = await window.fetch(`/assets/locales/${lang}.${version}.json`);
+		if (res.status === 200) {
+			const newLocale = await res.text();
+			const parsedNewLocale = JSON.parse(newLocale);
+			miLocalStorage.setItem('locale', newLocale);
+			miLocalStorage.setItem('localeVersion', version);
+			updateLocale(parsedNewLocale);
+			updateI18n(parsedNewLocale);
+		}
+	}
 
 	if (import.meta.hot) {
 		import.meta.hot.on('locale-update', async (updatedLang: string) => {
