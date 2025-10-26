@@ -9,6 +9,7 @@ import * as fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 import { Test } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
 import { jest } from '@jest/globals';
 
@@ -72,7 +73,7 @@ function createRandomNote(actor: NonTransientIActor, options: Partial<IPost> = {
 }
 
 describe('Federated Note Edits', () => {
-    let app: any;
+    let app: TestingModule;
     let config: Config;
     let noteService: ApNoteService;
     let personService: ApPersonService;
@@ -141,7 +142,7 @@ describe('Federated Note Edits', () => {
 
         // Mock notification creation to avoid user profile lookup issues during tests
         const notificationService = app.get<NotificationService>(NotificationService);
-        jest.spyOn(notificationService, 'createNotification').mockResolvedValue(null as any);
+        jest.spyOn(notificationService, 'createNotification').mockImplementation(() => undefined);
     });
 
     afterAll(async () => {

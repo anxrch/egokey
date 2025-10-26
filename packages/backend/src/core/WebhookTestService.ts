@@ -396,6 +396,9 @@ export class WebhookTestService {
             uri: note.uri ?? undefined,
             url: note.url ?? undefined,
             reactionAndUserPairCache: note.reactionAndUserPairCache,
+            isEdited: false,
+            editCount: 0,
+            latestEditedAt: null,
             ...(detail ? {
                 clippedCount: note.clippedCount,
                 reply: note.reply ? await this.toPackedNote(note.reply, false) : null,
