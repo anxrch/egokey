@@ -1,0 +1,50 @@
+diff --git a/built/utils/got.js b/built/utils/got.js
+index 4f49a66410a124fdc9ce3db63e942d2725f33446..142baa4c41011281c2a1b26778744f81d57597f5 100644
+--- a/built/utils/got.js
++++ b/built/utils/got.js
+@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
+ import { readFileSync } from 'node:fs';
+ import got, * as Got from 'got';
+ import * as cheerio from 'cheerio';
+-import PrivateIp from 'private-ip';
++import ipaddr from 'ipaddr.js';
+ import { StatusError } from '../utils/status-error.js';
+ import { detectEncoding, toUtf8 } from '../utils/encoding.js';
+ const _filename = fileURLToPath(import.meta.url);
+@@ -13,6 +13,12 @@ export function setAgent(_agent) {
+     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+     agent = _agent || {};
+ }
++function isPrivateIp(ip) {
++    if (!ipaddr.isValid(ip))
++        return false;
++    const parsedIp = ipaddr.parse(ip);
++    return parsedIp.range() !== 'unicast';
++}
+ const repo = JSON.parse(readFileSync(`${_dirname}/../../package.json`, 'utf8'));
+ export const DEFAULT_RESPONSE_TIMEOUT = 20 * 1000;
+ export const DEFAULT_OPERATION_TIMEOUT = 60 * 1000;
+@@ -96,7 +102,7 @@ export async function getResponse(args) {
+     // TODO: Try moving this to receiveResponse- ATM `got` doesn't provide a means
+     // to check the IP/response header data while streaming the response...
+     const allowPrivateIp = process.env.SUMMALY_ALLOW_PRIVATE_IP === 'true' || Object.keys(agent).length > 0;
+-    if (!allowPrivateIp && res.ip && PrivateIp(res.ip)) {
++    if (!allowPrivateIp && res.ip && isPrivateIp(res.ip)) {
+         throw new StatusError(`Private IP rejected ${res.ip}`, 400, 'Private IP Rejected');
+     }
+     // Check html
+diff --git a/package.json b/package.json
+index 66ebc2bff09e60628bf1844fd6ec8e03384791dc..895050565ddb5b2473833bf61190b63bd61d838b 100644
+--- a/package.json
++++ b/package.json
+@@ -35,8 +35,8 @@
+     "got": "^14.4.9",
+     "html-entities": "2.6.0",
+     "iconv-lite": "0.7.0",
+-    "jschardet": "3.1.4",
+-    "private-ip": "3.0.2"
++    "ipaddr.js": "2.2.0",
++    "jschardet": "3.1.4"
+   },
+   "scripts": {
+     "build": "tsc && tsc-alias",

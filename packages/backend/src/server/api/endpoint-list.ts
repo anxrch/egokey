@@ -52,6 +52,8 @@ export * as 'admin/emoji/set-aliases-bulk' from './endpoints/admin/emoji/set-ali
 export * as 'admin/emoji/set-category-bulk' from './endpoints/admin/emoji/set-category-bulk.js';
 export * as 'admin/emoji/set-license-bulk' from './endpoints/admin/emoji/set-license-bulk.js';
 export * as 'admin/emoji/update' from './endpoints/admin/emoji/update.js';
+export * as 'i/auto-delete-settings' from './endpoints/i/auto-delete-settings.js';
+export * as 'i/update-auto-delete-settings' from './endpoints/i/update-auto-delete-settings.js';
 export * as 'admin/federation/delete-all-files' from './endpoints/admin/federation/delete-all-files.js';
 export * as 'admin/federation/refresh-remote-instance-metadata' from './endpoints/admin/federation/refresh-remote-instance-metadata.js';
 export * as 'admin/federation/remove-all-following' from './endpoints/admin/federation/remove-all-following.js';
@@ -312,6 +314,7 @@ export * as 'notes/clips' from './endpoints/notes/clips.js';
 export * as 'notes/conversation' from './endpoints/notes/conversation.js';
 export * as 'notes/create' from './endpoints/notes/create.js';
 export * as 'notes/delete' from './endpoints/notes/delete.js';
+export * as 'notes/edit-history' from './endpoints/notes/edit-history.js';
 export * as 'notes/drafts/list' from './endpoints/notes/drafts/list.js';
 export * as 'notes/drafts/create' from './endpoints/notes/drafts/create.js';
 export * as 'notes/drafts/delete' from './endpoints/notes/drafts/delete.js';

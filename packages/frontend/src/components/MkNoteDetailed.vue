@@ -128,12 +128,20 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</div>
 		<footer>
 			<div :class="$style.noteFooterInfo">
-				<div v-if="$appearNote.updatedAt">
+				<button
+					v-if="$appearNote.updatedAt"
+					class="_button"
+					:class="$style.editedButton"
+					@click.stop="showEditHistory"
+				>
+					<i class="ti ti-pencil"></i>
 					{{ i18n.ts.edited }}: <MkTime :time="$appearNote.updatedAt" mode="detail"/>
+				</button>
+				<div>
+					<MkA :to="notePage(appearNote)">
+						<MkTime :time="appearNote.createdAt" mode="detail" colored/>
+					</MkA>
 				</div>
-				<MkA :to="notePage(appearNote)">
-					<MkTime :time="appearNote.createdAt" mode="detail" colored/>
-				</MkA>
 			</div>
 			<MkReactionsViewer
 				v-if="appearNote.reactionAcceptance !== 'likeOnly'"
@@ -231,7 +239,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, markRaw, onMounted, provide, ref, useTemplateRef } from 'vue';
+import { computed, defineAsyncComponent, inject, markRaw, onMounted, provide, ref, useTemplateRef } from 'vue';
 import * as mfm from 'mfm-js';
 import * as Misskey from 'misskey-js';
 import { isLink } from '@@/js/is-link.js';
@@ -441,6 +449,19 @@ if (appearNote.reactionAcceptance === 'likeOnly') {
 	});
 }
 
+function showEditHistory() {
+	const { dispose } = os.popup(
+		defineAsyncComponent(() => import('@/components/MkNoteEditHistoryDialog.vue')),
+		{
+			noteId: appearNote.id,
+			currentNote: appearNote,
+		},
+		{
+			closed: () => dispose(),
+		},
+	);
+}
+
 function renote() {
 	pleaseLogin({ openOnRemote: pleaseLoginContext.value });
 	showMovedDialog();
@@ -617,337 +638,355 @@ loadConversation();
 
 <style lang="scss" module>
 .root {
-	position: relative;
-	transition: box-shadow 0.1s ease;
-	overflow: clip;
-	contain: content;
+    position: relative;
+    transition: box-shadow 0.1s ease;
+    overflow: clip;
+    contain: content;
 
-	&:focus-visible {
-		outline: none;
+    &:focus-visible {
+        outline: none;
 
-		&::after {
-			content: "";
-			pointer-events: none;
-			display: block;
-			position: absolute;
-			z-index: 10;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			margin: auto;
-			width: calc(100% - 8px);
-			height: calc(100% - 8px);
-			border: dashed 2px var(--MI_THEME-focus);
-			border-radius: var(--MI-radius);
-			box-sizing: border-box;
-		}
-	}
+        &::after {
+            content: "";
+            pointer-events: none;
+            display: block;
+            position: absolute;
+            z-index: 10;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            width: calc(100% - 8px);
+            height: calc(100% - 8px);
+            border: dashed 2px var(--MI_THEME-focus);
+            border-radius: var(--MI-radius);
+            box-sizing: border-box;
+        }
+    }
 }
 
 .replyTo {
-	opacity: 0.7;
-	padding-bottom: 0;
+    opacity: 0.7;
+    padding-bottom: 0;
 }
 
 .replyToMore {
-	opacity: 0.7;
+    opacity: 0.7;
 }
 
 .renote {
-	display: flex;
-	align-items: center;
-	padding: 16px 32px 8px 32px;
-	line-height: 28px;
-	white-space: pre;
-	color: var(--MI_THEME-renote);
+    display: flex;
+    align-items: center;
+    padding: 16px 32px 8px 32px;
+    line-height: 28px;
+    white-space: pre;
+    color: var(--MI_THEME-renote);
 }
 
 .renoteAvatar {
-	flex-shrink: 0;
-	display: inline-block;
-	width: 28px;
-	height: 28px;
-	margin: 0 8px 0 0;
-	border-radius: 6px;
+    flex-shrink: 0;
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    margin: 0 8px 0 0;
+    border-radius: 6px;
 }
 
 .renoteText {
-	overflow: hidden;
-	flex-shrink: 1;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+    overflow: hidden;
+    flex-shrink: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .renoteName {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .renoteInfo {
-	margin-left: auto;
-	font-size: 0.9em;
+    margin-left: auto;
+    font-size: 0.9em;
 }
 
 .renoteTime {
-	flex-shrink: 0;
-	color: inherit;
+    flex-shrink: 0;
+    color: inherit;
 }
 
 .renote + .note {
-	padding-top: 8px;
+    padding-top: 8px;
 }
 
 .note {
-	padding: 32px;
-	font-size: 1.2em;
+    padding: 32px;
+    font-size: 1.2em;
 
-	&:hover > .main > .footer > .button {
-		opacity: 1;
-	}
+    &:hover > .main > .footer > .button {
+        opacity: 1;
+    }
 }
 
 .noteHeader {
-	display: flex;
-	position: relative;
-	margin-bottom: 16px;
-	align-items: center;
+    display: flex;
+    position: relative;
+    margin-bottom: 16px;
+    align-items: center;
 }
 
 .noteHeaderAvatar {
-	display: block;
-	flex-shrink: 0;
-	width: 58px;
-	height: 58px;
+    display: block;
+    flex-shrink: 0;
+    width: 58px;
+    height: 58px;
 }
 
 .noteHeaderBody {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	padding-left: 16px;
-	font-size: 0.95em;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 16px;
+    font-size: 0.95em;
 }
 
 .noteHeaderName {
-	font-weight: bold;
-	line-height: 1.3;
+    font-weight: bold;
+    line-height: 1.3;
 }
 
 .isBot {
-	display: inline-block;
-	margin: 0 0.5em;
-	padding: 4px 6px;
-	font-size: 80%;
-	line-height: 1;
-	border: solid 0.5px var(--MI_THEME-divider);
-	border-radius: 4px;
+    display: inline-block;
+    margin: 0 0.5em;
+    padding: 4px 6px;
+    font-size: 80%;
+    line-height: 1;
+    border: solid 0.5px var(--MI_THEME-divider);
+    border-radius: 4px;
 }
 
 .noteHeaderInfo {
-	float: right;
+    float: right;
 }
 
 .noteHeaderUsernameAndBadgeRoles {
-	display: flex;
+    display: flex;
 }
 
 .noteHeaderUsername {
-	margin-bottom: 2px;
-	margin-right: 0.5em;
-	line-height: 1.3;
-	word-wrap: anywhere;
+    margin-bottom: 2px;
+    margin-right: 0.5em;
+    line-height: 1.3;
+    word-wrap: anywhere;
 }
 
 .noteHeaderBadgeRoles {
-	margin: 0 .5em 0 0;
+    margin: 0 .5em 0 0;
 }
 
 .noteHeaderBadgeRole {
-	height: 1.3em;
-	vertical-align: -20%;
+    height: 1.3em;
+    vertical-align: -20%;
 
-	& + .noteHeaderBadgeRole {
-		margin-left: 0.2em;
-	}
+    & + .noteHeaderBadgeRole {
+        margin-left: 0.2em;
+    }
 }
 
 .noteContent {
-	container-type: inline-size;
-	overflow-wrap: break-word;
+    container-type: inline-size;
+    overflow-wrap: break-word;
 }
 
 .cw {
-	cursor: default;
-	display: block;
-	margin: 0;
-	padding: 0;
-	overflow-wrap: break-word;
+    cursor: default;
+    display: block;
+    margin: 0;
+    padding: 0;
+    overflow-wrap: break-word;
 }
 
 .noteReplyTarget {
-	color: var(--MI_THEME-accent);
-	margin-right: 0.5em;
+    color: var(--MI_THEME-accent);
+    margin-right: 0.5em;
 }
 
 .rn {
-	margin-left: 4px;
-	font-style: oblique;
-	color: var(--MI_THEME-renote);
+    margin-left: 4px;
+    font-style: oblique;
+    color: var(--MI_THEME-renote);
 }
 
 .translation {
-	border: solid 0.5px var(--MI_THEME-divider);
-	border-radius: var(--MI-radius);
-	padding: 12px;
-	margin-top: 8px;
+    border: solid 0.5px var(--MI_THEME-divider);
+    border-radius: var(--MI-radius);
+    padding: 12px;
+    margin-top: 8px;
 }
 
 .poll {
-	font-size: 80%;
+    font-size: 80%;
 }
 
 .quote {
-	padding: 8px 0;
+    padding: 8px 0;
 }
 
 .quoteNote {
-	padding: 16px;
-	border: dashed 1px var(--MI_THEME-renote);
-	border-radius: 8px;
-	overflow: clip;
+    padding: 16px;
+    border: dashed 1px var(--MI_THEME-renote);
+    border-radius: 8px;
+    overflow: clip;
 }
 
 .channel {
-	opacity: 0.7;
-	font-size: 80%;
+    opacity: 0.7;
+    font-size: 80%;
 }
 
 .noteFooterInfo {
-	margin: 16px 0;
-	opacity: 0.7;
-	font-size: 0.9em;
+    margin: 16px 0;
+    opacity: 0.7;
+    font-size: 0.9em;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 4px;
+}
+
+.editedButton {
+    padding: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    &:hover {
+        opacity: 1;
+        text-decoration: underline;
+    }
 }
 
 .noteFooterButton {
-	margin: 0;
-	padding: 8px;
-	opacity: 0.7;
+    margin: 0;
+    padding: 8px;
+    opacity: 0.7;
 
-	&:not(:last-child) {
-		margin-right: 28px;
-	}
+    &:not(:last-child) {
+        margin-right: 28px;
+    }
 
-	&:hover {
-		color: var(--MI_THEME-fgHighlighted);
-	}
+    &:hover {
+        color: var(--MI_THEME-fgHighlighted);
+    }
 }
 
 .noteFooterButtonCount {
-	display: inline;
-	margin: 0 0 0 8px;
-	opacity: 0.7;
+    display: inline;
+    margin: 0 0 0 8px;
+    opacity: 0.7;
 
-	&.reacted {
-		color: var(--MI_THEME-accent);
-	}
+    &.reacted {
+        color: var(--MI_THEME-accent);
+    }
 }
 
 .reply:not(:first-child) {
-	border-top: solid 0.5px var(--MI_THEME-divider);
+    border-top: solid 0.5px var(--MI_THEME-divider);
 }
 
 .tabs {
-	border-top: solid 0.5px var(--MI_THEME-divider);
-	border-bottom: solid 0.5px var(--MI_THEME-divider);
-	display: flex;
+    border-top: solid 0.5px var(--MI_THEME-divider);
+    border-bottom: solid 0.5px var(--MI_THEME-divider);
+    display: flex;
 }
 
 .tab {
-	flex: 1;
-	padding: 12px 8px;
-	border-top: solid 2px transparent;
-	border-bottom: solid 2px transparent;
+    flex: 1;
+    padding: 12px 8px;
+    border-top: solid 2px transparent;
+    border-bottom: solid 2px transparent;
 }
 
 .tabActive {
-	border-bottom: solid 2px var(--MI_THEME-accent);
+    border-bottom: solid 2px var(--MI_THEME-accent);
 }
 
 .tab_renotes {
-	padding: 16px;
+    padding: 16px;
 }
 
 .tab_reactions {
-	padding: 16px;
+    padding: 16px;
 }
 
 .reactionTabs {
-	display: flex;
-	gap: 8px;
-	flex-wrap: wrap;
-	margin-bottom: 8px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
 }
 
 .reactionTab {
-	padding: 4px 6px;
-	border: solid 1px var(--MI_THEME-divider);
-	border-radius: 6px;
+    padding: 4px 6px;
+    border: solid 1px var(--MI_THEME-divider);
+    border-radius: 6px;
 }
 
 .reactionTabActive {
-	border-color: var(--MI_THEME-accent);
+    border-color: var(--MI_THEME-accent);
 }
 
 @container (max-width: 500px) {
-	.root {
-		font-size: 0.9em;
-	}
+    .root {
+        font-size: 0.9em;
+    }
 }
 
 @container (max-width: 450px) {
-	.renote {
-		padding: 8px 16px 0 16px;
-	}
+    .renote {
+        padding: 8px 16px 0 16px;
+    }
 
-	.note {
-		padding: 16px;
-	}
+    .note {
+        padding: 16px;
+    }
 
-	.noteHeaderAvatar {
-		width: 50px;
-		height: 50px;
-	}
+    .noteHeaderAvatar {
+        width: 50px;
+        height: 50px;
+    }
 }
 
 @container (max-width: 350px) {
-	.noteFooterButton {
-		&:not(:last-child) {
-			margin-right: 18px;
-		}
-	}
+    .noteFooterButton {
+        &:not(:last-child) {
+            margin-right: 18px;
+        }
+    }
 }
 
 @container (max-width: 300px) {
-	.root {
-		font-size: 0.825em;
-	}
+    .root {
+        font-size: 0.825em;
+    }
 
-	.noteHeaderAvatar {
-		width: 50px;
-		height: 50px;
-	}
+    .noteHeaderAvatar {
+        width: 50px;
+        height: 50px;
+    }
 
-	.noteFooterButton {
-		&:not(:last-child) {
-			margin-right: 12px;
-		}
-	}
+    .noteFooterButton {
+        &:not(:last-child) {
+            margin-right: 12px;
+        }
+    }
 }
 
 .muted {
-	padding: 8px;
-	text-align: center;
-	opacity: 0.7;
+    padding: 8px;
+    text-align: center;
+    opacity: 0.7;
 }
 </style>

@@ -410,6 +410,7 @@ import type {
 	IAppsResponse,
 	IAuthorizedAppsRequest,
 	IAuthorizedAppsResponse,
+	IAutoDeleteSettingsResponse,
 	IChangePasswordRequest,
 	IClaimAchievementRequest,
 	IDeleteAccountRequest,
@@ -460,6 +461,7 @@ import type {
 	IUnpinResponse,
 	IUpdateRequest,
 	IUpdateResponse,
+	IUpdateAutoDeleteSettingsRequest,
 	IUpdateEmailRequest,
 	IUpdateEmailResponse,
 	IWebhooksCreateRequest,
@@ -504,6 +506,8 @@ import type {
 	NotesDraftsListResponse,
 	NotesDraftsUpdateRequest,
 	NotesDraftsUpdateResponse,
+	NotesEditHistoryRequest,
+	NotesEditHistoryResponse,
 	NotesFavoritesCreateRequest,
 	NotesFavoritesDeleteRequest,
 	NotesFeaturedRequest,
@@ -923,6 +927,7 @@ export type Endpoints = {
 	'i/2fa/update-key': { req: I2faUpdateKeyRequest; res: EmptyResponse };
 	'i/apps': { req: IAppsRequest; res: IAppsResponse };
 	'i/authorized-apps': { req: IAuthorizedAppsRequest; res: IAuthorizedAppsResponse };
+	'i/auto-delete-settings': { req: EmptyRequest; res: IAutoDeleteSettingsResponse };
 	'i/change-password': { req: IChangePasswordRequest; res: EmptyResponse };
 	'i/claim-achievement': { req: IClaimAchievementRequest; res: EmptyResponse };
 	'i/delete-account': { req: IDeleteAccountRequest; res: EmptyResponse };
@@ -963,6 +968,7 @@ export type Endpoints = {
 	'i/truncate-account': { req: ITruncateAccountRequest; res: EmptyResponse };
 	'i/unpin': { req: IUnpinRequest; res: IUnpinResponse };
 	'i/update': { req: IUpdateRequest; res: IUpdateResponse };
+	'i/update-auto-delete-settings': { req: IUpdateAutoDeleteSettingsRequest; res: EmptyResponse };
 	'i/update-email': { req: IUpdateEmailRequest; res: IUpdateEmailResponse };
 	'i/webhooks/create': { req: IWebhooksCreateRequest; res: IWebhooksCreateResponse };
 	'i/webhooks/delete': { req: IWebhooksDeleteRequest; res: EmptyResponse };
@@ -991,6 +997,7 @@ export type Endpoints = {
 	'notes/drafts/delete': { req: NotesDraftsDeleteRequest; res: EmptyResponse };
 	'notes/drafts/list': { req: NotesDraftsListRequest; res: NotesDraftsListResponse };
 	'notes/drafts/update': { req: NotesDraftsUpdateRequest; res: NotesDraftsUpdateResponse };
+	'notes/edit-history': { req: NotesEditHistoryRequest; res: NotesEditHistoryResponse };
 	'notes/favorites/create': { req: NotesFavoritesCreateRequest; res: EmptyResponse };
 	'notes/favorites/delete': { req: NotesFavoritesDeleteRequest; res: EmptyResponse };
 	'notes/featured': { req: NotesFeaturedRequest; res: NotesFeaturedResponse };

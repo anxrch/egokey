@@ -13,7 +13,6 @@ import type {
 	Role,
 	ReversiGameDetailed,
 	SystemWebhook,
-	UserLite,
 	ChatRoom,
 } from './autogen/models.js';
 
@@ -359,7 +358,7 @@ export type ModerationLogPayloads = {
 		noteUserId: string;
 		noteUserUsername: string;
 		noteUserHost: string | null;
-		note: any;
+		note: Note;
 	};
 	createGlobalAnnouncement: {
 		announcementId: string;
