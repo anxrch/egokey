@@ -3343,3 +3343,4 @@ _qr:
   scanFile: "단말기의 이미지 스캔"
   raw: "텍스트"
   mfm: "MFM"
+viewEditHistory: "수정 기록 보기"

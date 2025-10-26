@@ -9,9 +9,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 	:width="700"
 	:height="600"
 	:withOkButton="false"
-	@close="emit('closed')"
+	@close="cancel()"
 	@closed="emit('closed')"
-	@esc="emit('closed')"
 >
 	<template #header>
 		<i class="ti ti-history"></i> {{ i18n.ts.editHistory }}
@@ -135,6 +134,14 @@ const props = defineProps<{
 const emit = defineEmits<{
 	(ev: 'closed'): void;
 }>();
+
+// ... 기존 코드들 ...
+
+function cancel() {
+	dialogEl.value!.close();
+}
+
+// selectRevision, getChanges 함수들...
 
 type NoteRevision = {
 	version: number;
