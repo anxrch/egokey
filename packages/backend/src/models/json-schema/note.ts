@@ -273,17 +273,17 @@ export const packedNoteSchema = {
 
         isEdited: {
             type: 'boolean',
-            optional: true, nullable: false,
+            optional: false, nullable: false,
         },
 
         editCount: {
             type: 'number',
-            optional: true, nullable: false,
+            optional: false, nullable: false,
         },
 
         latestEditedAt: {
             type: 'string',
-            optional: true, nullable: true,
+            optional: false, nullable: true,
             format: 'date-time',
         },
         },

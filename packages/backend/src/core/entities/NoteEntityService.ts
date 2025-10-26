@@ -428,8 +428,12 @@ export class NoteEntityService implements OnModuleInit {
         const packedFiles = options?._hint_?.packedFiles;
         const packedUsers = options?._hint_?.packedUsers;
 
-        // Get edit metadata if the note has been updated
-        const editMetadata = note.updatedAt ? await this.getEditMetadata(note.id) : null;
+        const editMetadata = note.updatedAt
+            ? await this.getEditMetadata(note.id)
+            : { editCount: 0, latestEditedAt: null };
+        const editCount = editMetadata?.editCount ?? 0;
+        const latestEditedAt = editMetadata?.latestEditedAt ?? null;
+        const isEdited = editCount > 0;
 
         const packed: Packed<'Note'> = await awaitAll({
             id: note.id,
@@ -469,9 +473,9 @@ export class NoteEntityService implements OnModuleInit {
             uri: note.uri ?? undefined,
             url: note.url ?? undefined,
 
-            isEdited: editMetadata ? editMetadata.editCount > 0 : undefined,
-            editCount: editMetadata ? editMetadata.editCount : undefined,
-            latestEditedAt: editMetadata?.latestEditedAt ? editMetadata.latestEditedAt.toISOString() : undefined,
+            isEdited,
+            editCount,
+            latestEditedAt: latestEditedAt ? latestEditedAt.toISOString() : null,
 
             ...(opts.detail ? {
                 clippedCount: note.clippedCount,

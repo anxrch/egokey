@@ -4,6 +4,7 @@
  */
 
 import { Test } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
 
 import { CoreModule } from '@/core/CoreModule.js';
@@ -18,7 +19,7 @@ import { genAidx } from '@/misc/id/aidx.js';
 import { secureRndstr } from '@/misc/secure-rndstr.js';
 
 describe('NoteUpdateService', () => {
-    let app: any;
+    let app: TestingModule;
     let noteUpdateService: NoteUpdateService;
     let noteCreateService: NoteCreateService;
     let notesRepository: NotesRepository;
