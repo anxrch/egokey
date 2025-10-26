@@ -121,9 +121,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { ref, onMounted } from 'vue';
 import * as Misskey from 'misskey-js';
 import MkModalWindow from '@/components/MkModalWindow.vue';
-import MkLoading from '@/components/MkLoading.vue';
-import MkAvatar from '@/components/MkAvatar.vue';
-import MkUserName from '@/components/MkUserName.vue';
+import MkLoading from '@/components/global/MkLoading.vue';
+import MkAvatar from '@/components/global/MkAvatar.vue';
+import MkUserName from '@/components/global/MkUserName.vue';
 import { misskeyApi } from '@/utility/misskey-api.js';
 import { i18n } from '@/i18n.js';
 
