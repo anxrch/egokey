@@ -1,7 +1,10 @@
 ## Unreleased
 
 ### General
--
+- Security: Patched vulnerable dependencies
+  - Forced `axios` to >=1.12.2 across the workspace to address CVEs in transitive dependencies (e.g., `deep-email-validator`)
+  - Patched `@misskey-dev/summaly@5.2.4` to replace vulnerable `private-ip` dependency with audited `ipaddr.js` helper (already used in backend for IP filtering)
+  - Rebuilt lockfile to apply security overrides and patches
 
 ### Client
 - Fix: アプリ内からキャッシュをクリアするとテーマ再適用するまでレンダリングが正しく行われない問題を修正
