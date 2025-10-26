@@ -11,110 +11,154 @@ import { NoteEntityService } from '@/core/entities/NoteEntityService.js';
 import { ApiError } from '../../error.js';
 
 export const meta = {
-	tags: ['notes'],
+    tags: ['notes'],
 
-	requireCredential: true,
-	requireRolePolicy: 'canEditNote',
+    requireCredential: true,
+    requireRolePolicy: 'canEditNote',
 
-	prohibitMoved: true,
+    prohibitMoved: true,
 
-	kind: 'write:notes',
+    kind: 'write:notes',
 
-	limit: {
-		duration: ms('1hour'),
-		max: 300,
-		minInterval: ms('1sec'),
-	},
+    limit: {
+        duration: ms('1hour'),
+        max: 300,
+        minInterval: ms('1sec'),
+    },
 
-	res: {
-		type: 'object',
-		optional: false, nullable: false,
-		properties: {
-			createdNote: {
-				type: 'object',
-				optional: false, nullable: false,
-				ref: 'Note',
-			},
-		},
-	},
+    res: {
+        type: 'object',
+        optional: false, nullable: false,
+        properties: {
+            createdNote: {
+                type: 'object',
+                optional: false, nullable: false,
+                ref: 'Note',
+            },
+        },
+    },
 
-	errors: {
-		noSuchNote: {
-			message: 'No such note.',
-			code: 'NO_SUCH_NOTE',
-			id: '490be23f-8c1f-4796-819f-94cb4f9d1630',
-		},
+    errors: {
+        noSuchNote: {
+            message: 'No such note.',
+            code: 'NO_SUCH_NOTE',
+            id: '490be23f-8c1f-4796-819f-94cb4f9d1630',
+        },
 
-		accessDenied: {
-			message: 'Access denied.',
-			code: 'ACCESS_DENIED',
-			id: 'fe8d7103-0ea8-4ec3-814d-f8b401dc69e9',
-		},
+        accessDenied: {
+            message: 'Access denied.',
+            code: 'ACCESS_DENIED',
+            id: 'fe8d7103-0ea8-4ec3-814d-f8b401dc69e9',
+        },
 
-		invalidParam: {
-			message: 'Invalid param.',
-			code: 'INVALID_PARAM',
-			id: '3d81ceae-475f-4600-b2a8-2bc116157532',
-		},
-	},
+        invalidParam: {
+            message: 'Invalid param.',
+            code: 'INVALID_PARAM',
+            id: '3d81ceae-475f-4600-b2a8-2bc116157532',
+        },
+    },
 } as const;
 
 export const paramDef = {
-	type: 'object',
-	properties: {
-		noteId: { type: 'string', format: 'misskey:id' },
-		text: {
-			type: 'string',
-			minLength: 1,
-			maxLength: MAX_NOTE_TEXT_LENGTH,
-			nullable: false,
-		},
-		cw: { type: 'string', nullable: true, maxLength: 100 },
-		visibility: { type: 'string', enum: ['public', 'home', 'followers', 'specified'] },
-	},
-	required: ['noteId'],
-	anyOf: [
-		{ required: ['text'] },
-		{ required: ['visibility'] },
-	],
+    type: 'object',
+    properties: {
+        noteId: { type: 'string', format: 'misskey:id' },
+        text: {
+            type: 'string',
+            minLength: 1,
+            maxLength: MAX_NOTE_TEXT_LENGTH,
+            nullable: false,
+        },
+        cw: { type: 'string', nullable: true, maxLength: 100 },
+        visibility: { type: 'string', enum: ['public', 'home', 'followers', 'specified'] },
+        localOnly: { type: 'boolean' },
+        fileIds: {
+            type: 'array',
+            uniqueItems: true,
+            minItems: 0,
+            maxItems: 16,
+            items: { type: 'string', format: 'misskey:id' },
+        },
+        poll: {
+            type: 'object',
+            nullable: true,
+            properties: {
+                choices: {
+                    type: 'array',
+                    uniqueItems: true,
+                    minItems: 2,
+                    maxItems: 10,
+                    items: { type: 'string', minLength: 1, maxLength: 256 },
+                },
+                multiple: { type: 'boolean' },
+                expiresAt: { type: 'integer', nullable: true },
+            },
+            required: ['choices'],
+        },
+    },
+    required: ['noteId'],
+    anyOf: [
+        { required: ['text'] },
+        { required: ['visibility'] },
+        { required: ['fileIds'] },
+        { required: ['poll'] },
+        { required: ['localOnly'] },
+    ],
 } as const;
 
 @Injectable()
 export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-disable-line import/no-default-export
-	constructor(
-		@Inject(DI.usersRepository)
-		private usersRepository: UsersRepository,
+    constructor(
+        @Inject(DI.usersRepository)
+        private usersRepository: UsersRepository,
 
-		private getterService: GetterService,
-		private roleService: RoleService,
-		private noteEntityService: NoteEntityService,
-		private noteUpdateService: NoteUpdateService,
-	) {
-		super(meta, paramDef, async (ps, me) => {
-			const note = await this.getterService.getNote(ps.noteId).catch(err => {
-				if (err.id === '9725d0ce-ba28-4dde-95a7-2cbb2c15de24') throw new ApiError(meta.errors.noSuchNote);
-				throw err;
-			});
+        private getterService: GetterService,
+        private roleService: RoleService,
+        private noteEntityService: NoteEntityService,
+        private noteUpdateService: NoteUpdateService,
+    ) {
+        super(meta, paramDef, async (ps, me) => {
+            const note = await this.getterService.getNote(ps.noteId).catch(err => {
+                if (err.id === '9725d0ce-ba28-4dde-95a7-2cbb2c15de24') throw new ApiError(meta.errors.noSuchNote);
+                throw err;
+            });
 
-			if (ps.visibility !== note.visibility && !await this.roleService.isModerator(me) && !await this.roleService.isAdministrator(me)) {
-				throw new ApiError(meta.errors.accessDenied);
-			}
+            if (ps.visibility !== note.visibility && !await this.roleService.isModerator(me) && !await this.roleService.isAdministrator(me)) {
+                throw new ApiError(meta.errors.accessDenied);
+            }
 
-			if (ps.text === undefined && ps.visibility === undefined) {
-				throw new ApiError(meta.errors.invalidParam);
-			}
+            if (ps.text === undefined && ps.visibility === undefined && ps.fileIds === undefined && ps.poll === undefined && ps.localOnly === undefined) {
+                throw new ApiError(meta.errors.invalidParam);
+            }
 
-			// この操作を行うのが投稿者とは限らない(例えばモデレーター)ため
-			const updatedNote = await this.noteUpdateService.update(await this.usersRepository.findOneByOrFail({ id: note.userId }), note, {
-				cw: ps.cw,
-				text: ps.text,
-				visibility: ps.visibility,
-				updatedAt: new Date(),
-			}, false, me);
+            // Convert poll expiresAt timestamp to Date if provided
+            let poll = undefined;
+            if (ps.poll !== undefined) {
+                if (ps.poll === null) {
+                    poll = null;
+                } else {
+                    poll = {
+                        choices: ps.poll.choices,
+                        multiple: ps.poll.multiple ?? false,
+                        expiresAt: ps.poll.expiresAt ? new Date(ps.poll.expiresAt) : null,
+                    };
+                }
+            }
 
-			return {
-				createdNote: await this.noteEntityService.pack(updatedNote, me),
-			};
-		});
-	}
+            // この操作を行うのが投稿者とは限らない(例えばモデレーター)ため
+            const updatedNote = await this.noteUpdateService.update(await this.usersRepository.findOneByOrFail({ id: note.userId }), note, {
+                cw: ps.cw,
+                text: ps.text,
+                visibility: ps.visibility,
+                localOnly: ps.localOnly,
+                fileIds: ps.fileIds,
+                poll: poll,
+                updatedAt: new Date(),
+            }, false, me);
+
+            return {
+                createdNote: await this.noteEntityService.pack(updatedNote, me),
+            };
+        });
+    }
 }
