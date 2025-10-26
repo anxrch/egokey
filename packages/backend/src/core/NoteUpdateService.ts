@@ -150,6 +150,8 @@ export class NoteUpdateService implements OnApplicationShutdown {
             text: data.text,
             visibility: data.visibility,
             updatedAt: data.updatedAt,
+            fileIds: data.fileIds,
+            hasPoll: data.poll !== undefined ? data.poll !== null : undefined,
         } as any);
 
         setImmediate('post updating', { signal: this.#shutdownController.signal }).then(
