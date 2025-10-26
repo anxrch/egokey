@@ -17,7 +17,7 @@ echo "Waiting for databases to be ready..."
 # Wait for PostgreSQL
 MAX_ATTEMPTS=30
 ATTEMPT=0
-until docker compose -f compose.yml exec -T dbtest pg_isready -U postgres -d test-misskey 2>/dev/null || [ $ATTEMPT -eq $MAX_ATTEMPTS ]; do
+until docker compose -f compose.yml exec -T dbtest pg_isready -U misskey_test -d misskey_test 2>/dev/null || [ $ATTEMPT -eq $MAX_ATTEMPTS ]; do
     ATTEMPT=$((ATTEMPT+1))
     echo "Waiting for PostgreSQL... (attempt $ATTEMPT/$MAX_ATTEMPTS)"
     sleep 1
@@ -30,7 +30,7 @@ fi
 
 # Wait for Redis
 ATTEMPT=0
-until docker compose -f compose.yml exec -T redistest redis-cli ping 2>/dev/null | grep -q PONG || [ $ATTEMPT -eq $MAX_ATTEMPTS ]; do
+until docker compose -f compose.yml exec -T redistest redis-cli -a misskey-test-redis ping 2>/dev/null | grep -q PONG || [ $ATTEMPT -eq $MAX_ATTEMPTS ]; do
     ATTEMPT=$((ATTEMPT+1))
     echo "Waiting for Redis... (attempt $ATTEMPT/$MAX_ATTEMPTS)"
     sleep 1
@@ -42,5 +42,5 @@ if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
 fi
 
 echo "✓ Test databases are ready!"
-echo "  PostgreSQL: localhost:54312 (database: test-misskey)"
-echo "  Redis: localhost:56312"
+echo "  PostgreSQL: localhost:54312 (database: misskey_test, user: misskey_test)"
+echo "  Redis: localhost:56312 (password protected)"

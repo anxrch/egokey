@@ -17,8 +17,8 @@ pnpm test-db:start
 
 **What it does:**
 - Starts Docker containers defined in `packages/backend/test/compose.yml`
-- PostgreSQL 15 on port 54312 (database: test-misskey)
-- Redis 7 on port 56312
+- PostgreSQL 15 on port 54312 (database: misskey_test, user: misskey_test, password: misskey-test-password)
+- Redis 7 on port 56312 (requirepass: misskey-test-redis)
 - Waits for both services to be ready before returning
 - Health checks ensure services are accepting connections
 

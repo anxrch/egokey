@@ -1,6 +1,10 @@
 services:
   redistest:
     image: redis:7
+    command:
+      - redis-server
+      - --requirepass
+      - misskey-test-redis
     ports:
       - "127.0.0.1:56312:6379"
 
@@ -9,5 +13,6 @@ services:
     ports:
       - "127.0.0.1:54312:5432"
     environment:
-      POSTGRES_DB: "test-misskey"
-      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: misskey_test
+      POSTGRES_USER: misskey_test
+      POSTGRES_PASSWORD: misskey-test-password
