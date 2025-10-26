@@ -712,6 +712,11 @@ export class MiMeta {
 	})
 	public remoteNotesCleaningExpiryDaysForEachNotes: number;
 
+	@Column('boolean', {
+		default: false,
+	})
+	public showRoleBadgesOfRemoteUsers: boolean;
+
 	@Column('jsonb', {
 		default: { },
 	})
