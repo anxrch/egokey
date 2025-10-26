@@ -45,7 +45,10 @@ describe('NoteUpdateService', () => {
         app = await Test.createTestingModule({
             imports: [GlobalModule, CoreModule],
         }).compile();
-        
+
+        await app.init();
+        app.enableShutdownHooks();
+
         noteUpdateService = app.get<NoteUpdateService>(NoteUpdateService);
         noteCreateService = app.get<NoteCreateService>(NoteCreateService);
         notesRepository = app.get<NotesRepository>(DI.notesRepository);
@@ -88,18 +91,19 @@ describe('NoteUpdateService', () => {
 
         test('should increment version number on multiple edits', async () => {
             // Create a note
-            const note = await noteCreateService.create(testUser, {
+            let note = await noteCreateService.create(testUser, {
                 text: 'Version 0',
             });
 
             // First update
-            await noteUpdateService.update(testUser, note, {
+            // Reassign note to ensure subsequent edits operate on the latest persisted state.
+            note = await noteUpdateService.update(testUser, note, {
                 text: 'Version 1',
                 updatedAt: new Date(),
             });
 
             // Second update
-            await noteUpdateService.update(testUser, note, {
+            note = await noteUpdateService.update(testUser, note, {
                 text: 'Version 2',
                 updatedAt: new Date(),
             });
@@ -198,16 +202,17 @@ describe('NoteUpdateService', () => {
 
     describe('getRevisions', () => {
         test('should return revisions in descending order', async () => {
-            const note = await noteCreateService.create(testUser, {
+            let note = await noteCreateService.create(testUser, {
                 text: 'V0',
             });
 
-            await noteUpdateService.update(testUser, note, {
+            // Use the returned note so the next update sees the most recent snapshot.
+            note = await noteUpdateService.update(testUser, note, {
                 text: 'V1',
                 updatedAt: new Date(),
             });
 
-            await noteUpdateService.update(testUser, note, {
+            note = await noteUpdateService.update(testUser, note, {
                 text: 'V2',
                 updatedAt: new Date(),
             });

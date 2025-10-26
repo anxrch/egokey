@@ -28,7 +28,7 @@ import { DownloadService } from '@/core/DownloadService.js';
 import { FederatedInstanceService } from '@/core/FederatedInstanceService.js';
 import { NotificationService } from '@/core/NotificationService.js';
 import type { Config } from '@/config.js';
-import type { NotesRepository, UsersRepository, NoteRevisionsRepository, MiMeta } from '@/models/_.js';
+import type { NotesRepository, UsersRepository, NoteRevisionsRepository, UserProfilesRepository, MiMeta } from '@/models/_.js';
 import type { MiLocalUser, MiRemoteUser } from '@/models/User.js';
 import type { MiNote } from '@/models/Note.js';
 import type { IActor, IPost, IUpdate } from '@/core/activitypub/type.js';
@@ -83,6 +83,7 @@ describe('Federated Note Edits', () => {
     let noteCreateService: NoteCreateService;
     let notesRepository: NotesRepository;
     let usersRepository: UsersRepository;
+    let userProfilesRepository: UserProfilesRepository;
     let noteRevisionsRepository: NoteRevisionsRepository;
     let resolver: MockResolver;
     let db: DataSource;
@@ -131,6 +132,7 @@ describe('Federated Note Edits', () => {
         noteCreateService = app.get<NoteCreateService>(NoteCreateService);
         notesRepository = app.get<NotesRepository>(DI.notesRepository);
         usersRepository = app.get<UsersRepository>(DI.usersRepository);
+        userProfilesRepository = app.get<UserProfilesRepository>(DI.userProfilesRepository);
         noteRevisionsRepository = app.get<NoteRevisionsRepository>(DI.noteRevisionsRepository);
         db = app.get<DataSource>(DI.db);
 
@@ -158,7 +160,11 @@ describe('Federated Note Edits', () => {
             host: null,
             ...data,
         });
-        return await usersRepository.findOneByOrFail(x.identifiers[0]) as MiLocalUser;
+        const user = await usersRepository.findOneByOrFail(x.identifiers[0]) as MiLocalUser;
+        await userProfilesRepository.insert({
+            userId: user.id,
+        });
+        return user;
     }
 
     async function createRemoteUser(actor: NonTransientIActor): Promise<MiRemoteUser> {
