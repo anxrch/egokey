@@ -4,18 +4,18 @@
  */
 
 import {
-	FindOneOptions,
-	InsertQueryBuilder,
-	ObjectLiteral,
-	QueryRunner,
-	Repository,
-	SelectQueryBuilder,
+    FindOneOptions,
+    InsertQueryBuilder,
+    ObjectLiteral,
+    QueryRunner,
+    Repository,
+    SelectQueryBuilder,
 } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions.js';
 import { RelationCountLoader } from 'typeorm/query-builder/relation-count/RelationCountLoader.js';
 import { RelationIdLoader } from 'typeorm/query-builder/relation-id/RelationIdLoader.js';
 import {
-	RawSqlResultsToEntityTransformer,
+    RawSqlResultsToEntityTransformer,
 } from 'typeorm/query-builder/transformer/RawSqlResultsToEntityTransformer.js';
 import { MiAbuseReportNotificationRecipient } from '@/models/AbuseReportNotificationRecipient.js';
 import { MiAbuseUserReport } from '@/models/AbuseUserReport.js';
@@ -58,6 +58,7 @@ import { MiNote } from '@/models/Note.js';
 import { MiNoteDraft } from '@/models/NoteDraft.js';
 import { MiNoteFavorite } from '@/models/NoteFavorite.js';
 import { MiNoteReaction } from '@/models/NoteReaction.js';
+import { MiNoteRevision } from '@/models/NoteRevision.js';
 import { MiNoteThreadMuting } from '@/models/NoteThreadMuting.js';
 import { MiPage } from '@/models/Page.js';
 import { MiPageLike } from '@/models/PageLike.js';
@@ -95,151 +96,152 @@ import { MiWebhook } from '@/models/Webhook.js';
 import type { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 export interface MiRepository<T extends ObjectLiteral> {
-	createTableColumnNames(this: Repository<T> & MiRepository<T>): string[];
+    createTableColumnNames(this: Repository<T> & MiRepository<T>): string[];
 
-	insertOne(this: Repository<T> & MiRepository<T>, entity: QueryDeepPartialEntity<T>, findOptions?: Pick<FindOneOptions<T>, 'relations'>): Promise<T>;
+    insertOne(this: Repository<T> & MiRepository<T>, entity: QueryDeepPartialEntity<T>, findOptions?: Pick<FindOneOptions<T>, 'relations'>): Promise<T>;
 
-	insertOneImpl(this: Repository<T> & MiRepository<T>, entity: QueryDeepPartialEntity<T>, findOptions?: Pick<FindOneOptions<T>, 'relations'>, queryRunner?: QueryRunner): Promise<T>;
+    insertOneImpl(this: Repository<T> & MiRepository<T>, entity: QueryDeepPartialEntity<T>, findOptions?: Pick<FindOneOptions<T>, 'relations'>, queryRunner?: QueryRunner): Promise<T>;
 
-	selectAliasColumnNames(this: Repository<T> & MiRepository<T>, queryBuilder: InsertQueryBuilder<T>, builder: SelectQueryBuilder<T>): void;
+    selectAliasColumnNames(this: Repository<T> & MiRepository<T>, queryBuilder: InsertQueryBuilder<T>, builder: SelectQueryBuilder<T>): void;
 }
 
 export const miRepository = {
-	createTableColumnNames() {
-		return this.metadata.columns.filter(column => column.isSelect && !column.isVirtual).map(column => column.databaseName);
-	},
-	async insertOne(entity, findOptions?) {
-		const opt = this.manager.connection.options as PostgresConnectionOptions;
-		if (opt.replication) {
-			const queryRunner = this.manager.connection.createQueryRunner('master');
-			try {
-				return this.insertOneImpl(entity, findOptions, queryRunner);
-			} finally {
-				await queryRunner.release();
-			}
-		} else {
-			return this.insertOneImpl(entity, findOptions);
-		}
-	},
-	async insertOneImpl(entity, findOptions?, queryRunner?) {
-		// ---- insert + returningの結果を共通テーブル式(CTE)に保持するクエリを生成 ----
+    createTableColumnNames() {
+        return this.metadata.columns.filter(column => column.isSelect && !column.isVirtual).map(column => column.databaseName);
+    },
+    async insertOne(entity, findOptions?) {
+        const opt = this.manager.connection.options as PostgresConnectionOptions;
+        if (opt.replication) {
+            const queryRunner = this.manager.connection.createQueryRunner('master');
+            try {
+                return this.insertOneImpl(entity, findOptions, queryRunner);
+            } finally {
+                await queryRunner.release();
+            }
+        } else {
+            return this.insertOneImpl(entity, findOptions);
+        }
+    },
+    async insertOneImpl(entity, findOptions?, queryRunner?) {
+        // ---- insert + returningの結果を共通テーブル式(CTE)に保持するクエリを生成 ----
 
-		const queryBuilder = this.createQueryBuilder().insert().values(entity);
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const mainAlias = queryBuilder.expressionMap.mainAlias!;
-		const name = mainAlias.name;
-		mainAlias.name = 't';
-		const columnNames = this.createTableColumnNames();
-		queryBuilder.returning(columnNames.reduce((a, c) => `${a}, ${queryBuilder.escape(c)}`, '').slice(2));
+        const queryBuilder = this.createQueryBuilder().insert().values(entity);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const mainAlias = queryBuilder.expressionMap.mainAlias!;
+        const name = mainAlias.name;
+        mainAlias.name = 't';
+        const columnNames = this.createTableColumnNames();
+        queryBuilder.returning(columnNames.reduce((a, c) => `${a}, ${queryBuilder.escape(c)}`, '').slice(2));
 
-		// ---- 共通テーブル式(CTE)から結果を取得 ----
-		const builder = this.createQueryBuilder(undefined, queryRunner).addCommonTableExpression(queryBuilder, 'cte', { columnNames });
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		builder.expressionMap.mainAlias!.tablePath = 'cte';
-		this.selectAliasColumnNames(queryBuilder, builder);
-		if (findOptions) {
-			builder.setFindOptions(findOptions);
-		}
-		const raw = await builder.execute();
-		mainAlias.name = name;
-		const relationId = await new RelationIdLoader(builder.connection, this.queryRunner, builder.expressionMap.relationIdAttributes).load(raw);
-		const relationCount = await new RelationCountLoader(builder.connection, this.queryRunner, builder.expressionMap.relationCountAttributes).load(raw);
-		const result = new RawSqlResultsToEntityTransformer(builder.expressionMap, builder.connection.driver, relationId, relationCount, this.queryRunner).transform(raw, mainAlias);
-		return result[0];
-	},
-	selectAliasColumnNames(queryBuilder, builder) {
-		let selectOrAddSelect = (selection: string, selectionAliasName?: string) => {
-			selectOrAddSelect = (selection, selectionAliasName) => builder.addSelect(selection, selectionAliasName);
-			return builder.select(selection, selectionAliasName);
-		};
-		for (const columnName of this.createTableColumnNames()) {
-			selectOrAddSelect(`${builder.alias}.${columnName}`, `${builder.alias}_${columnName}`);
-		}
-	},
+        // ---- 共通テーブル式(CTE)から結果を取得 ----
+        const builder = this.createQueryBuilder(undefined, queryRunner).addCommonTableExpression(queryBuilder, 'cte', { columnNames });
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        builder.expressionMap.mainAlias!.tablePath = 'cte';
+        this.selectAliasColumnNames(queryBuilder, builder);
+        if (findOptions) {
+            builder.setFindOptions(findOptions);
+        }
+        const raw = await builder.execute();
+        mainAlias.name = name;
+        const relationId = await new RelationIdLoader(builder.connection, this.queryRunner, builder.expressionMap.relationIdAttributes).load(raw);
+        const relationCount = await new RelationCountLoader(builder.connection, this.queryRunner, builder.expressionMap.relationCountAttributes).load(raw);
+        const result = new RawSqlResultsToEntityTransformer(builder.expressionMap, builder.connection.driver, relationId, relationCount, this.queryRunner).transform(raw, mainAlias);
+        return result[0];
+    },
+    selectAliasColumnNames(queryBuilder, builder) {
+        let selectOrAddSelect = (selection: string, selectionAliasName?: string) => {
+            selectOrAddSelect = (selection, selectionAliasName) => builder.addSelect(selection, selectionAliasName);
+            return builder.select(selection, selectionAliasName);
+        };
+        for (const columnName of this.createTableColumnNames()) {
+            selectOrAddSelect(`${builder.alias}.${columnName}`, `${builder.alias}_${columnName}`);
+        }
+    },
 } satisfies MiRepository<ObjectLiteral>;
 
 export {
-	MiAbuseUserReport,
-	MiAbuseReportNotificationRecipient,
-	MiAccessToken,
-	MiAd,
-	MiAnnouncement,
-	MiAnnouncementRead,
-	MiAntenna,
-	MiApp,
-	MiAvatarDecoration,
-	MiAuthSession,
-	MiBlocking,
-	MiChannelFollowing,
-	MiChannelFavorite,
-	MiClip,
-	MiClipNote,
-	MiClipFavorite,
-	MiDriveFile,
-	MiDriveFolder,
-	MiEmoji,
-	MiFollowing,
-	MiFollowRequest,
-	MiGalleryLike,
-	MiGalleryPost,
-	MiHashtag,
-	MiInstance,
-	MiMeta,
-	MiModerationLog,
-	MiMuting,
-	MiRenoteMuting,
-	MiNote,
-	MiNoteDraft,
-	MiNoteFavorite,
-	MiNoteReaction,
-	MiNoteThreadMuting,
-	MiPage,
-	MiPageLike,
-	MiPasswordResetRequest,
-	MiPoll,
-	MiPollVote,
-	MiPromoNote,
-	MiPromoRead,
-	MiRegistrationTicket,
-	MiRegistryItem,
-	MiRelay,
-	MiSignin,
-	MiSwSubscription,
-	MiSystemAccount,
-	MiUsedUsername,
-	MiUser,
-	MiUserIp,
-	MiUserKeypair,
-	MiUserList,
-	MiUserListFavorite,
-	MiUserListMembership,
-	MiUserNotePining,
-	MiUserPending,
-	MiUserProfile,
-	MiUserPublickey,
-	MiUserSecurityKey,
-	MiWebhook,
-	MiSystemWebhook,
-	MiChannel,
-	MiRetentionAggregation,
-	MiRole,
-	MiRoleAssignment,
-	MiFlash,
-	MiFlashLike,
-	MiUserMemo,
-	MiChatMessage,
-	MiChatRoom,
-	MiChatRoomMembership,
-	MiChatRoomInvitation,
-	MiChatApproval,
-	MiBubbleGameRecord,
-	MiReversiGame,
+    MiAbuseUserReport,
+    MiAbuseReportNotificationRecipient,
+    MiAccessToken,
+    MiAd,
+    MiAnnouncement,
+    MiAnnouncementRead,
+    MiAntenna,
+    MiApp,
+    MiAvatarDecoration,
+    MiAuthSession,
+    MiBlocking,
+    MiChannelFollowing,
+    MiChannelFavorite,
+    MiClip,
+    MiClipNote,
+    MiClipFavorite,
+    MiDriveFile,
+    MiDriveFolder,
+    MiEmoji,
+    MiFollowing,
+    MiFollowRequest,
+    MiGalleryLike,
+    MiGalleryPost,
+    MiHashtag,
+    MiInstance,
+    MiMeta,
+    MiModerationLog,
+    MiMuting,
+    MiRenoteMuting,
+    MiNote,
+    MiNoteDraft,
+    MiNoteFavorite,
+    MiNoteReaction,
+    MiNoteRevision,
+    MiNoteThreadMuting,
+    MiPage,
+    MiPageLike,
+    MiPasswordResetRequest,
+    MiPoll,
+    MiPollVote,
+    MiPromoNote,
+    MiPromoRead,
+    MiRegistrationTicket,
+    MiRegistryItem,
+    MiRelay,
+    MiSignin,
+    MiSwSubscription,
+    MiSystemAccount,
+    MiUsedUsername,
+    MiUser,
+    MiUserIp,
+    MiUserKeypair,
+    MiUserList,
+    MiUserListFavorite,
+    MiUserListMembership,
+    MiUserNotePining,
+    MiUserPending,
+    MiUserProfile,
+    MiUserPublickey,
+    MiUserSecurityKey,
+    MiWebhook,
+    MiSystemWebhook,
+    MiChannel,
+    MiRetentionAggregation,
+    MiRole,
+    MiRoleAssignment,
+    MiFlash,
+    MiFlashLike,
+    MiUserMemo,
+    MiChatMessage,
+    MiChatRoom,
+    MiChatRoomMembership,
+    MiChatRoomInvitation,
+    MiChatApproval,
+    MiBubbleGameRecord,
+    MiReversiGame,
 };
 
 export type AbuseUserReportsRepository = Repository<MiAbuseUserReport> & MiRepository<MiAbuseUserReport>;
 export type AbuseReportNotificationRecipientRepository =
-	Repository<MiAbuseReportNotificationRecipient>
-	& MiRepository<MiAbuseReportNotificationRecipient>;
+    Repository<MiAbuseReportNotificationRecipient>
+    & MiRepository<MiAbuseReportNotificationRecipient>;
 export type AccessTokensRepository = Repository<MiAccessToken> & MiRepository<MiAccessToken>;
 export type AdsRepository = Repository<MiAd> & MiRepository<MiAd>;
 export type AnnouncementsRepository = Repository<MiAnnouncement> & MiRepository<MiAnnouncement>;
@@ -271,6 +273,7 @@ export type NotesRepository = Repository<MiNote> & MiRepository<MiNote>;
 export type NoteDraftsRepository = Repository<MiNoteDraft> & MiRepository<MiNoteDraft>;
 export type NoteFavoritesRepository = Repository<MiNoteFavorite> & MiRepository<MiNoteFavorite>;
 export type NoteReactionsRepository = Repository<MiNoteReaction> & MiRepository<MiNoteReaction>;
+export type NoteRevisionsRepository = Repository<MiNoteRevision> & MiRepository<MiNoteRevision>;
 export type NoteThreadMutingsRepository = Repository<MiNoteThreadMuting> & MiRepository<MiNoteThreadMuting>;
 export type PagesRepository = Repository<MiPage> & MiRepository<MiPage>;
 export type PageLikesRepository = Repository<MiPageLike> & MiRepository<MiPageLike>;

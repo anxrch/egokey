@@ -44,6 +44,7 @@ import { MiRenoteMuting } from '@/models/RenoteMuting.js';
 import { MiNote } from '@/models/Note.js';
 import { MiNoteFavorite } from '@/models/NoteFavorite.js';
 import { MiNoteReaction } from '@/models/NoteReaction.js';
+import { MiNoteRevision } from '@/models/NoteRevision.js';
 import { MiNoteThreadMuting } from '@/models/NoteThreadMuting.js';
 import { MiNoteDraft } from '@/models/NoteDraft.js';
 import { MiPage } from '@/models/Page.js';
@@ -95,228 +96,229 @@ export const dbLogger = new MisskeyLogger('db');
 const sqlLogger = dbLogger.createSubLogger('sql', 'gray');
 
 export type LoggerProps = {
-	disableQueryTruncation?: boolean;
-	enableQueryParamLogging?: boolean;
-	printReplicationMode?: boolean,
+    disableQueryTruncation?: boolean;
+    enableQueryParamLogging?: boolean;
+    printReplicationMode?: boolean,
 };
 
 function highlightSql(sql: string) {
-	return highlight.highlight(sql, {
-		language: 'sql', ignoreIllegals: true,
-	});
+    return highlight.highlight(sql, {
+        language: 'sql', ignoreIllegals: true,
+    });
 }
 
 function truncateSql(sql: string) {
-	return sql.length > 100 ? `${sql.substring(0, 100)}...` : sql;
+    return sql.length > 100 ? `${sql.substring(0, 100)}...` : sql;
 }
 
 function stringifyParameter(param: any) {
-	if (param instanceof Date) {
-		return param.toISOString();
-	} else {
-		return param;
-	}
+    if (param instanceof Date) {
+        return param.toISOString();
+    } else {
+        return param;
+    }
 }
 
 class MyCustomLogger implements Logger {
-	constructor(private props: LoggerProps = {}) {
-	}
+    constructor(private props: LoggerProps = {}) {
+    }
 
-	@bindThis
-	private transformQueryLog(sql: string, opts?: {
-		prefix?: string;
-	}) {
-		let modded = opts?.prefix ? opts.prefix + sql : sql;
-		if (!this.props.disableQueryTruncation) {
-			modded = truncateSql(modded);
-		}
+    @bindThis
+    private transformQueryLog(sql: string, opts?: {
+        prefix?: string;
+    }) {
+        let modded = opts?.prefix ? opts.prefix + sql : sql;
+        if (!this.props.disableQueryTruncation) {
+            modded = truncateSql(modded);
+        }
 
-		return highlightSql(modded);
-	}
+        return highlightSql(modded);
+    }
 
-	@bindThis
-	private transformParameters(parameters?: any[]) {
-		if (this.props.enableQueryParamLogging && parameters && parameters.length > 0) {
-			return parameters.map(stringifyParameter);
-		}
+    @bindThis
+    private transformParameters(parameters?: any[]) {
+        if (this.props.enableQueryParamLogging && parameters && parameters.length > 0) {
+            return parameters.map(stringifyParameter);
+        }
 
-		return undefined;
-	}
+        return undefined;
+    }
 
-	@bindThis
-	public logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner) {
-		const prefix = (this.props.printReplicationMode && queryRunner)
-			? `[${queryRunner.getReplicationMode()}] `
-			: undefined;
-		sqlLogger.info(this.transformQueryLog(query, { prefix }), this.transformParameters(parameters));
-	}
+    @bindThis
+    public logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner) {
+        const prefix = (this.props.printReplicationMode && queryRunner)
+            ? `[${queryRunner.getReplicationMode()}] `
+            : undefined;
+        sqlLogger.info(this.transformQueryLog(query, { prefix }), this.transformParameters(parameters));
+    }
 
-	@bindThis
-	public logQueryError(error: string, query: string, parameters?: any[], queryRunner?: QueryRunner) {
-		const prefix = (this.props.printReplicationMode && queryRunner)
-			? `[${queryRunner.getReplicationMode()}] `
-			: undefined;
-		sqlLogger.error(this.transformQueryLog(query, { prefix }), this.transformParameters(parameters));
-	}
+    @bindThis
+    public logQueryError(error: string, query: string, parameters?: any[], queryRunner?: QueryRunner) {
+        const prefix = (this.props.printReplicationMode && queryRunner)
+            ? `[${queryRunner.getReplicationMode()}] `
+            : undefined;
+        sqlLogger.error(this.transformQueryLog(query, { prefix }), this.transformParameters(parameters));
+    }
 
-	@bindThis
-	public logQuerySlow(time: number, query: string, parameters?: any[], queryRunner?: QueryRunner) {
-		const prefix = (this.props.printReplicationMode && queryRunner)
-			? `[${queryRunner.getReplicationMode()}] `
-			: undefined;
-		sqlLogger.warn(this.transformQueryLog(query, { prefix }), this.transformParameters(parameters));
-	}
+    @bindThis
+    public logQuerySlow(time: number, query: string, parameters?: any[], queryRunner?: QueryRunner) {
+        const prefix = (this.props.printReplicationMode && queryRunner)
+            ? `[${queryRunner.getReplicationMode()}] `
+            : undefined;
+        sqlLogger.warn(this.transformQueryLog(query, { prefix }), this.transformParameters(parameters));
+    }
 
-	@bindThis
-	public logSchemaBuild(message: string) {
-		sqlLogger.info(message);
-	}
+    @bindThis
+    public logSchemaBuild(message: string) {
+        sqlLogger.info(message);
+    }
 
-	@bindThis
-	public log(message: string) {
-		sqlLogger.info(message);
-	}
+    @bindThis
+    public log(message: string) {
+        sqlLogger.info(message);
+    }
 
-	@bindThis
-	public logMigration(message: string) {
-		sqlLogger.info(message);
-	}
+    @bindThis
+    public logMigration(message: string) {
+        sqlLogger.info(message);
+    }
 }
 
 export const entities = [
-	MiAnnouncement,
-	MiAnnouncementRead,
-	MiMeta,
-	MiInstance,
-	MiApp,
-	MiAvatarDecoration,
-	MiAuthSession,
-	MiAccessToken,
-	MiUser,
-	MiUserProfile,
-	MiUserKeypair,
-	MiUserPublickey,
-	MiUserList,
-	MiUserListFavorite,
-	MiUserListMembership,
-	MiUserNotePining,
-	MiUserSecurityKey,
-	MiUsedUsername,
-	MiFollowing,
-	MiFollowRequest,
-	MiMuting,
-	MiRenoteMuting,
-	MiBlocking,
-	MiNote,
-	MiNoteFavorite,
-	MiNoteReaction,
-	MiNoteThreadMuting,
-	MiNoteDraft,
-	MiPage,
-	MiPageLike,
-	MiGalleryPost,
-	MiGalleryLike,
-	MiDriveFile,
-	MiDriveFolder,
-	MiPoll,
-	MiPollVote,
-	MiEmoji,
-	MiHashtag,
-	MiSwSubscription,
-	MiSystemAccount,
-	MiAbuseUserReport,
-	MiAbuseReportNotificationRecipient,
-	MiRegistrationTicket,
-	MiSignin,
-	MiModerationLog,
-	MiClip,
-	MiClipNote,
-	MiClipFavorite,
-	MiAntenna,
-	MiPromoNote,
-	MiPromoRead,
-	MiRelay,
-	MiChannel,
-	MiChannelFollowing,
-	MiChannelFavorite,
-	MiRegistryItem,
-	MiAd,
-	MiPasswordResetRequest,
-	MiUserPending,
-	MiWebhook,
-	MiSystemWebhook,
-	MiUserIp,
-	MiRetentionAggregation,
-	MiRole,
-	MiRoleAssignment,
-	MiFlash,
-	MiFlashLike,
-	MiUserMemo,
-	MiChatMessage,
-	MiChatRoom,
-	MiChatRoomMembership,
-	MiChatRoomInvitation,
-	MiChatApproval,
-	MiBubbleGameRecord,
-	MiReversiGame,
-	...charts,
+    MiAnnouncement,
+    MiAnnouncementRead,
+    MiMeta,
+    MiInstance,
+    MiApp,
+    MiAvatarDecoration,
+    MiAuthSession,
+    MiAccessToken,
+    MiUser,
+    MiUserProfile,
+    MiUserKeypair,
+    MiUserPublickey,
+    MiUserList,
+    MiUserListFavorite,
+    MiUserListMembership,
+    MiUserNotePining,
+    MiUserSecurityKey,
+    MiUsedUsername,
+    MiFollowing,
+    MiFollowRequest,
+    MiMuting,
+    MiRenoteMuting,
+    MiBlocking,
+    MiNote,
+    MiNoteFavorite,
+    MiNoteReaction,
+    MiNoteRevision,
+    MiNoteThreadMuting,
+    MiNoteDraft,
+    MiPage,
+    MiPageLike,
+    MiGalleryPost,
+    MiGalleryLike,
+    MiDriveFile,
+    MiDriveFolder,
+    MiPoll,
+    MiPollVote,
+    MiEmoji,
+    MiHashtag,
+    MiSwSubscription,
+    MiSystemAccount,
+    MiAbuseUserReport,
+    MiAbuseReportNotificationRecipient,
+    MiRegistrationTicket,
+    MiSignin,
+    MiModerationLog,
+    MiClip,
+    MiClipNote,
+    MiClipFavorite,
+    MiAntenna,
+    MiPromoNote,
+    MiPromoRead,
+    MiRelay,
+    MiChannel,
+    MiChannelFollowing,
+    MiChannelFavorite,
+    MiRegistryItem,
+    MiAd,
+    MiPasswordResetRequest,
+    MiUserPending,
+    MiWebhook,
+    MiSystemWebhook,
+    MiUserIp,
+    MiRetentionAggregation,
+    MiRole,
+    MiRoleAssignment,
+    MiFlash,
+    MiFlashLike,
+    MiUserMemo,
+    MiChatMessage,
+    MiChatRoom,
+    MiChatRoomMembership,
+    MiChatRoomInvitation,
+    MiChatApproval,
+    MiBubbleGameRecord,
+    MiReversiGame,
+    ...charts,
 ];
 
 const log = process.env.NODE_ENV !== 'production';
 
 export function createPostgresDataSource(config: Config) {
-	return new DataSource({
-		type: 'postgres',
-		host: config.db.host,
-		port: config.db.port,
-		username: config.db.user,
-		password: config.db.pass,
-		database: config.db.db,
-		extra: {
-			statement_timeout: 1000 * 10,
-			...config.db.extra,
-		},
-		...(config.dbReplications ? {
-			replication: {
-				master: {
-					host: config.db.host,
-					port: config.db.port,
-					username: config.db.user,
-					password: config.db.pass,
-					database: config.db.db,
-				},
-				slaves: config.dbSlaves!.map(rep => ({
-					host: rep.host,
-					port: rep.port,
-					username: rep.user,
-					password: rep.pass,
-					database: rep.db,
-				})),
-			},
-		} : {}),
-		synchronize: process.env.NODE_ENV === 'test',
-		dropSchema: process.env.NODE_ENV === 'test',
-		cache: !config.db.disableCache && process.env.NODE_ENV !== 'test' ? { // dbをcloseしても何故かredisのコネクションが内部的に残り続けるようで、テストの際に支障が出るため無効にする(キャッシュも含めてテストしたいため本当は有効にしたいが...)
-			type: 'ioredis',
-			options: {
-				host: config.redis.host,
-				port: config.redis.port,
-				family: config.redis.family ?? 0,
-				password: config.redis.pass,
-				keyPrefix: `${config.redis.prefix}:query:`,
-				db: config.redis.db ?? 0,
-			},
-		} : false,
-		logging: log,
-		logger: log
-			? new MyCustomLogger({
-				disableQueryTruncation: config.logging?.sql?.disableQueryTruncation,
-				enableQueryParamLogging: config.logging?.sql?.enableQueryParamLogging,
-				printReplicationMode: !!config.dbReplications,
-			})
-			: undefined,
-		maxQueryExecutionTime: 300,
-		entities: entities,
-		migrations: ['../../migration/*.js'],
-	});
+    return new DataSource({
+        type: 'postgres',
+        host: config.db.host,
+        port: config.db.port,
+        username: config.db.user,
+        password: config.db.pass,
+        database: config.db.db,
+        extra: {
+            statement_timeout: 1000 * 10,
+            ...config.db.extra,
+        },
+        ...(config.dbReplications ? {
+            replication: {
+                master: {
+                    host: config.db.host,
+                    port: config.db.port,
+                    username: config.db.user,
+                    password: config.db.pass,
+                    database: config.db.db,
+                },
+                slaves: config.dbSlaves!.map(rep => ({
+                    host: rep.host,
+                    port: rep.port,
+                    username: rep.user,
+                    password: rep.pass,
+                    database: rep.db,
+                })),
+            },
+        } : {}),
+        synchronize: process.env.NODE_ENV === 'test',
+        dropSchema: process.env.NODE_ENV === 'test',
+        cache: !config.db.disableCache && process.env.NODE_ENV !== 'test' ? { // dbをcloseしても何故かredisのコネクションが内部的に残り続けるようで、テストの際に支障が出るため無効にする(キャッシュも含めてテストしたいため本当は有効にしたいが...)
+            type: 'ioredis',
+            options: {
+                host: config.redis.host,
+                port: config.redis.port,
+                family: config.redis.family ?? 0,
+                password: config.redis.pass,
+                keyPrefix: `${config.redis.prefix}:query:`,
+                db: config.redis.db ?? 0,
+            },
+        } : false,
+        logging: log,
+        logger: log
+            ? new MyCustomLogger({
+                disableQueryTruncation: config.logging?.sql?.disableQueryTruncation,
+                enableQueryParamLogging: config.logging?.sql?.enableQueryParamLogging,
+                printReplicationMode: !!config.dbReplications,
+            })
+            : undefined,
+        maxQueryExecutionTime: 300,
+        entities: entities,
+        migrations: ['../../migration/*.js'],
+    });
 }
