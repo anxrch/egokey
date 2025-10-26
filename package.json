@@ -89,7 +89,8 @@
     "pnpm": {
         "overrides": {
             "@aiscript-dev/aiscript-languageserver": "-",
-            "axios": ">=1.12.2"
+            "deep-email-validator>axios": "0.30.2",
+            "@misskey-dev/summaly>private-ip": "npm:ipaddr.js@2.2.0"
         },
         "patchedDependencies": {
             "@misskey-dev/summaly@5.2.4": "patches/@misskey-dev__summaly@5.2.4.patch"
