@@ -1,127 +1,119 @@
-# Misskey Test Environment Setup
+# Test Environment Setup
 
-This document describes the test environment setup completed for the Misskey monorepo.
+## Overview
 
-## ✅ Completed Setup Steps
+This document describes how the frontend test environment is configured to run tests in isolation without requiring external services or network connectivity.
 
-### 1. Tooling Versions
-- **Node.js**: v22.15.0 (as specified in `.node-version`)
-- **pnpm**: 10.18.2 (as specified in `packageManager` in package.json)
-- **Docker**: 28.5.1
+## Network Request Mocking
 
-### 2. System Packages Installed
-All required native dependencies have been installed:
-- `build-essential` (gcc 13.3.0, GNU Make 4.3)
-- `python3` (3.12.3)
-- `pkg-config` (1.8.1)
-- `libcairo2-dev` (1.18.0)
-- `libpango1.0-dev` (1.52.1)
-- `libjpeg-dev`
-- `libgif-dev`
-- `librsvg2-2` (2.58.0)
-- `ffmpeg` (6.1.1)
+All HTTP requests made during frontend tests are intercepted and mocked using `vitest-fetch-mock`. This prevents tests from attempting to connect to real servers (like `localhost:3000`) and ensures tests run reliably in any environment.
 
-### 3. Git Submodules
-- `fluent-emojis` submodule initialized and checked out
-- Commit: `cae981eb4c5189ea9ea3230e83b876a5068df7d1`
+### Implementation
 
-### 4. Configuration Files
-- ✅ `.config/test.yml` created from `.github/misskey/test.yml`
-- ✅ `/etc/hosts` updated with `127.0.0.1 misskey.local`
+The mocking behavior is configured in `packages/frontend/test/init.ts`, which is automatically loaded before all tests run.
 
-### 5. Data Services (Docker Containers)
+### Mocked Endpoints
 
-#### PostgreSQL 15
-- **Container name**: `misskey-test-postgres`
-- **Image**: `postgres:15` (15.14)
-- **Port**: 54312 (host) → 5432 (container)
-- **Database**: `test-misskey`
-- **User**: `postgres`
-- **Auth**: trust method (no password required)
-- **Status**: ✅ Running and accepting connections
+The following request patterns are intercepted and handled:
 
-#### Redis 7
-- **Container name**: `misskey-test-redis`
-- **Image**: `redis:7` (7.4.6)
-- **Port**: 56312 (host) → 6379 (container)
-- **Status**: ✅ Running and responding to PING
+1. **API Endpoints** (`/api/*`)
+   - All Misskey API requests return empty successful responses by default
+   - Individual tests can override this behavior using `fetchMock.mockOnceIf()` or similar methods
 
-### 6. Dependencies & Binaries
-- ✅ All pnpm workspace dependencies installed
-- ✅ pnpm store populated via `pnpm fetch`
-- ✅ Cypress binary 15.4.0 cached at `/home/engine/.cache/Cypress/15.4.0`
+2. **URL Preview Endpoint** (`/url`)
+   - Returns a minimal valid summaly response structure
+   - Includes fields: `url`, `title`, `description`, `thumbnail`, `icon`, `sitename`, `player`
+   - The `url` field echoes back the requested URL
 
-## 🔍 Verification
+3. **Static Assets** (`/client-assets/*`, `/assets/*`)
+   - Return empty successful responses to prevent 404 errors
 
-All acceptance criteria have been met:
+4. **All Other Requests**
+   - Return a 404 response to identify unexpected network calls during development
 
-1. ✅ Required Node/pnpm versions are active
-2. ✅ Git submodules synced
-3. ✅ Native tools (ffmpeg, build toolchain, graphics libs) installed
-4. ✅ `.config/test.yml` exists and references correct ports
-5. ✅ Postgres on port 54312 is healthy and reachable
-6. ✅ Redis on port 56312 is healthy and reachable
-7. ✅ Cypress binary cached and ready
+### Global Test Stubs
 
-## 🚀 Running Tests
+The test environment also provides the following global stubs:
 
-Now that the environment is prepared, you can run:
+- **window.location**: Stubbed to `http://localhost:3000/` with all standard location properties
+- **WebSocket**: A minimal mock to prevent misskey-js from throwing errors
+- **AudioContext**: Mocked to support components that use the Web Audio API
+- **Meta tags**: A mock `instance_url` meta tag is injected if it doesn't exist
 
-```bash
-# Run all tests
-pnpm test
+## Writing Tests
 
-# Run backend Jest tests
-pnpm jest
+### Using the Default Mocks
 
-# Run Jest with coverage
-pnpm jest-and-coverage
+Most tests will work automatically with the default mocks. Simply import your component and render it:
 
-# Run E2E tests (starts test server and runs Cypress)
-pnpm e2e
+```typescript
+import { render } from '@testing-library/vue';
+import './init';
+import MyComponent from '@/components/MyComponent.vue';
 
-# Open Cypress interactively
-pnpm cy:open
-
-# Run specific Cypress tests
-pnpm cy:run
+test('my test', () => {
+  const { getByText } = render(MyComponent);
+  // ... assertions
+});
 ```
 
-## 📝 Environment Variables
+### Overriding Mocks for Specific Tests
 
-When running backend CLI utilities, you may need:
-```bash
-export MISSKEY_CONFIG_YML=test.yml
-export NODE_ENV=test
+If a test needs custom API responses, you can override the default mock behavior:
+
+```typescript
+import { fetchMock } from './init';
+
+test('with custom API response', async () => {
+  fetchMock.mockOnceIf((req) => {
+    const url = new URL(req.url);
+    return url.pathname === '/api/my-endpoint';
+  }, () => {
+    return {
+      status: 200,
+      body: JSON.stringify({ custom: 'data' }),
+    };
+  });
+
+  // ... render component and test
+});
 ```
 
-## 🐳 Managing Docker Containers
+### Resetting Mocks
 
-```bash
-# View running containers
-docker ps
+Always reset mocks in `afterEach` hooks to prevent test pollution:
 
-# Stop containers
-docker stop misskey-test-postgres misskey-test-redis
+```typescript
+import { afterEach } from 'vitest';
+import { fetchMock } from './init';
 
-# Start containers
-docker start misskey-test-postgres misskey-test-redis
-
-# Remove containers (to recreate from scratch)
-docker rm -f misskey-test-postgres misskey-test-redis
+afterEach(() => {
+  fetchMock.resetMocks();
+});
 ```
 
-## 📋 Test Configuration
+## Troubleshooting
 
-The test configuration (`.config/test.yml`) includes:
-- **URL**: http://misskey.local
-- **Port**: 61812 (Misskey test server)
-- **Database**: PostgreSQL on 127.0.0.1:54312
-- **Redis**: 127.0.0.1:56312
-- **ID Generation**: aidx
-- **Proxy Remote Files**: enabled
+### Connection Refused Errors
 
----
+If you see `ECONNREFUSED` errors during tests, it means a component is attempting to make a real HTTP request that isn't being caught by the fetch mock. Common causes:
 
-**Setup Date**: 2025-01-XX  
-**Branch**: `chore/test-env-misskey-node22-pnpm10-postgres15-redis7-ffmpeg-cypress`
+1. **Using native fetch without going through the global mock** - Ensure the fetch is using the global `window.fetch` or `fetch` function
+2. **WebSocket connections** - These need separate mocking (see WebSocket stub in init.ts)
+3. **Third-party libraries** - May need additional module mocking in vitest.config.ts
+
+### Module Resolution Errors
+
+If tests fail with "Failed to resolve entry for package" errors:
+
+1. Ensure all workspace packages are built: `pnpm -r build`
+2. Check that the package's `built/` directory exists
+3. Verify package.json exports are correctly configured
+
+## Best Practices
+
+1. **Avoid Live Data**: Never write tests that depend on real network calls or external services
+2. **Use Fixtures**: Create deterministic test data rather than fetching it dynamically
+3. **Mock Early**: Configure mocks before components mount to prevent race conditions
+4. **Clean Up**: Always reset mocks in afterEach hooks
+5. **Test Isolation**: Each test should be independent and not rely on state from other tests
