@@ -44,9 +44,10 @@ Three helper scripts are provided to manage test databases:
 
 Backend e2e tests use the configuration file at `.config/test.yml`, which is committed to the repository. This configuration specifies:
 
+- Test server base URL: http://127.0.0.1:61812
 - Test server port: 61812
-- PostgreSQL: localhost:54312, database `test-misskey`
-- Redis: localhost:56312
+- PostgreSQL: 127.0.0.1:54312 (database `misskey_test`, user `misskey_test`, password `misskey-test-password`)
+- Redis: 127.0.0.1:56312 (requirepass `misskey-test-redis`, database `1`)
 - Test ID algorithm: `aidx`
 
 ### Running Backend E2E Tests
@@ -73,11 +74,13 @@ The test databases run in Docker containers defined in `packages/backend/test/co
 
 - **PostgreSQL 15**: 
   - Port mapping: 127.0.0.1:54312 → container:5432
-  - Database: test-misskey
-  - Auth: trust method (no password required)
+  - Database: misskey_test
+  - User: misskey_test
+  - Password: misskey-test-password
   
 - **Redis 7**:
   - Port mapping: 127.0.0.1:56312 → container:6379
+  - requirepass: misskey-test-redis
 
 ## Cypress E2E Tests
 

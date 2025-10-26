@@ -15,9 +15,9 @@ The e2e test infrastructure has been improved to make it easier for contributors
 - **Purpose:** Provides standardized test configuration
 - **Source:** Sanitized version of `.github/misskey/test.yml`
 - **Configuration:**
-  - Test server: `http://misskey.local:61812`
-  - PostgreSQL: `localhost:54312` (database: `test-misskey`)
-  - Redis: `localhost:56312`
+  - Test server: `http://127.0.0.1:61812`
+  - PostgreSQL: `localhost:54312` (database: `misskey_test`, user: `misskey_test`, password: `misskey-test-password`)
+  - Redis: `localhost:56312` (requirepass: `misskey-test-redis`)
   - ID algorithm: `aidx`
 
 ### 2. Database Management Scripts

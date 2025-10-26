@@ -89,9 +89,9 @@ pnpm test-db:clean
 ## Configuration Files
 
 - **`.config/test.yml`**: Main test configuration (committed to repository)
-  - Test server port: 61812
-  - PostgreSQL: localhost:54312
-  - Redis: localhost:56312
+  - Test server base URL: http://127.0.0.1:61812 (port 61812)
+  - PostgreSQL: 127.0.0.1:54312 (database `misskey_test`, user `misskey_test`, password `misskey-test-password`)
+  - Redis: 127.0.0.1:56312 (requirepass `misskey-test-redis`, database `1`)
 
 - **`packages/backend/test/compose.yml`**: Docker Compose file for test databases
 
