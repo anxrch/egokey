@@ -209,6 +209,12 @@ export class MiUser {
 
 	@Column('boolean', {
 		default: false,
+		comment: 'Keep drive files when auto-deleting notes',
+	})
+	public autoDeleteKeepDriveFiles: boolean;
+
+	@Column('boolean', {
+		default: false,
 	})
 	public isHibernated: boolean;
 

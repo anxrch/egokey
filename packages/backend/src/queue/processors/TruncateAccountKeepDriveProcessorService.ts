@@ -6,7 +6,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Brackets, And, In, MoreThan, Not } from 'typeorm';
 import { DI } from '@/di-symbols.js';
-import type { NotesRepository, UserNotePiningsRepository, UsersRepository } from '@/models/_.js';
+import type { NotesRepository, UserNotePiningsRepository, UsersRepository, NoteFavoritesRepository } from '@/models/_.js';
 import type Logger from '@/logger.js';
 import type { MiNote } from '@/models/Note.js';
 import { bindThis } from '@/decorators.js';
@@ -29,6 +29,9 @@ export class TruncateAccountKeepDriveProcessorService {
 		@Inject(DI.userNotePiningsRepository)
 		private userNotePiningsRepository: UserNotePiningsRepository,
 
+		@Inject(DI.noteFavoritesRepository)
+		private noteFavoritesRepository: NoteFavoritesRepository,
+
 		private queueLoggerService: QueueLoggerService,
 		private noteDeleteService: NoteDeleteService,
 	) {
@@ -44,6 +47,8 @@ export class TruncateAccountKeepDriveProcessorService {
 			return;
 		}
 
+		const keepFavorites = job.data.keepFavorites ?? false;
+
 		const pinings = await this.userNotePiningsRepository.findBy({ userId: user.id });
 		const piningNoteIds = pinings.map(pining => pining.noteId);
 		const cascadingPiningNoteIds = piningNoteIds.length !== 0 ? await this.findCascadingNotes(piningNoteIds) : [];
@@ -55,15 +60,27 @@ export class TruncateAccountKeepDriveProcessorService {
 		const specifiedNoteIds = specifiedNotes.map(note => note.id);
 		const cascadingSpecifiedNoteIds = specifiedNoteIds.length !== 0 ? await this.findCascadingNotes(specifiedNoteIds) : [];
 
+		// 즐겨찾기 보호 옵션이 켜져 있으면 즐겨찾기한 노트도 보호
+		let favoriteNoteIds: MiNote['id'][] = [];
+		let cascadingFavoriteNoteIds: MiNote['id'][] = [];
+		if (keepFavorites) {
+			const favorites = await this.noteFavoritesRepository.findBy({ userId: user.id });
+			favoriteNoteIds = favorites.map(fav => fav.noteId);
+			cascadingFavoriteNoteIds = favoriteNoteIds.length !== 0 ? await this.findCascadingNotes(favoriteNoteIds) : [];
+			this.logger.info(`Found ${favoriteNoteIds.length} favorite notes to keep`);
+		}
+
+		const protectedNoteIds = [...piningNoteIds, ...cascadingPiningNoteIds, ...specifiedNoteIds, ...cascadingSpecifiedNoteIds, ...favoriteNoteIds, ...cascadingFavoriteNoteIds];
+
 		let cursor: MiNote['id'] | null = null;
 		while (true) {
 			const notes = await this.notesRepository.find({
 				where: {
 					userId: user.id,
 					...(cursor ? {
-						id: And(Not(In([...piningNoteIds, ...cascadingPiningNoteIds, ...specifiedNoteIds, ...cascadingSpecifiedNoteIds])), MoreThan(cursor)),
+						id: And(Not(In(protectedNoteIds)), MoreThan(cursor)),
 					} : {
-						id: Not(In([...piningNoteIds, ...cascadingPiningNoteIds, ...specifiedNoteIds, ...cascadingSpecifiedNoteIds])),
+						id: Not(In(protectedNoteIds)),
 					}),
 				},
 				take: 100,

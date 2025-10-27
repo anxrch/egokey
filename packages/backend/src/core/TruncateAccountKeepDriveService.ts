@@ -23,10 +23,10 @@ export class TruncateAccountKeepDriveService {
   public async truncateAccountKeepDrive(user: {
     id: string;
     host: string | null;
-  }): Promise<void> {
+  }, keepFavorites: boolean = false): Promise<void> {
     await this.usersRepository.findOneByOrFail({ id: user.id });
 
-    this.queueService.createTruncateAccountKeepDriveJob(user);
+    this.queueService.createTruncateAccountKeepDriveJob(user, { keepFavorites });
   }
 }
 

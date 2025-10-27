@@ -36,6 +36,9 @@ export const paramDef = {
 		autoDeleteKeepFavorites: {
 			type: 'boolean',
 		},
+		autoDeleteKeepDriveFiles: {
+			type: 'boolean',
+		},
 	},
 	required: [],
 } as const;
@@ -55,6 +58,10 @@ export default class extends Endpoint<typeof meta, typeof paramDef> {
 
 			if (ps.autoDeleteKeepFavorites !== undefined) {
 				updates.autoDeleteKeepFavorites = ps.autoDeleteKeepFavorites;
+			}
+
+			if (ps.autoDeleteKeepDriveFiles !== undefined) {
+				updates.autoDeleteKeepDriveFiles = ps.autoDeleteKeepDriveFiles;
 			}
 
 			await this.usersRepository.update(me.id, updates);

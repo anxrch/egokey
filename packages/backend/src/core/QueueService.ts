@@ -573,9 +573,10 @@ export class QueueService implements OnModuleInit {
 	}
 
 	@bindThis
-	public createTruncateAccountJob(user: ThinUser, opts = {}) {
+	public createTruncateAccountJob(user: ThinUser, opts: { keepFavorites?: boolean } = {}) {
 		return this.dbQueue.add('truncateAccount', {
 			user: { id: user.id },
+			keepFavorites: opts.keepFavorites ?? false,
 		}, {
 			removeOnComplete: true,
 			removeOnFail: true,
@@ -583,9 +584,10 @@ export class QueueService implements OnModuleInit {
 	}
 
 	@bindThis
-	public createTruncateAccountKeepDriveJob(user: ThinUser) {
+	public createTruncateAccountKeepDriveJob(user: ThinUser, opts: { keepFavorites?: boolean } = {}) {
 		return this.dbQueue.add('truncateAccountKeepDrive', {
 			user: { id: user.id },
+			keepFavorites: opts.keepFavorites ?? false,
 		}, {
 			removeOnComplete: true,
 			removeOnFail: true,

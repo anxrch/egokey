@@ -6,7 +6,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Brackets, And, In, MoreThan, Not } from 'typeorm';
 import { DI } from '@/di-symbols.js';
-import type { DriveFilesRepository, NotesRepository, UserNotePiningsRepository, UsersRepository } from '@/models/_.js';
+import type { DriveFilesRepository, NotesRepository, UserNotePiningsRepository, UsersRepository, NoteFavoritesRepository } from '@/models/_.js';
 import type Logger from '@/logger.js';
 import { DriveService } from '@/core/DriveService.js';
 import type { MiDriveFile } from '@/models/DriveFile.js';
@@ -34,6 +34,9 @@ export class TruncateAccountProcessorService {
 		@Inject(DI.driveFilesRepository)
 		private driveFilesRepository: DriveFilesRepository,
 
+		@Inject(DI.noteFavoritesRepository)
+		private noteFavoritesRepository: NoteFavoritesRepository,
+
 		private driveService: DriveService,
 		private queueLoggerService: QueueLoggerService,
 		private noteDeleteService: NoteDeleteService,
@@ -50,6 +53,8 @@ export class TruncateAccountProcessorService {
 			return;
 		}
 
+		const keepFavorites = job.data.keepFavorites ?? false;
+
 		const pinings = await this.userNotePiningsRepository.findBy({ userId: user.id });
 		const piningNoteIds = pinings.map(pining => pining.noteId); // pining.note always undefined (bug?)
 		const cascadingPiningNoteIds = piningNoteIds.length !== 0 ? await this.findCascadingNotes(piningNoteIds) : [];
@@ -61,7 +66,19 @@ export class TruncateAccountProcessorService {
 		const specifiedNoteIds = specifiedNotes.map(note => note.id);
 		const cascadingSpecifiedNoteIds = specifiedNoteIds.length !== 0 ? await this.findCascadingNotes(specifiedNoteIds) : [];
 
-		const keepFileIds = (await Promise.all([...piningNoteIds, ...cascadingPiningNoteIds, ...specifiedNoteIds, ...cascadingSpecifiedNoteIds].map(async (noteId) => {
+		// 즐겨찾기 보호 옵션이 켜져 있으면 즐겨찾기한 노트도 보호
+		let favoriteNoteIds: MiNote['id'][] = [];
+		let cascadingFavoriteNoteIds: MiNote['id'][] = [];
+		if (keepFavorites) {
+			const favorites = await this.noteFavoritesRepository.findBy({ userId: user.id });
+			favoriteNoteIds = favorites.map(fav => fav.noteId);
+			cascadingFavoriteNoteIds = favoriteNoteIds.length !== 0 ? await this.findCascadingNotes(favoriteNoteIds) : [];
+			this.logger.info(`Found ${favoriteNoteIds.length} favorite notes to keep`);
+		}
+
+		const protectedNoteIds = [...piningNoteIds, ...cascadingPiningNoteIds, ...specifiedNoteIds, ...cascadingSpecifiedNoteIds, ...favoriteNoteIds, ...cascadingFavoriteNoteIds];
+
+		const keepFileIds = (await Promise.all(protectedNoteIds.map(async (noteId) => {
 			const note = await this.notesRepository.findOneBy({ id: noteId });
 
 			return note?.fileIds;
@@ -83,9 +100,9 @@ export class TruncateAccountProcessorService {
 					where: {
 						userId: user.id,
 						...(cursor ? {
-							id: And(Not(In([...piningNoteIds, ...cascadingPiningNoteIds, ...specifiedNoteIds, ...cascadingSpecifiedNoteIds])), MoreThan(cursor)),
+							id: And(Not(In(protectedNoteIds)), MoreThan(cursor)),
 						} : {
-							id: Not(In([...piningNoteIds, ...cascadingPiningNoteIds, ...specifiedNoteIds, ...cascadingSpecifiedNoteIds])),
+							id: Not(In(protectedNoteIds)),
 						}),
 					},
 					take: 100,

@@ -86,6 +86,7 @@ export type DbUserDeleteJobData = {
 
 export type DbUserTruncateJobData = {
 	user: ThinUser;
+	keepFavorites?: boolean;
 };
 
 export type DbUserImportJobData = {

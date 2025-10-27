@@ -4,12 +4,14 @@
  */
 
 import { Inject, Injectable } from '@nestjs/common';
-import { IsNull, LessThan, Not } from 'typeorm';
+import { IsNull, LessThan, Not, In, Raw } from 'typeorm';
 import { DI } from '@/di-symbols.js';
-import type { NotesRepository, UsersRepository } from '@/models/_.js';
+import type { NotesRepository, UsersRepository, DriveFilesRepository } from '@/models/_.js';
 import type Logger from '@/logger.js';
 import { bindThis } from '@/decorators.js';
 import { IdService } from '@/core/IdService.js';
+import { DriveService } from '@/core/DriveService.js';
+import { NoteDeleteService } from '@/core/NoteDeleteService.js';
 import { QueueLoggerService } from '../QueueLoggerService.js';
 import type * as Bull from 'bullmq';
 
@@ -24,7 +26,12 @@ export class AutoDeleteNotesProcessorService {
 		@Inject(DI.notesRepository)
 		private notesRepository: NotesRepository,
 
+		@Inject(DI.driveFilesRepository)
+		private driveFilesRepository: DriveFilesRepository,
+
 		private idService: IdService,
+		private driveService: DriveService,
+		private noteDeleteService: NoteDeleteService,
 		private queueLoggerService: QueueLoggerService,
 	) {
 		this.logger = this.queueLoggerService.logger.createSubLogger('auto-delete-notes');
@@ -77,16 +84,73 @@ export class AutoDeleteNotesProcessorService {
 				}
 
 				const notesToDelete = await queryBuilder
-					.select('note.id')
 					.limit(1000) // 한 번에 최대 1000개씩 처리
 					.getMany();
 
 				if (notesToDelete.length > 0) {
 					const noteIds = notesToDelete.map(note => note.id);
-					await this.notesRepository.delete(noteIds);
 
-					stats.deletedCount += noteIds.length;
-					this.logger.info(`Deleted ${noteIds.length} notes for user ${user.id}`);
+					// 드라이브 파일 삭제가 필요한 경우
+					if (!user.autoDeleteKeepDriveFiles) {
+						// 모든 노트의 fileIds를 수집
+						const allFileIds = notesToDelete
+							.flatMap(note => note.fileIds)
+							.filter(fileId => fileId != null);
+
+						if (allFileIds.length > 0) {
+							try {
+								// 각 파일이 다른 노트에서도 사용 중인지 확인 후 삭제
+								const uniqueFileIds = [...new Set(allFileIds)];
+								let deletedFilesCount = 0;
+
+								for (const fileId of uniqueFileIds) {
+									// 이 파일이 삭제 예정이 아닌 다른 노트에서도 사용되는지 확인
+									const usageCount = await this.notesRepository.count({
+										where: {
+											userId: user.id,
+											fileIds: Raw(alias => `${alias} @> ARRAY[:fileId]::varchar[]`, { fileId }),
+											id: Not(In(noteIds)), // 삭제 대상이 아닌 노트에서
+										},
+									});
+
+									// 다른 노트에서 사용하지 않는 파일만 삭제
+									if (usageCount === 0) {
+										try {
+											const file = await this.driveFilesRepository.findOneBy({
+												id: fileId,
+												userId: user.id,
+											});
+
+											if (file) {
+												await this.driveService.deleteFile(file);
+												deletedFilesCount++;
+											}
+										} catch (fileError) {
+											this.logger.error(`Failed to delete file ${fileId}: ${fileError}`);
+										}
+									} else {
+										this.logger.info(`Skipping file ${fileId} (used by ${usageCount} other notes)`);
+									}
+								}
+
+								this.logger.info(`Deleted ${deletedFilesCount} drive files for user ${user.id}`);
+							} catch (fileError) {
+								this.logger.error(`Error deleting files for user ${user.id}: ${fileError}`);
+							}
+						}
+					}
+
+					// NoteDeleteService를 사용하여 노트 삭제 (통계, 이벤트, 검색 인덱스 업데이트)
+					for (const note of notesToDelete) {
+						try {
+							await this.noteDeleteService.delete(user, note, true); // quiet=true로 이벤트는 발행하지 않음
+						} catch (noteError) {
+							this.logger.error(`Failed to delete note ${note.id}: ${noteError}`);
+						}
+					}
+
+					stats.deletedCount += notesToDelete.length;
+					this.logger.info(`Deleted ${notesToDelete.length} notes for user ${user.id}`);
 				} else {
 					this.logger.info(`No notes to delete for user ${user.id}`);
 				}

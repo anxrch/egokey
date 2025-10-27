@@ -247,6 +247,13 @@ SPDX-License-Identifier: AGPL-3.0-only
 						</MkSwitch>
 					</SearchMarker>
 
+					<SearchMarker :keywords="['drive', 'file', 'keep']">
+						<MkSwitch v-model="autoDeleteKeepDriveFiles" @update:modelValue="saveAutoDelete()">
+							<template #label><SearchLabel>{{ i18n.ts.autoDeleteKeepDriveFiles }}</SearchLabel></template>
+							<template #caption><SearchText>{{ i18n.ts.autoDeleteKeepDriveFilesDescription }}</SearchText></template>
+						</MkSwitch>
+					</SearchMarker>
+
 					<MkInfo warn>{{ i18n.ts.autoDeleteNotesWarning }}</MkInfo>
 				</div>
 			</FormSection>
@@ -289,6 +296,7 @@ const hideOnlineStatus = ref($i.hideOnlineStatus);
 const publicReactions = ref($i.publicReactions);
 const autoDeleteNotesAfterDays = ref<number | null>($i?.autoDeleteNotesAfterDays ?? null);
 const autoDeleteKeepFavorites = ref($i?.autoDeleteKeepFavorites ?? false);
+const autoDeleteKeepDriveFiles = ref($i?.autoDeleteKeepDriveFiles ?? false);
 const {
 	model: followingVisibility,
 	def: followingVisibilityDef,
@@ -439,6 +447,7 @@ async function saveAutoDelete() {
 	await misskeyApi('i/update-auto-delete-settings', {
 		autoDeleteNotesAfterDays: autoDeleteNotesAfterDays.value,
 		autoDeleteKeepFavorites: !!autoDeleteKeepFavorites.value,
+		autoDeleteKeepDriveFiles: !!autoDeleteKeepDriveFiles.value,
 	});
 }
 
@@ -448,6 +457,7 @@ onMounted(async () => {
 		const settings = await misskeyApi('i/auto-delete-settings');
 		autoDeleteNotesAfterDays.value = settings.autoDeleteNotesAfterDays;
 		autoDeleteKeepFavorites.value = settings.autoDeleteKeepFavorites;
+		autoDeleteKeepDriveFiles.value = settings.autoDeleteKeepDriveFiles;
 	} catch (error) {
 		console.error('Failed to load auto-delete settings:', error);
 	}

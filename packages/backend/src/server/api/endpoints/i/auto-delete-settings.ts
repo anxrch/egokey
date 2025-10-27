@@ -25,6 +25,9 @@ export const meta = {
 			autoDeleteKeepFavorites: {
 				type: 'boolean',
 			},
+			autoDeleteKeepDriveFiles: {
+				type: 'boolean',
+			},
 		},
 	},
 } as const;
@@ -47,6 +50,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> {
 			return {
 				autoDeleteNotesAfterDays: user.autoDeleteNotesAfterDays,
 				autoDeleteKeepFavorites: user.autoDeleteKeepFavorites,
+				autoDeleteKeepDriveFiles: user.autoDeleteKeepDriveFiles,
 			};
 		});
 	}

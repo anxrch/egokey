@@ -21,6 +21,7 @@ export const paramDef = {
   properties: {
     password: { type: 'string' },
     token: { type: 'string', nullable: true },
+    keepFavorites: { type: 'boolean', default: false },
   },
   required: ['password'],
 } as const;
@@ -63,7 +64,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
         throw new Error('incorrect password');
       }
 
-      await this.truncateAccountKeepDriveService.truncateAccountKeepDrive(me);
+      await this.truncateAccountKeepDriveService.truncateAccountKeepDrive(me, ps.keepFavorites ?? false);
     });
   }
 }
