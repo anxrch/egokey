@@ -140,10 +140,10 @@ export class AutoDeleteNotesProcessorService {
 						}
 					}
 
-					// NoteDeleteService를 사용하여 노트 삭제 (통계, 이벤트, 검색 인덱스 업데이트)
+					// NoteDeleteService를 사용하여 노트 삭제 (통계, 이벤트, 검색 인덱스, 연합 업데이트)
 					for (const note of notesToDelete) {
 						try {
-							await this.noteDeleteService.delete(user, note, true); // quiet=true로 이벤트는 발행하지 않음
+							await this.noteDeleteService.delete(user, note, false); // quiet=false로 연합에도 반영
 						} catch (noteError) {
 							this.logger.error(`Failed to delete note ${note.id}: ${noteError}`);
 						}
