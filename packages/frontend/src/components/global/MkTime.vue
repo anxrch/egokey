@@ -53,7 +53,7 @@ const actualNow = useLowresTime();
 const now = computed(() => (props.origin ? props.origin.getTime() : actualNow.value));
 
 // eslint-disable-next-line vue/no-setup-props-reactivity-loss
-const ago = computed(() => (now.value - _time) / 1000/*ms*/);
+const ago = computed(() => (now.value - _time.value) / 1000/*ms*/);
 
 const relative = computed<string>(() => {
 	if (props.mode === 'absolute') return ''; // absoluteではrelativeを使わないので計算しない
