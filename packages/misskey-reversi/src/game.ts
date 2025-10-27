@@ -26,8 +26,8 @@ export type Undo = {
 	pos: number;
 
 	/**
-	 * 反転した石の位置の配列
-	 */
+     * 反転した石の位置の配列
+     */
 	effects: number[];
 
 	turn: Color | null;
@@ -53,13 +53,6 @@ export class Game {
 
 		//#region Options
 		this.opts = opts;
-
-		/* eslint-disable @typescript-eslint/no-unnecessary-condition */
-		if (this.opts.isLlotheo == null) this.opts.isLlotheo = false;
-		if (this.opts.canPutEverywhere == null) this.opts.canPutEverywhere = false;
-		if (this.opts.loopedBoard == null) this.opts.loopedBoard = false;
-		/* eslint-enable */
-
 		//#endregion
 
 		//#region Parse map data
@@ -165,10 +158,10 @@ export class Game {
 	}
 
 	/**
-	 * 指定のマスに石を置いた時の、反転させられる石を取得します
-	 * @param color 自分の色
-	 * @param initPos 位置
-	 */
+     * 指定のマスに石を置いた時の、反転させられる石を取得します
+     * @param color 自分の色
+     * @param initPos 位置
+     */
 	public effects(color: Color, initPos: number): number[] {
 		const enemyColor = !color;
 

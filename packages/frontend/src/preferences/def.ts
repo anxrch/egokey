@@ -41,6 +41,14 @@ export type StatusbarStore = {
 	props: Record<string, any>;
 };
 
+export type DataSaverStore = {
+	media: boolean;
+	avatar: boolean;
+	urlPreviewThumbnail: boolean;
+	disableUrlPreview: boolean;
+	code: boolean;
+};
+
 type OmitStrict<T, K extends keyof T> = T extends any ? Pick<T, Exclude<keyof T, K>> : never;
 
 // NOTE: デフォルト値は他の設定の状態に依存してはならない(依存していた場合、ユーザーがその設定項目単体で「初期値にリセット」した場合不具合の原因になる)
@@ -67,7 +75,7 @@ export const PREF_DEF = definePreferences({
 			name: 'calendar',
 			id: genId(), place: 'right', data: {},
 		}, {
-			name: 'notifications',
+			name: 'notifiions',
 			id: genId(), place: 'right', data: {},
 		}, {
 			name: 'trends',
@@ -280,6 +288,10 @@ export const PREF_DEF = definePreferences({
 	showAvatarDecorations: {
 		default: true,
 	},
+	mutedAvatarDecorationUsers: {
+		accountDependent: true,
+		default: [] as string[],
+	},
 	numberOfPageCache: {
 		default: 3,
 	},
@@ -307,6 +319,9 @@ export const PREF_DEF = definePreferences({
 	aiChanMode: {
 		default: false,
 	},
+		disableCatSpeech: {
+		default: false,
+	},
 	devMode: {
 		default: false,
 	},
@@ -316,7 +331,7 @@ export const PREF_DEF = definePreferences({
 	notificationPosition: {
 		default: 'rightBottom' as 'leftTop' | 'leftBottom' | 'rightTop' | 'rightBottom',
 	},
-	notificationStackAxis: {
+	notifiionStackAxis: {
 		default: 'horizontal' as 'vertical' | 'horizontal',
 	},
 	enableCondensedLine: {
@@ -325,7 +340,7 @@ export const PREF_DEF = definePreferences({
 	keepScreenOn: {
 		default: false,
 	},
-	useGroupedNotifications: {
+	useGroupedNotifiions: {
 		default: true,
 	},
 	dataSaver: {
@@ -335,7 +350,7 @@ export const PREF_DEF = definePreferences({
 			urlPreviewThumbnail: false,
 			disableUrlPreview: false,
 			code: false,
-		} satisfies Record<string, boolean>,
+		} as DataSaverStore,
 	},
 	hemisphere: {
 		default: hemisphere as 'N' | 'S',
@@ -398,13 +413,13 @@ export const PREF_DEF = definePreferences({
 			if (sameIdExists) throw new Error();
 			const sameNameExists = a.some(x => b.some(y => x.name === y.name));
 			if (sameNameExists) throw new Error();
-			return a.concat(b);
+			return a.con(b);
 		},
 	},
 	mutingEmojis: {
 		default: [] as string[],
 		mergeStrategy: (a, b) => {
-			return [...new Set(a.concat(b))];
+			return [...new Set(a.con(b))];
 		},
 	},
 	watermarkPresets: {
@@ -412,7 +427,7 @@ export const PREF_DEF = definePreferences({
 		default: [] as WatermarkPreset[],
 		mergeStrategy: (a, b) => {
 			const mergedItems = [] as typeof a;
-			for (const x of a.concat(b)) {
+			for (const x of a.con(b)) {
 				const sameIdItem = mergedItems.find(y => y.id === x.id);
 				if (sameIdItem != null) {
 					if (deepEqual(x, sameIdItem)) { // 完全な重複は無視
@@ -434,6 +449,9 @@ export const PREF_DEF = definePreferences({
 	defaultImageCompressionLevel: {
 		default: 2 as 0 | 1 | 2 | 3,
 	},
+	defaultVideoCompressionLevel: {
+		default: 2 as 0 | 1 | 2 | 3,
+	},
 
 	'sound.masterVolume': {
 		default: 0.5,
@@ -450,7 +468,7 @@ export const PREF_DEF = definePreferences({
 	'sound.on.noteMy': {
 		default: { type: 'syuilo/n-cea-4va', volume: 1 } as SoundStore,
 	},
-	'sound.on.notification': {
+	'sound.on.notifiion': {
 		default: { type: 'syuilo/n-ea', volume: 1 } as SoundStore,
 	},
 	'sound.on.reaction': {
@@ -506,6 +524,9 @@ export const PREF_DEF = definePreferences({
 		default: false,
 	},
 	'experimental.enableHapticFeedback': {
+		default: false,
+	},
+	'experimental.enableWebTranslatorApi': {
 		default: false,
 	},
 });

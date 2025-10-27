@@ -80,7 +80,7 @@ export class MiInstance {
 	})
 	public isNotResponding: boolean;
 
-	@Index()
+	@Index('IDX_99bb262237b9d1209eef4c1510')
 	@Column('boolean', {
 		default: false,
 	})

@@ -195,6 +195,24 @@ export class MiUser {
 	})
 	public isExplorable: boolean;
 
+	@Column('integer', {
+		nullable: true,
+		default: null,
+	})
+	public autoDeleteNotesAfterDays!: number | null;
+
+	@Column('boolean', {
+		default: true,
+
+	})
+	public autoDeleteKeepFavorites: boolean;
+
+	@Column('boolean', {
+		default: false,
+		comment: 'Keep drive files when auto-deleting notes',
+	})
+	public autoDeleteKeepDriveFiles: boolean;
+
 	@Column('boolean', {
 		default: false,
 	})

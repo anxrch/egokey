@@ -62,6 +62,7 @@ export type DbJobMap = {
 	importCustomEmojis: DbUserImportJobData;
 	deleteAccount: DbUserDeleteJobData;
 	truncateAccount: DbUserTruncateJobData;
+  truncateAccountKeepDrive: DbUserTruncateJobData;
 };
 
 export type DbJobDataWithUser = {
@@ -85,6 +86,7 @@ export type DbUserDeleteJobData = {
 
 export type DbUserTruncateJobData = {
 	user: ThinUser;
+	keepFavorites?: boolean;
 };
 
 export type DbUserImportJobData = {
@@ -112,6 +114,10 @@ export type ObjectStorageFileJobData = {
 
 export type EndedPollNotificationJobData = {
 	noteId: MiNote['id'];
+};
+
+export type PostScheduledNoteJobData = {
+	noteDraftId: string;
 };
 
 export type SystemWebhookDeliverJobData<T extends SystemWebhookEventType = SystemWebhookEventType> = {

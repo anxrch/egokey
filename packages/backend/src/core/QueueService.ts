@@ -4,7 +4,7 @@
  */
 
 import { randomUUID } from 'node:crypto';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { MetricsTime, type JobType } from 'bullmq';
 import { parse as parseRedisInfo } from 'redis-info';
 import { isDelete, type IActivity } from '@/core/activitypub/type.js';
@@ -31,6 +31,7 @@ import type {
 	DbQueue,
 	DeliverQueue,
 	EndedPollNotificationQueue,
+	PostScheduledNoteQueue,
 	InboxQueue,
 	ObjectStorageQueue,
 	RelationshipQueue,
@@ -44,6 +45,7 @@ import type * as Bull from 'bullmq';
 export const QUEUE_TYPES = [
 	'system',
 	'endedPollNotification',
+	'postScheduledNote',
 	'deliver',
 	'inbox',
 	'db',
@@ -82,16 +84,20 @@ const REPEATABLE_SYSTEM_JOB_DEF = [{
 	name: 'cleanRemoteNotes',
 	// 毎日午前4時に起動(最も人の少ない時間帯)
 	pattern: '0 4 * * *',
+}, {
+	name: 'autoDeleteNotes',
+	// 매일 오전 3시에 실행
+	pattern: '0 3 * * *',
 }];
-
 @Injectable()
-export class QueueService {
+export class QueueService implements OnModuleInit {
 	constructor(
 		@Inject(DI.config)
 		private config: Config,
 
 		@Inject('queue:system') public systemQueue: SystemQueue,
 		@Inject('queue:endedPollNotification') public endedPollNotificationQueue: EndedPollNotificationQueue,
+		@Inject('queue:postScheduledNote') public postScheduledNoteQueue: PostScheduledNoteQueue,
 		@Inject('queue:deliver') public deliverQueue: DeliverQueue,
 		@Inject('queue:inbox') public inboxQueue: InboxQueue,
 		@Inject('queue:db') public dbQueue: DbQueue,
@@ -100,32 +106,44 @@ export class QueueService {
 		@Inject('queue:userWebhookDeliver') public userWebhookDeliverQueue: UserWebhookDeliverQueue,
 		@Inject('queue:systemWebhookDeliver') public systemWebhookDeliverQueue: SystemWebhookDeliverQueue,
 	) {
-		for (const def of REPEATABLE_SYSTEM_JOB_DEF) {
-			this.systemQueue.upsertJobScheduler(def.name, {
-				pattern: def.pattern,
-				immediately: false,
-			}, {
-				name: def.name,
-				opts: {
-					// 期限ではなくcountで設定したいが、ジョブごとではなくキュー全体でカウントされるため、高頻度で実行されるジョブによって低頻度で実行されるジョブのログが消えることになる
-					removeOnComplete: {
-						age: 3600 * 24 * 7, // keep up to 7 days
-					},
-					removeOnFail: {
-						age: 3600 * 24 * 7, // keep up to 7 days
-					},
-				},
-			});
-		}
 
-		// 古いバージョンで作成され現在使われなくなったrepeatableジョブをクリーンアップ
-		this.systemQueue.getJobSchedulers().then(schedulers => {
+	}
+
+	async onModuleInit() {
+		console.log('[QueueService] onModuleInit: Setting up', REPEATABLE_SYSTEM_JOB_DEF.length, 'repeatable jobs');
+		try {
+			for (const def of REPEATABLE_SYSTEM_JOB_DEF) {
+				console.log('[QueueService] Setting up repeatable job:', def.name, 'pattern:', def.pattern);
+				const result = await this.systemQueue.upsertJobScheduler(def.name, {
+					pattern: def.pattern,
+					immediately: false,
+				}, {
+					name: def.name,
+					opts: {
+						removeOnComplete: {
+							age: 3600 * 24 * 7,
+						},
+						removeOnFail: {
+							age: 3600 * 24 * 7,
+						},
+					},
+				});
+				console.log('[QueueService] Result:', def.name, result);
+			}
+
+			// cleanup old jobs
+			const schedulers = await this.systemQueue.getJobSchedulers();
+			console.log('[QueueService] Found', schedulers.length, 'existing schedulers');
 			for (const scheduler of schedulers) {
 				if (!REPEATABLE_SYSTEM_JOB_DEF.some(def => def.name === scheduler.key)) {
-					this.systemQueue.removeJobScheduler(scheduler.key);
+					await this.systemQueue.removeJobScheduler(scheduler.key);
 				}
 			}
-		});
+			console.log('[QueueService] onModuleInit: All repeatable jobs set up successfully');
+		} catch (error) {
+			console.error('[QueueService] ERROR in onModuleInit:', error);
+			throw error;
+		}
 	}
 
 	@bindThis
@@ -555,9 +573,21 @@ export class QueueService {
 	}
 
 	@bindThis
-	public createTruncateAccountJob(user: ThinUser, opts = {}) {
+	public createTruncateAccountJob(user: ThinUser, opts: { keepFavorites?: boolean } = {}) {
 		return this.dbQueue.add('truncateAccount', {
 			user: { id: user.id },
+			keepFavorites: opts.keepFavorites ?? false,
+		}, {
+			removeOnComplete: true,
+			removeOnFail: true,
+		});
+	}
+
+	@bindThis
+	public createTruncateAccountKeepDriveJob(user: ThinUser, opts: { keepFavorites?: boolean } = {}) {
+		return this.dbQueue.add('truncateAccountKeepDrive', {
+			user: { id: user.id },
+			keepFavorites: opts.keepFavorites ?? false,
 		}, {
 			removeOnComplete: true,
 			removeOnFail: true,
@@ -733,6 +763,7 @@ export class QueueService {
 		switch (type) {
 			case 'system': return this.systemQueue;
 			case 'endedPollNotification': return this.endedPollNotificationQueue;
+			case 'postScheduledNote': return this.postScheduledNoteQueue;
 			case 'deliver': return this.deliverQueue;
 			case 'inbox': return this.inboxQueue;
 			case 'db': return this.dbQueue;

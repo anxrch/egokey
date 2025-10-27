@@ -23,11 +23,11 @@ export class TruncateAccountService {
 	public async truncateAccount(user: {
 		id: string;
 		host: string | null;
-	}): Promise<void> {
+	}, keepFavorites: boolean = false): Promise<void> {
 		const _user = await this.usersRepository.findOneByOrFail({ id: user.id });
 
 		this.queueService.createTruncateAccountJob(user, {
-			soft: false,
+			keepFavorites,
 		});
 	}
 }

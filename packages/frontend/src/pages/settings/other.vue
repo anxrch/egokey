@@ -65,7 +65,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 					<div class="_gaps_m">
 						<FormInfo warn>{{ i18n.ts._accountTruncate.mayTakeTime }}</FormInfo>
-						<MkButton v-if="!$i.isDeleted" danger @click="truncateAccount">{{ i18n.ts._accountTruncate.requestAccountTruncate }}</MkButton>
+						
+						<MkSwitch v-model="truncateKeepDrive">
+							<template #label>{{ i18n.ts.autoDeleteKeepDriveFiles }}</template>
+							<template #caption>{{ i18n.ts._accountTruncate.keepDriveDescription }}</template>
+						</MkSwitch>
+						
+						<MkSwitch v-model="truncateKeepFavorites">
+							<template #label>{{ i18n.ts.autoDeleteKeepFavorites }}</template>
+							<template #caption>{{ i18n.ts._accountTruncate.keepFavoritesDescription }}</template>
+						</MkSwitch>
+						
+						<MkButton v-if="!$i.isDeleted" danger @click="requestTruncateAccount">{{ i18n.ts._accountTruncate.requestAccountTruncate }}</MkButton>
 						<MkButton v-else disabled>{{ i18n.ts._accountTruncate.inProgress }}</MkButton>
 					</div>
 				</MkFolder>
@@ -115,6 +126,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<MkSwitch v-model="enableHapticFeedback">
 							<template #label>Enable haptic feedback</template>
 						</MkSwitch>
+						<MkSwitch v-model="enableWebTranslatorApi">
+							<template #label>Enable in-browser translator API</template>
+						</MkSwitch>
 					</div>
 				</MkFolder>
 			</SearchMarker>
@@ -163,7 +177,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { computed, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import XMigration from './migration.vue';
 import MkSwitch from '@/components/MkSwitch.vue';
 import FormLink from '@/components/form/link.vue';
@@ -195,6 +209,10 @@ const devMode = prefer.model('devMode');
 const stackingRouterView = prefer.model('experimental.stackingRouterView');
 const enableFolderPageView = prefer.model('experimental.enableFolderPageView');
 const enableHapticFeedback = prefer.model('experimental.enableHapticFeedback');
+const enableWebTranslatorApi = prefer.model('experimental.enableWebTranslatorApi');
+
+const truncateKeepDrive = ref(false);
+const truncateKeepFavorites = ref(false);
 
 watch(skipNoteRender, () => {
 	suggestReload();
@@ -240,6 +258,61 @@ async function truncateAccount() {
 		password: auth.result.password,
 		token: auth.result.token,
 	});
+
+	await os.alert({
+		title: i18n.ts._accountTruncate.started,
+	});
+}
+
+async function truncateAccountKeepDrive() {
+	{
+		const { canceled } = await os.confirm({
+			type: 'warning',
+			text: i18n.ts.truncateAccountConfirm,
+		});
+		if (canceled) return;
+	}
+
+	const auth = await os.authenticateDialog();
+	if (auth.canceled) return;
+
+	await os.apiWithDialog('i/truncate-account-keep-drive', {
+		password: auth.result.password,
+		token: auth.result.token,
+	});
+
+	await os.alert({
+		title: i18n.ts._accountTruncate.started,
+	});
+}
+
+async function requestTruncateAccount() {
+	{
+		const { canceled } = await os.confirm({
+			type: 'warning',
+			text: i18n.ts.truncateAccountConfirm,
+		});
+		if (canceled) return;
+	}
+
+	const auth = await os.authenticateDialog();
+	if (auth.canceled) return;
+
+	// 드라이브 유지 옵션이 켜져 있으면 truncate-account-keep-drive API 호출
+	if (truncateKeepDrive.value) {
+		await os.apiWithDialog('i/truncate-account-keep-drive', {
+			password: auth.result.password,
+			token: auth.result.token,
+			keepFavorites: truncateKeepFavorites.value,
+		});
+	} else {
+		// 드라이브도 삭제하는 일반 truncate (즐겨찾기 보호 옵션 포함)
+		await os.apiWithDialog('i/truncate-account', {
+			password: auth.result.password,
+			token: auth.result.token,
+			keepFavorites: truncateKeepFavorites.value,
+		});
+	}
 
 	await os.alert({
 		title: i18n.ts._accountTruncate.started,

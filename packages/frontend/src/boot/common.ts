@@ -16,6 +16,7 @@ import components from '@/components/index.js';
 import { applyTheme } from '@/theme.js';
 import { isDeviceDarkmode } from '@/utility/is-device-darkmode.js';
 import { updateI18n, i18n } from '@/i18n.js';
+import { locale, updateLocale } from '@@/js/locale.js';
 import { refreshCurrentAccount, login } from '@/accounts.js';
 import { store } from '@/store.js';
 import { fetchInstance, instance } from '@/instance.js';
@@ -69,9 +70,6 @@ export async function common(createVue: () => Promise<App<Element>>) {
 	if (lastVersion !== version) {
 		miLocalStorage.setItem('lastVersion', version);
 
-		// テーマリビルドするため
-		miLocalStorage.removeItem('theme');
-
 		try { // 変なバージョン文字列来るとcompareVersionsでエラーになるため
 			if (lastVersion != null && compareVersions(version, lastVersion) === 1) {
 				isClientUpdated = true;
@@ -81,7 +79,19 @@ export async function common(createVue: () => Promise<App<Element>>) {
 	//#endregion
 
 	//#region Detect language & fetch translations
-	storeBootloaderErrors({ ...i18n.ts._bootErrors, reload: i18n.ts.reload });
+	const localeVersion = miLocalStorage.getItem('localeVersion');
+	const localeOutdated = (localeVersion == null || localeVersion !== version || locale == null);
+	if (localeOutdated) {
+		const res = await window.fetch(`/assets/locales/${lang}.${version}.json`);
+		if (res.status === 200) {
+			const newLocale = await res.text();
+			const parsedNewLocale = JSON.parse(newLocale);
+			miLocalStorage.setItem('locale', newLocale);
+			miLocalStorage.setItem('localeVersion', version);
+			updateLocale(parsedNewLocale);
+			updateI18n(parsedNewLocale);
+		}
+	}
 
 	if (import.meta.hot) {
 		import.meta.hot.on('locale-update', async (updatedLang: string) => {
@@ -151,7 +161,21 @@ export async function common(createVue: () => Promise<App<Element>>) {
 	}
 	//#endregion
 
+	//#region Sync dark mode
+	if (prefer.s.syncDeviceDarkMode) {
+		store.set('darkMode', isDeviceDarkmode());
+	}
+
+	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (mql) => {
+		if (prefer.s.syncDeviceDarkMode) {
+			store.set('darkMode', mql.matches);
+		}
+	});
+	//#endregion
+
 	// NOTE: この処理は必ずクライアント更新チェック処理より後に来ること(テーマ再構築のため)
+	// NOTE: この処理は必ずダークモード判定処理より後に来ること(初回のテーマ適用のため)
+	// see: https://github.com/misskey-dev/misskey/issues/16562
 	watch(store.r.darkMode, (darkMode) => {
 		const theme = (() => {
 			if (darkMode) {
@@ -162,7 +186,7 @@ export async function common(createVue: () => Promise<App<Element>>) {
 		})();
 
 		applyTheme(theme);
-	}, { immediate: isSafeMode || miLocalStorage.getItem('theme') == null });
+	}, { immediate: true });
 
 	window.document.documentElement.dataset.colorScheme = store.s.darkMode ? 'dark' : 'light';
 
@@ -181,26 +205,6 @@ export async function common(createVue: () => Promise<App<Element>>) {
 				applyTheme(theme ?? defaultLightTheme);
 			}
 		});
-	}
-
-	//#region Sync dark mode
-	if (prefer.s.syncDeviceDarkMode) {
-		store.set('darkMode', isDeviceDarkmode());
-	}
-
-	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (mql) => {
-		if (prefer.s.syncDeviceDarkMode) {
-			store.set('darkMode', mql.matches);
-		}
-	});
-	//#endregion
-
-	if (!isSafeMode) {
-		if (prefer.s.darkTheme && store.s.darkMode) {
-			if (miLocalStorage.getItem('themeId') !== prefer.s.darkTheme.id) applyTheme(prefer.s.darkTheme);
-		} else if (prefer.s.lightTheme && !store.s.darkMode) {
-			if (miLocalStorage.getItem('themeId') !== prefer.s.lightTheme.id) applyTheme(prefer.s.lightTheme);
-		}
 
 		fetchInstanceMetaPromise.then(() => {
 			// TODO: instance.defaultLightTheme/instance.defaultDarkThemeが不正な形式だった場合のケア

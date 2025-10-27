@@ -12,38 +12,38 @@ import { GlobalModule } from '@/GlobalModule.js';
 import { MiNote } from '@/models/Note.js';
 
 describe('ApMfmService', () => {
-	let apMfmService: ApMfmService;
+    let apMfmService: ApMfmService;
 
-	beforeAll(async () => {
-		const app = await Test.createTestingModule({
-			imports: [GlobalModule, CoreModule],
-		}).compile();
-		apMfmService = app.get<ApMfmService>(ApMfmService);
-	});
+    beforeAll(async () => {
+        const app = await Test.createTestingModule({
+            imports: [GlobalModule, CoreModule],
+        }).compile();
+        apMfmService = app.get<ApMfmService>(ApMfmService);
+    });
 
-	describe('getNoteHtml', () => {
-		test('Do not provide _misskey_content for simple text', () => {
-			const note = {
-				text: 'テキスト #タグ @mention 🍊 :emoji: https://example.com',
-				mentionedRemoteUsers: '[]',
-			};
+    describe('getNoteHtml', () => {
+        test('Do not provide _misskey_content for simple text', () => {
+            const note = {
+                text: 'テキスト #タグ @mention 🍊 :emoji: https://example.com',
+                mentionedRemoteUsers: '[]',
+            };
 
-			const { content, noMisskeyContent } = apMfmService.getNoteHtml(note);
+            const { content, noMisskeyContent } = apMfmService.getNoteHtml(note);
 
-			assert.equal(noMisskeyContent, true, 'noMisskeyContent');
-			assert.equal(content, '<p>テキスト <a href="http://misskey.local/tags/タグ" rel="tag">#タグ</a> <a href="http://misskey.local/@mention" class="u-url mention">@mention</a> 🍊 ​:emoji:​ <a href="https://example.com">https://example.com</a></p>', 'content');
-		});
+            assert.equal(noMisskeyContent, true, 'noMisskeyContent');
+            assert.equal(content, '<p>テキスト <a href="http://127.0.0.1:61812/tags/タグ" rel="tag">#タグ</a> <a href="http://127.0.0.1:61812/@mention" class="u-url mention">@mention</a> 🍊 ​:emoji:​ <a href="https://example.com">https://example.com</a></p>', 'content');
+        });
 
-		test('Provide _misskey_content for MFM', () => {
-			const note = {
-				text: '$[tada foo]',
-				mentionedRemoteUsers: '[]',
-			};
+        test('Provide _misskey_content for MFM', () => {
+            const note = {
+                text: '$[tada foo]',
+                mentionedRemoteUsers: '[]',
+            };
 
-			const { content, noMisskeyContent } = apMfmService.getNoteHtml(note);
+            const { content, noMisskeyContent } = apMfmService.getNoteHtml(note);
 
-			assert.equal(noMisskeyContent, false, 'noMisskeyContent');
-			assert.equal(content, '<p><i>foo</i></p>', 'content');
-		});
-	});
+            assert.equal(noMisskeyContent, false, 'noMisskeyContent');
+            assert.equal(content, '<p><i>foo</i></p>', 'content');
+        });
+    });
 });

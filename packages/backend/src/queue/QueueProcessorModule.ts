@@ -10,6 +10,7 @@ import { QueueLoggerService } from './QueueLoggerService.js';
 import { QueueProcessorService } from './QueueProcessorService.js';
 import { DeliverProcessorService } from './processors/DeliverProcessorService.js';
 import { EndedPollNotificationProcessorService } from './processors/EndedPollNotificationProcessorService.js';
+import { PostScheduledNoteProcessorService } from './processors/PostScheduledNoteProcessorService.js';
 import { InboxProcessorService } from './processors/InboxProcessorService.js';
 import { UserWebhookDeliverProcessorService } from './processors/UserWebhookDeliverProcessorService.js';
 import { SystemWebhookDeliverProcessorService } from './processors/SystemWebhookDeliverProcessorService.js';
@@ -20,8 +21,10 @@ import { CleanProcessorService } from './processors/CleanProcessorService.js';
 import { CheckModeratorsActivityProcessorService } from './processors/CheckModeratorsActivityProcessorService.js';
 import { CleanRemoteNotesProcessorService } from './processors/CleanRemoteNotesProcessorService.js';
 import { CleanRemoteFilesProcessorService } from './processors/CleanRemoteFilesProcessorService.js';
+import { AutoDeleteNotesProcessorService } from './processors/AutoDeleteNotesProcessorService.js';
 import { DeleteAccountProcessorService } from './processors/DeleteAccountProcessorService.js';
 import { TruncateAccountProcessorService } from './processors/TruncateAccountProcessorService.js';
+import { TruncateAccountKeepDriveProcessorService } from './processors/TruncateAccountKeepDriveProcessorService.js';
 import { DeleteDriveFilesProcessorService } from './processors/DeleteDriveFilesProcessorService.js';
 import { DeleteFileProcessorService } from './processors/DeleteFileProcessorService.js';
 import { ExportBlockingProcessorService } from './processors/ExportBlockingProcessorService.js';
@@ -74,19 +77,22 @@ import { RelationshipProcessorService } from './processors/RelationshipProcessor
 		ImportCustomEmojisProcessorService,
 		ImportAntennasProcessorService,
 		DeleteAccountProcessorService,
-		TruncateAccountProcessorService,
+        TruncateAccountProcessorService,
+        TruncateAccountKeepDriveProcessorService,
 		DeleteFileProcessorService,
 		CleanRemoteFilesProcessorService,
 		RelationshipProcessorService,
 		UserWebhookDeliverProcessorService,
 		SystemWebhookDeliverProcessorService,
 		EndedPollNotificationProcessorService,
+		PostScheduledNoteProcessorService,
 		DeliverProcessorService,
 		InboxProcessorService,
 		AggregateRetentionProcessorService,
 		CheckExpiredMutingsProcessorService,
 		CheckModeratorsActivityProcessorService,
 		CleanRemoteNotesProcessorService,
+		AutoDeleteNotesProcessorService,
 		QueueProcessorService,
 	],
 	exports: [

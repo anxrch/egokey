@@ -6,12 +6,29 @@
 import { promises as fsp } from 'fs';
 import { compress } from 'wawoff2';
 
+interface HarfbuzzWasm extends WebAssembly.Exports {
+	memory: WebAssembly.Memory;
+	hb_subset_input_create_or_fail: () => number;
+	malloc: (size: number) => number;
+	hb_blob_create: (data: number, length: number, mode: number, user_data: number, destroy: number) => number;
+	hb_face_create: (blob: number, index: number) => number;
+	hb_blob_destroy: (blob: number) => void;
+	hb_subset_input_unicode_set: (input: number) => number;
+	hb_set_add: (set: number, codepoint: number) => void;
+	hb_subset_or_fail: (face: number, input: number) => number;
+	hb_subset_input_destroy: (input: number) => void;
+	hb_face_reference_blob: (face: number) => number;
+	hb_blob_get_data: (blob: number, length: number) => number;
+	hb_blob_get_length: (blob: number) => number;
+	hb_face_destroy: (face: number) => void;
+	free: (ptr: number) => void;
+}
+
 export async function generateSubsettedFont(ttfPath: string, unicodeRangeValues: Map<string, number[]>) {
 	const ttf = await fsp.readFile(ttfPath);
 
-	const {
-		instance: { exports: harfbuzzWasm },
-	}: any = await WebAssembly.instantiate(await fsp.readFile('./node_modules/harfbuzzjs/hb-subset.wasm'));
+	const result = await WebAssembly.instantiate(await fsp.readFile('./node_modules/harfbuzzjs/hb-subset.wasm'));
+	const harfbuzzWasm = result.instance.exports as HarfbuzzWasm;
 
 	const heapu8 = new Uint8Array(harfbuzzWasm.memory.buffer);
 

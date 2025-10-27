@@ -1,0 +1,321 @@
+[1mdiff --git a/packages/backend/src/models/Instance.ts b/packages/backend/src/models/Instance.ts[m
+[1mindex 2abfebece3..fb3f639d4d 100644[m
+[1m--- a/packages/backend/src/models/Instance.ts[m
+[1m+++ b/packages/backend/src/models/Instance.ts[m
+[36m@@ -8,160 +8,160 @@[m [mimport { id } from './util/id.js';[m
+ [m
+ @Entity('instance')[m
+ export class MiInstance {[m
+[31m-	@PrimaryColumn(id())[m
+[31m-	public id: string;[m
+[31m-[m
+[31m-	/**[m
+[31m-	 * このインスタンスを捕捉した日時[m
+[31m-	 */[m
+[31m-	@Index()[m
+[31m-	@Column('timestamp with time zone', {[m
+[31m-		comment: 'The caught date of the Instance.',[m
+[31m-	})[m
+[31m-	public firstRetrievedAt: Date;[m
+[31m-[m
+[31m-	/**[m
+[31m-	 * ホスト[m
+[31m-	 */[m
+[31m-	@Index({ unique: true })[m
+[31m-	@Column('varchar', {[m
+[31m-		length: 128,[m
+[31m-		comment: 'The host of the Instance.',[m
+[31m-	})[m
+[31m-	public host: string;[m
+[31m-[m
+[31m-	/**[m
+[31m-	 * インスタンスのユーザー数[m
+[31m-	 */[m
+[31m-	@Column('integer', {[m
+[31m-		default: 0,[m
+[31m-		comment: 'The count of the users of the Instance.',[m
+[31m-	})[m
+[31m-	public usersCount: number;[m
+[31m-[m
+[31m-	/**[m
+[31m-	 * インスタンスの投稿数[m
+[31m-	 */[m
+[31m-	@Column('integer', {[m
+[31m-		default: 0,[m
+[31m-		comment: 'The count of the notes of the Instance.',[m
+[31m-	})[m
+[31m-	public notesCount: number;[m
+[31m-[m
+[31m-	/**[m
+[31m-	 * このインスタンスのユーザーからフォローされている、自インスタンスのユーザーの数[m
+[31m-	 */[m
+[31m-	@Column('integer', {[m
+[31m-		default: 0,[m
+[31m-	})[m
+[31m-	public followingCount: number;[m
+[31m-[m
+[31m-	/**[m
+[31m-	 * このインスタンスのユーザーをフォローしている、自インスタンスのユーザーの数[m
+[31m-	 */[m
+[31m-	@Column('integer', {[m
+[31m-		default: 0,[m
+[31m-	})[m
+[31m-	public followersCount: number;[m
+[31m-[m
+[31m-	/**[m
+[31m-	 * 直近のリクエスト受信日時[m
+[31m-	 */[m
+[31m-	@Column('timestamp with time zone', {[m
+[31m-		nullable: true,[m
+[31m-	})[m
+[31m-	public latestRequestReceivedAt: Date | null;[m
+[31m-[m
+[31m-	/**[m
+[31m-	 * このインスタンスと不通かどうか[m
+[31m-	 */[m
+[31m-	@Column('boolean', {[m
+[31m-		default: false,[m
+[31m-	})[m
+[31m-	public isNotResponding: boolean;[m
+[31m-[m
+[31m-	@Index()[m
+[31m-	@Column('boolean', {[m
+[31m-		default: false,[m
+[31m-	})[m
+[31m-	public isSilenced: boolean;[m
+[31m-[m
+[31m-	/**[m
+[31m-	 * このインスタンスと不通になった日時[m
+[31m-	 */[m
+[31m-	@Column('timestamp with time zone', {[m
+[31m-		nullable: true,[m
+[31m-	})[m
+[31m-	public notRespondingSince: Date | null;[m
+[31m-[m
+[31m-	/**[m
+[31m-	 * このインスタンスへの配信状態[m
+[31m-	 */[m
+[31m-	@Index()[m
+[31m-	@Column('enum', {[m
+[31m-		default: 'none',[m
+[31m-		enum: ['none', 'manuallySuspended', 'goneSuspended', 'autoSuspendedForNotResponding'],[m
+[31m-	})[m
+[31m-	public suspensionState: 'none' | 'manuallySuspended' | 'goneSuspended' | 'autoSuspendedForNotResponding';[m
+[31m-[m
+[31m-	@Column('varchar', {[m
+[31m-		length: 64, nullable: true,[m
+[31m-		comment: 'The software of the Instance.',[m
+[31m-	})[m
+[31m-	public softwareName: string | null;[m
+[31m-[m
+[31m-	@Column('varchar', {[m
+[31m-		length: 64, nullable: true,[m
+[31m-	})[m
+[31m-	public softwareVersion: string | null;[m
+[31m-[m
+[31m-	@Column('boolean', {[m
+[31m-		nullable: true,[m
+[31m-	})[m
+[31m-	public openRegistrations: boolean | null;[m
+[31m-[m
+[31m-	@Column('varchar', {[m
+[31m-		length: 256, nullable: true,[m
+[31m-	})[m
+[31m-	public name: string | null;[m
+[31m-[m
+[31m-	@Column('varchar', {[m
+[31m-		length: 4096, nullable: true,[m
+[31m-	})[m
+[31m-	public description: string | null;[m
+[31m-[m
+[31m-	@Column('varchar', {[m
+[31m-		length: 128, nullable: true,[m
+[31m-	})[m
+[31m-	public maintainerName: string | null;[m
+[31m-[m
+[31m-	@Column('varchar', {[m
+[31m-		length: 256, nullable: true,[m
+[31m-	})[m
+[31m-	public maintainerEmail: string | null;[m
+[31m-[m
+[31m-	@Column('varchar', {[m
+[31m-		length: 256, nullable: true,[m
+[31m-	})[m
+[31m-	public iconUrl: string | null;[m
+[31m-[m
+[31m-	@Column('varchar', {[m
+[31m-		length: 256, nullable: true,[m
+[31m-	})[m
+[31m-	public faviconUrl: string | null;[m
+[31m-[m
+[31m-	@Column('varchar', {[m
+[31m-		length: 64, nullable: true,[m
+[31m-	})[m
+[31m-	public themeColor: string | null;[m
+[31m-[m
+[31m-	@Column('timestamp with time zone', {[m
+[31m-		nullable: true,[m
+[31m-	})[m
+[31m-	public infoUpdatedAt: Date | null;[m
+[31m-[m
+[31m-	@Column('varchar', {[m
+[31m-		length: 16384, default: '',[m
+[31m-	})[m
+[31m-	public moderationNote: string;[m
+[32m+[m[32m    @PrimaryColumn(id())[m
+[32m+[m[32m    public id: string;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * このインスタンスを捕捉した日時[m
+[32m+[m[32m     */[m
+[32m+[m[32m    @Index()[m
+[32m+[m[32m    @Column('timestamp with time zone', {[m
+[32m+[m[32m        comment: 'The caught date of the Instance.',[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public firstRetrievedAt: Date;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * ホスト[m
+[32m+[m[32m     */[m
+[32m+[m[32m    @Index({ unique: true })[m
+[32m+[m[32m    @Column('varchar', {[m
+[32m+[m[32m        length: 128,[m
+[32m+[m[32m        comment: 'The host of the Instance.',[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public host: string;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * インスタンスのユーザー数[m
+[32m+[m[32m     */[m
+[32m+[m[32m    @Column('integer', {[m
+[32m+[m[32m        default: 0,[m
+[32m+[m[32m        comment: 'The count of the users of the Instance.',[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public usersCount: number;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * インスタンスの投稿数[m
+[32m+[m[32m     */[m
+[32m+[m[32m    @Column('integer', {[m
+[32m+[m[32m        default: 0,[m
+[32m+[m[32m        comment: 'The count of the notes of the Instance.',[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public notesCount: number;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * このインスタンスのユーザーからフォローされている、自インスタンスのユーザーの数[m
+[32m+[m[32m     */[m
+[32m+[m[32m    @Column('integer', {[m
+[32m+[m[32m        default: 0,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public followingCount: number;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * このインスタンスのユーザーをフォローしている、自インスタンスのユーザーの数[m
+[32m+[m[32m     */[m
+[32m+[m[32m    @Column('integer', {[m
+[32m+[m[32m        default: 0,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public followersCount: number;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * 直近のリクエスト受信日時[m
+[32m+[m[32m     */[m
+[32m+[m[32m    @Column('timestamp with time zone', {[m
+[32m+[m[32m        nullable: true,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public latestRequestReceivedAt: Date | null;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * このインスタンスと不通かどうか[m
+[32m+[m[32m     */[m
+[32m+[m[32m    @Column('boolean', {[m
+[32m+[m[32m        default: false,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public isNotResponding: boolean;[m
+[32m+[m
+[32m+[m[32m    @Index('IDX_99bb262237b9d1209eef4c1510')[m
+[32m+[m[32m    @Column('boolean', {[m
+[32m+[m[32m        default: false,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public isSilenced: boolean;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * このインスタンスと不通になった日時[m
+[32m+[m[32m     */[m
+[32m+[m[32m    @Column('timestamp with time zone', {[m
+[32m+[m[32m        nullable: true,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public notRespondingSince: Date | null;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * このインスタンスへの配信状態[m
+[32m+[m[32m     */[m
+[32m+[m[32m    @Index()[m
+[32m+[m[32m    @Column('enum', {[m
+[32m+[m[32m        default: 'none',[m
+[32m+[m[32m        enum: ['none', 'manuallySuspended', 'goneSuspended', 'autoSuspendedForNotResponding'],[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public suspensionState: 'none' | 'manuallySuspended' | 'goneSuspended' | 'autoSuspendedForNotResponding';[m
+[32m+[m
+[32m+[m[32m    @Column('varchar', {[m
+[32m+[m[32m        length: 64, nullable: true,[m
+[32m+[m[32m        comment: 'The software of the Instance.',[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public softwareName: string | null;[m
+[32m+[m
+[32m+[m[32m    @Column('varchar', {[m
+[32m+[m[32m        length: 64, nullable: true,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public softwareVersion: string | null;[m
+[32m+[m
+[32m+[m[32m    @Column('boolean', {[m
+[32m+[m[32m        nullable: true,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public openRegistrations: boolean | null;[m
+[32m+[m
+[32m+[m[32m    @Column('varchar', {[m
+[32m+[m[32m        length: 256, nullable: true,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public name: string | null;[m
+[32m+[m
+[32m+[m[32m    @Column('varchar', {[m
+[32m+[m[32m        length: 4096, nullable: true,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public description: string | null;[m
+[32m+[m
+[32m+[m[32m    @Column('varchar', {[m
+[32m+[m[32m        length: 128, nullable: true,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public maintainerName: string | null;[m
+[32m+[m
+[32m+[m[32m    @Column('varchar', {[m
+[32m+[m[32m        length: 256, nullable: true,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public maintainerEmail: string | null;[m
+[32m+[m
+[32m+[m[32m    @Column('varchar', {[m
+[32m+[m[32m        length: 256, nullable: true,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public iconUrl: string | null;[m
+[32m+[m
+[32m+[m[32m    @Column('varchar', {[m
+[32m+[m[32m        length: 256, nullable: true,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public faviconUrl: string | null;[m
+[32m+[m
+[32m+[m[32m    @Column('varchar', {[m
+[32m+[m[32m        length: 64, nullable: true,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public themeColor: string | null;[m
+[32m+[m
+[32m+[m[32m    @Column('timestamp with time zone', {[m
+[32m+[m[32m        nullable: true,[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public infoUpdatedAt: Date | null;[m
+[32m+[m
+[32m+[m[32m    @Column('varchar', {[m
+[32m+[m[32m        length: 16384, default: '',[m
+[32m+[m[32m    })[m
+[32m+[m[32m    public moderationNote: string;[m
+ }[m

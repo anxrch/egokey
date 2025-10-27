@@ -33,20 +33,14 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</SearchMarker>
 
 		<SearchMarker :keywords="['following', 'visibility']">
-			<MkSelect v-model="followingVisibility" @update:modelValue="save()">
+			<MkSelect v-model="followingVisibility" :items="followingVisibilityDef" @update:modelValue="save()">
 				<template #label><SearchLabel>{{ i18n.ts.followingVisibility }}</SearchLabel></template>
-				<option value="public">{{ i18n.ts._ffVisibility.public }}</option>
-				<option value="followers">{{ i18n.ts._ffVisibility.followers }}</option>
-				<option value="private">{{ i18n.ts._ffVisibility.private }}</option>
 			</MkSelect>
 		</SearchMarker>
 
 		<SearchMarker :keywords="['follower', 'visibility']">
-			<MkSelect v-model="followersVisibility" @update:modelValue="save()">
+			<MkSelect v-model="followersVisibility" :items="followersVisibilityDef" @update:modelValue="save()">
 				<template #label><SearchLabel>{{ i18n.ts.followersVisibility }}</SearchLabel></template>
-				<option value="public">{{ i18n.ts._ffVisibility.public }}</option>
-				<option value="followers">{{ i18n.ts._ffVisibility.followers }}</option>
-				<option value="private">{{ i18n.ts._ffVisibility.private }}</option>
 			</MkSelect>
 		</SearchMarker>
 
@@ -90,18 +84,13 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 		<SearchMarker :keywords="['chat']">
 			<FormSection>
-				<template #label><SearchLabel>{{ i18n.ts.chat }}</SearchLabel></template>
+				<template #label><SearchLabel>{{ i18n.ts.directMessage }}</SearchLabel></template>
 
 				<div class="_gaps_m">
 					<MkInfo v-if="$i.policies.chatAvailability === 'unavailable'">{{ i18n.ts._chat.chatNotAvailableForThisAccountOrServer }}</MkInfo>
 					<SearchMarker :keywords="['chat']">
-						<MkSelect v-model="chatScope" @update:modelValue="save()">
+						<MkSelect v-model="chatScope" :items="chatScopeDef" @update:modelValue="save()">
 							<template #label><SearchLabel>{{ i18n.ts._chat.chatAllowedUsers }}</SearchLabel></template>
-							<option value="everyone">{{ i18n.ts._chat._chatAllowedUsers.everyone }}</option>
-							<option value="followers">{{ i18n.ts._chat._chatAllowedUsers.followers }}</option>
-							<option value="following">{{ i18n.ts._chat._chatAllowedUsers.following }}</option>
-							<option value="mutual">{{ i18n.ts._chat._chatAllowedUsers.mutual }}</option>
-							<option value="none">{{ i18n.ts._chat._chatAllowedUsers.none }}</option>
 							<template #caption>{{ i18n.ts._chat.chatAllowedUsers_note }}</template>
 						</MkSelect>
 					</SearchMarker>
@@ -129,15 +118,24 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<template #label><SearchLabel>{{ i18n.ts._accountSettings.makeNotesFollowersOnlyBefore }}</SearchLabel></template>
 
 							<div class="_gaps_s">
-								<MkSelect :modelValue="makeNotesFollowersOnlyBefore_type" @update:modelValue="makeNotesFollowersOnlyBefore = $event === 'relative' ? -604800 : $event === 'absolute' ? Math.floor(Date.now() / 1000) : null">
-									<option :value="null">{{ i18n.ts.none }}</option>
-									<option value="relative">{{ i18n.ts._accountSettings.notesHavePassedSpecifiedPeriod }}</option>
-									<option value="absolute">{{ i18n.ts._accountSettings.notesOlderThanSpecifiedDateAndTime }}</option>
+								<MkSelect
+									v-model="makeNotesFollowersOnlyBefore_type"
+									:items="[
+										{ label: i18n.ts.none, value: null },
+										{ label: i18n.ts._accountSettings.notesHavePassedSpecifiedPeriod, value: 'relative' },
+										{ label: i18n.ts._accountSettings.notesOlderThanSpecifiedDateAndTime, value: 'absolute' },
+									]"
+								>
 								</MkSelect>
 
-								<MkSelect v-if="makeNotesFollowersOnlyBefore_type === 'relative'" v-model="makeNotesFollowersOnlyBefore_selection">
-									<option v-for="preset in makeNotesFollowersOnlyBefore_presets" :value="preset.value">{{ preset.label }}</option>
-									<option value="custom">{{ i18n.ts.custom }}</option>
+								<MkSelect
+									v-if="makeNotesFollowersOnlyBefore_type === 'relative'"
+									v-model="makeNotesFollowersOnlyBefore_selection"
+									:items="[
+										...makeNotesFollowersOnlyBefore_presets,
+										{ label: i18n.ts.custom, value: 'custom' },
+									]"
+								>
 								</MkSelect>
 
 								<MkInput
@@ -150,7 +148,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 								</MkInput>
 
 								<MkInput
-									v-if="makeNotesFollowersOnlyBefore_type === 'absolute'"
+									v-if="makeNotesFollowersOnlyBefore_type === 'absolute' && makeNotesFollowersOnlyBefore != null"
 									:modelValue="formatDateTimeString(new Date(makeNotesFollowersOnlyBefore * 1000), 'yyyy-MM-dd')"
 									type="date"
 									:manualSave="true"
@@ -171,22 +169,23 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 							<div class="_gaps_s">
 								<MkSelect
-									:items="[{
-										value: null,
-										label: i18n.ts.none
-									}, {
-										value: 'relative',
-										label: i18n.ts._accountSettings.notesHavePassedSpecifiedPeriod
-									}, {
-										value: 'absolute',
-										label: i18n.ts._accountSettings.notesOlderThanSpecifiedDateAndTime
-									}] as const" :modelValue="makeNotesHiddenBefore_type" @update:modelValue="makeNotesHiddenBefore = $event === 'relative' ? -604800 : $event === 'absolute' ? Math.floor(Date.now() / 1000) : null"
+									v-model="makeNotesHiddenBefore_type"
+									:items="[
+										{ label: i18n.ts.none, value: null },
+										{ label: i18n.ts._accountSettings.notesHavePassedSpecifiedPeriod, value: 'relative' },
+										{ label: i18n.ts._accountSettings.notesOlderThanSpecifiedDateAndTime, value: 'absolute' },
+									]"
 								>
 								</MkSelect>
 
-								<MkSelect v-if="makeNotesHiddenBefore_type === 'relative'" v-model="makeNotesHiddenBefore_selection">
-									<option v-for="preset in makeNotesHiddenBefore_presets" :value="preset.value">{{ preset.label }}</option>
-									<option value="custom">{{ i18n.ts.custom }}</option>
+								<MkSelect
+									v-if="makeNotesHiddenBefore_type === 'relative'"
+									v-model="makeNotesHiddenBefore_selection"
+									:items="[
+										...makeNotesHiddenBefore_presets,
+										{ label: i18n.ts.custom, value: 'custom' },
+									]"
+								>
 								</MkSelect>
 
 								<MkInput
@@ -199,7 +198,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 								</MkInput>
 
 								<MkInput
-									v-if="makeNotesHiddenBefore_type === 'absolute'"
+									v-if="makeNotesHiddenBefore_type === 'absolute' && makeNotesHiddenBefore != null"
 									:modelValue="formatDateTimeString(new Date(makeNotesHiddenBefore * 1000), 'yyyy-MM-dd')"
 									type="date"
 									:manualSave="true"
@@ -218,16 +217,57 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</div>
 			</FormSection>
 		</SearchMarker>
+
+		<!-- 자동 삭제 섹션 -->
+		<SearchMarker :keywords="['auto', 'delete', 'notes']">
+			<FormSection>
+				<template #label><SearchLabel>{{ i18n.ts.autoDeleteNotes }}</SearchLabel></template>
+
+				<div class="_gaps_m">
+					<MkInfo>{{ i18n.ts.autoDeleteNotesDescription }}</MkInfo>
+
+					<SearchMarker :keywords="['auto', 'delete', 'enable']">
+						<MkInput
+							v-model="autoDeleteNotesAfterDays"
+							type="number"
+							:min="1"
+							:max="3650"
+							@update:modelValue="saveAutoDelete()"
+						>
+							<template #label><SearchLabel>{{ i18n.ts.autoDeleteNotesAfterDays }}</SearchLabel></template>
+							<template #suffix>{{ i18n.ts._time.day }}</template>
+							<template #caption>{{ i18n.ts.autoDeleteNotesAfterDaysDescription }}</template>
+						</MkInput>
+					</SearchMarker>
+
+					<SearchMarker :keywords="['favorite', 'keep']">
+						<MkSwitch v-model="autoDeleteKeepFavorites" @update:modelValue="saveAutoDelete()">
+							<template #label><SearchLabel>{{ i18n.ts.autoDeleteKeepFavorites }}</SearchLabel></template>
+							<template #caption><SearchText>{{ i18n.ts.autoDeleteKeepFavoritesDescription }}</SearchText></template>
+						</MkSwitch>
+					</SearchMarker>
+
+					<SearchMarker :keywords="['drive', 'file', 'keep']">
+						<MkSwitch v-model="autoDeleteKeepDriveFiles" @update:modelValue="saveAutoDelete()">
+							<template #label><SearchLabel>{{ i18n.ts.autoDeleteKeepDriveFiles }}</SearchLabel></template>
+							<template #caption><SearchText>{{ i18n.ts.autoDeleteKeepDriveFilesDescription }}</SearchText></template>
+						</MkSwitch>
+					</SearchMarker>
+
+					<MkInfo warn>{{ i18n.ts.autoDeleteNotesWarning }}</MkInfo>
+				</div>
+			</FormSection>
+		</SearchMarker>
 	</div>
 </SearchMarker>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
+import type { MkSelectItem } from '@/components/MkSelect.vue';
 import MkSwitch from '@/components/MkSwitch.vue';
 import MkSelect from '@/components/MkSelect.vue';
 import FormSection from '@/components/form/section.vue';
-import MkFolder from '@/components/MkFolder.vue';
 import { misskeyApi } from '@/utility/misskey-api.js';
 import { i18n } from '@/i18n.js';
 import { instance } from '@/instance.js';
@@ -235,6 +275,7 @@ import { ensureSignin } from '@/i.js';
 import { definePage } from '@/page.js';
 import FormSlot from '@/components/form/slot.vue';
 import { formatDateTimeString } from '@/utility/format-time-string.js';
+import { useMkSelect } from '@/composables/use-mkselect.js';
 import MkInput from '@/components/MkInput.vue';
 import * as os from '@/os.js';
 import MkDisableSection from '@/components/MkDisableSection.vue';
@@ -253,19 +294,65 @@ const makeNotesFollowersOnlyBefore = ref($i.makeNotesFollowersOnlyBefore ?? null
 const makeNotesHiddenBefore = ref($i.makeNotesHiddenBefore ?? null);
 const hideOnlineStatus = ref($i.hideOnlineStatus);
 const publicReactions = ref($i.publicReactions);
-const followingVisibility = ref($i.followingVisibility);
-const followersVisibility = ref($i.followersVisibility);
+const autoDeleteNotesAfterDays = ref<number | null>($i?.autoDeleteNotesAfterDays ?? null);
+const autoDeleteKeepFavorites = ref($i?.autoDeleteKeepFavorites ?? false);
+const autoDeleteKeepDriveFiles = ref($i?.autoDeleteKeepDriveFiles ?? false);
+const {
+	model: followingVisibility,
+	def: followingVisibilityDef,
+} = useMkSelect({
+	items: [
+		{ label: i18n.ts.public, value: 'public' },
+		{ label: i18n.ts.followers, value: 'followers' },
+		{ label: i18n.ts.private, value: 'private' },
+	],
+	initialValue: $i.followingVisibility,
+});
+const {
+	model: followersVisibility,
+	def: followersVisibilityDef,
+} = useMkSelect({
+	items: [
+		{ label: i18n.ts.public, value: 'public' },
+		{ label: i18n.ts.followers, value: 'followers' },
+		{ label: i18n.ts.private, value: 'private' },
+	],
+	initialValue: $i.followersVisibility,
+});
 const bridgeHomeVisibility = ref($i.bridgeHomeVisibility);
-const chatScope = ref($i.chatScope);
+const {
+	model: chatScope,
+	def: chatScopeDef,
+} = useMkSelect({
+	items: [
+		{ label: i18n.ts._chat._chatAllowedUsers.everyone, value: 'everyone' },
+		{ label: i18n.ts._chat._chatAllowedUsers.followers, value: 'followers' },
+		{ label: i18n.ts._chat._chatAllowedUsers.following, value: 'following' },
+		{ label: i18n.ts._chat._chatAllowedUsers.mutual, value: 'mutual' },
+		{ label: i18n.ts._chat._chatAllowedUsers.none, value: 'none' },
+	],
+	initialValue: $i.chatScope,
+});
 
-const makeNotesFollowersOnlyBefore_type = computed(() => {
-	if (makeNotesFollowersOnlyBefore.value == null) {
-		return null;
-	} else if (makeNotesFollowersOnlyBefore.value >= 0) {
-		return 'absolute';
-	} else {
-		return 'relative';
-	}
+const makeNotesFollowersOnlyBefore_type = computed({
+	get: () => {
+		if (makeNotesFollowersOnlyBefore.value == null) {
+			return null;
+		} else if (makeNotesFollowersOnlyBefore.value >= 0) {
+			return 'absolute';
+		} else {
+			return 'relative';
+		}
+	},
+	set(value) {
+		if (value === 'relative') {
+			makeNotesFollowersOnlyBefore.value = -604800;
+		} else if (value === 'absolute') {
+			makeNotesFollowersOnlyBefore.value = Math.floor(Date.now() / 1000);
+		} else {
+			makeNotesFollowersOnlyBefore.value = null;
+		}
+	},
 });
 
 const makeNotesFollowersOnlyBefore_presets = [
@@ -276,7 +363,7 @@ const makeNotesFollowersOnlyBefore_presets = [
 	{ label: i18n.ts.oneMonth, value: -2592000 },
 	{ label: i18n.ts.threeMonths, value: -7776000 },
 	{ label: i18n.ts.oneYear, value: -31104000 },
-];
+] satisfies MkSelectItem[];
 
 const makeNotesFollowersOnlyBefore_isCustomMode = ref(
 	makeNotesFollowersOnlyBefore.value != null &&
@@ -299,14 +386,25 @@ const makeNotesFollowersOnlyBefore_customMonths = computed({
 	},
 });
 
-const makeNotesHiddenBefore_type = computed(() => {
-	if (makeNotesHiddenBefore.value == null) {
-		return null;
-	} else if (makeNotesHiddenBefore.value >= 0) {
-		return 'absolute';
-	} else {
-		return 'relative';
-	}
+const makeNotesHiddenBefore_type = computed({
+	get: () => {
+		if (makeNotesHiddenBefore.value == null) {
+			return null;
+		} else if (makeNotesHiddenBefore.value >= 0) {
+			return 'absolute';
+		} else {
+			return 'relative';
+		}
+	},
+	set(value) {
+		if (value === 'relative') {
+			makeNotesHiddenBefore.value = -604800;
+		} else if (value === 'absolute') {
+			makeNotesHiddenBefore.value = Math.floor(Date.now() / 1000);
+		} else {
+			makeNotesHiddenBefore.value = null;
+		}
+	},
 });
 
 const makeNotesHiddenBefore_presets = [
@@ -317,7 +415,7 @@ const makeNotesHiddenBefore_presets = [
 	{ label: i18n.ts.oneMonth, value: -2592000 },
 	{ label: i18n.ts.threeMonths, value: -7776000 },
 	{ label: i18n.ts.oneYear, value: -31104000 },
-];
+] satisfies MkSelectItem[];
 
 const makeNotesHiddenBefore_isCustomMode = ref(
 	makeNotesHiddenBefore.value != null &&
@@ -342,6 +440,27 @@ const makeNotesHiddenBefore_customMonths = computed({
 
 watch([makeNotesFollowersOnlyBefore, makeNotesHiddenBefore], () => {
 	save();
+});
+
+// 자동 삭제 설정 저장
+async function saveAutoDelete() {
+	await misskeyApi('i/update-auto-delete-settings', {
+		autoDeleteNotesAfterDays: autoDeleteNotesAfterDays.value,
+		autoDeleteKeepFavorites: !!autoDeleteKeepFavorites.value,
+		autoDeleteKeepDriveFiles: !!autoDeleteKeepDriveFiles.value,
+	});
+}
+
+// 컴포넌트 마운트 시 설정 불러오기
+onMounted(async () => {
+	try {
+		const settings = await misskeyApi('i/auto-delete-settings');
+		autoDeleteNotesAfterDays.value = settings.autoDeleteNotesAfterDays;
+		autoDeleteKeepFavorites.value = settings.autoDeleteKeepFavorites;
+		autoDeleteKeepDriveFiles.value = settings.autoDeleteKeepDriveFiles;
+	} catch (error) {
+		console.error('Failed to load auto-delete settings:', error);
+	}
 });
 
 async function update_requireSigninToViewContents(value: boolean) {
