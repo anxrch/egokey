@@ -28,7 +28,7 @@ export async function generateSubsettedFont(ttfPath: string, unicodeRangeValues:
 	const ttf = await fsp.readFile(ttfPath);
 
 	const result = await WebAssembly.instantiate(await fsp.readFile('./node_modules/harfbuzzjs/hb-subset.wasm'));
-	const harfbuzzWasm = result.exports as HarfbuzzWasm;
+	const harfbuzzWasm = result.instance.exports as HarfbuzzWasm;
 
 	const heapu8 = new Uint8Array(harfbuzzWasm.memory.buffer);
 
