@@ -1,7 +1,7 @@
 # 릴리스 노트
 이 문서는 CherryPick의 변경 사항만 포함합니다.
 
-## 4.19.0
+## Unreleased
 **출시일**: Unreleased  
 **기반 Misskey 버전**: 2025.12.0 
 Misskey의 전체 변경 사항을 확인하려면, [CHANGELOG.md#2025120](CHANGELOG.md#2025120) 문서를 참고하십시오.
