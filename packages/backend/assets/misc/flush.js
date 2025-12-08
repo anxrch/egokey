@@ -1,6 +1,6 @@
 (async () => {
 	const msg = document.getElementById('msg');
-	const successText = `\nSuccess Flush! <a href="/">Back to CherryPick</a>\n성공했습니다. <a href="/">CherryPick을 다시 열어주세요.</a>\n成功しました。<a href="/">CherryPickを開き直してください。</a>`;
+	const successText = '\nSuccess Flush! <a href="/">Back to CherryPick</a>\n성공했습니다. <a href="/">CherryPick을 다시 열어주세요.</a>\n成功しました。<a href="/">CherryPickを開き直してください。</a>';
 
 	if (!document.cookie) {
 		message('Your site data is fully cleared by your browser.');
@@ -31,7 +31,7 @@
 			message(successText);
 		} catch (e) {
 			message(`\n${e}\n\nFlush Failed. <a href="/flush">Please retry.</a>\n실패했습니다.<a href="/flush">다시 한 번 시도해 보세요.</a>\n失敗しました。<a href="/flush">もう一度試してみてください。</a>`);
-			message(`\nIf you retry more than 3 times, try manually clearing the browser cache or contact to instance admin.\n3번 이상 시도해도 실패하면 브라우저의 캐시를 지우고, 그래도 문제가 지속되면 인스턴스 관리자에게 문의하십시오.\n3回以上試しても失敗する場合、ブラウザのキャッシュを手動で消去し、それでもだめならインスタンス管理者に連絡してみてください。\n`);
+			message('\nIf you retry more than 3 times, try manually clearing the browser cache or contact to instance admin.\n3번 이상 시도해도 실패하면 브라우저의 캐시를 지우고, 그래도 문제가 지속되면 인스턴스 관리자에게 문의하십시오.\n3回以上試しても失敗する場合、ブラウザのキャッシュを手動で消去し、それでもだめならインスタンス管理者に連絡してみてください。\n');
 
 			console.error(e);
 			setTimeout(() => {
@@ -41,6 +41,6 @@
 	}
 
 	function message(text) {
-		msg.insertAdjacentHTML('beforeend', `<p>[${(new Date()).toString()}] ${text.replace(/\n/g,'<br>')}</p>`);
+		msg.insertAdjacentHTML('beforeend', `<p>[${(new Date()).toString()}] ${text.replace(/\n/g, '<br>')}</p>`);
 	}
 })();

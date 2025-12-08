@@ -4,7 +4,6 @@
  */
 
 import { Inject, Injectable } from '@nestjs/common';
-import type { SummalyResult } from '@misskey-dev/summaly/built/summary.js';
 import { DI } from '@/di-symbols.js';
 import type { Config } from '@/config.js';
 import { HttpRequestService } from '@/core/HttpRequestService.js';
@@ -14,6 +13,7 @@ import { LoggerService } from '@/core/LoggerService.js';
 import { bindThis } from '@/decorators.js';
 import { ApiError } from '@/server/api/error.js';
 import { MiMeta } from '@/models/Meta.js';
+import type { SummalyResult } from '@misskey-dev/summaly/built/summary.js';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
 @Injectable()

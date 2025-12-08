@@ -198,7 +198,7 @@ function showNodejsVersion(): void {
 	nodejsLogger.info(`Version ${process.version} detected.`);
 }
 
-function loadConfigBoot(debug: boolean = true): Config {
+function loadConfigBoot(debug = true): Config {
 	const configLogger = bootLogger.createSubLogger('config');
 	let config;
 

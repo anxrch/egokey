@@ -112,8 +112,8 @@ type PreferencesManagerEvents = {
 export function definePreferences<T extends Record<string, unknown>>(x: {
 	[K in keyof T]: PreferencesDefinitionRecord<T[K]>
 }): {
-		[K in keyof T]: PreferencesDefinitionRecord<T[K]>
-	} {
+	[K in keyof T]: PreferencesDefinitionRecord<T[K]>
+} {
 	return x;
 }
 

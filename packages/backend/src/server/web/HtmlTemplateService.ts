@@ -12,9 +12,9 @@ import { DI } from '@/di-symbols.js';
 import { bindThis } from '@/decorators.js';
 import { htmlSafeJsonStringify } from '@/misc/json-stringify-html-safe.js';
 import { MetaEntityService } from '@/core/entities/MetaEntityService.js';
-import type { FastifyReply } from 'fastify';
 import type { Config } from '@/config.js';
 import type { MiMeta } from '@/models/Meta.js';
+import type { FastifyReply } from 'fastify';
 import type { CommonData } from './views/_.js';
 
 const _filename = fileURLToPath(import.meta.url);

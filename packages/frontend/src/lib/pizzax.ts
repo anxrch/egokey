@@ -232,9 +232,9 @@ export class Pizzax<T extends StateDef> {
 		getter?: (v: T[K]['default']) => R,
 		setter?: (v: R) => T[K]['default'],
 	): {
-			get: () => R;
-			set: (value: R) => void;
-		} {
+		get: () => R;
+		set: (value: R) => void;
+	} {
 		const valueRef = ref(this.s[key]);
 
 		const stop = watch(this.r[key], val => {
