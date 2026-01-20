@@ -50,7 +50,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<template #prefix><i class="ti ti-lock"></i></template>
 				<template #suffix>
 					<div v-if="isCapsLock" :class="$style.isCapslock"><i class="ti ti-arrow-big-up-line"></i></div>
-					<button v-if="password" type="button" :class="$style.passwordToggleBtn" @click="togglePassword"><i :class="showPassword ? 'ti ti-eye-off' : 'ti ti-eye'"></i></button>
+					<button v-if="password" type="button" tabindex="-1" :class="$style.passwordToggleBtn" @click="togglePassword"><i :class="showPassword ? 'ti ti-eye-off' : 'ti ti-eye'"></i></button>
 				</template>
 				<template #caption>
 					<span v-if="passwordStrength == 'low'" style="color: var(--MI_THEME-error)"><i class="ti ti-alert-triangle ti-fw"></i> {{ i18n.ts.weakPassword }}</span>
@@ -63,7 +63,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<template #prefix><i class="ti ti-lock"></i></template>
 				<template #suffix>
 					<div v-if="isCapsLock" :class="$style.isCapslock"><i class="ti ti-arrow-big-up-line"></i></div>
-					<button v-if="retypedPassword" type="button" :class="$style.passwordToggleBtn" @click="togglePassword2"><i :class="showPassword2 ? 'ti ti-eye-off' : 'ti ti-eye'"></i></button>
+					<button v-if="retypedPassword" type="button" tabindex="-1" :class="$style.passwordToggleBtn" @click="togglePassword2"><i :class="showPassword2 ? 'ti ti-eye-off' : 'ti ti-eye'"></i></button>
 				</template>
 				<template #caption>
 					<span v-if="passwordRetypeState == 'match'" style="color: var(--MI_THEME-success)"><i class="ti ti-check ti-fw"></i> {{ i18n.ts.passwordMatched }}</span>
