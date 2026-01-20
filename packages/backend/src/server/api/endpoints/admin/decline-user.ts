@@ -61,9 +61,9 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			const profile = await this.userProfilesRepository.findOneBy({ userId: ps.userId });
 
 			if (profile?.email) {
-				this.emailService.sendEmail(profile.email, 'Account Declined',
-					'Your Account has been declined!',
-					'Your Account has been declined!');
+				this.emailService.sendEmail(profile.email, 'Account Declined / 登録承認されていない / 가입 거부됨',
+					'Your Account has been declined.. / アカウントが拒否されました… / 가입 요청한 계정이 거부되었어요..',
+					'Your Account has been declined.. / アカウントが拒否されました… / 가입 요청한 계정이 거부되었어요..');
 			}
 
 			await this.usedUsernamesRepository.delete({ username: user.username.toLowerCase() });
