@@ -25,7 +25,7 @@ describe('Chart', () => {
 	const config = loadConfig();
 
 	let db: DataSource | undefined;
-	let redisClient = {
+	const redisClient = {
 		set: () => Promise.resolve('OK'),
 		get: () => Promise.resolve(null),
 	} as unknown as jest.Mocked<Redis.Redis>;

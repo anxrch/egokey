@@ -72,8 +72,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<span v-if="appearNote.user.isBot" :class="$style.userBadge"><i class="ti ti-robot"></i></span>
 							<span v-if="appearNote.user.isProxy" :class="$style.userBadge"><i class="ti ti-ghost"></i></span>
 							<span v-if="appearNote.user.badgeRoles" :class="$style.badgeRoles">
-							<img v-for="role in appearNote.user.badgeRoles" :key="role.id" v-tooltip="role.name" :class="$style.badgeRole" :src="role.iconUrl"/>
-						</span>
+								<img v-for="role in appearNote.user.badgeRoles" :key="role.id" v-tooltip="role.name" :class="$style.badgeRole" :src="role.iconUrl"/>
+							</span>
 						</div>
 						<div :class="$style.noteHeaderUsername"><MkAcct :user="appearNote.user"/></div>
 					</div>
@@ -84,24 +84,24 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<span v-if="appearNote.updatedAt" style="margin-right: 0.5em;"><i v-tooltip="i18n.tsx.noteUpdatedAt({ date: (new Date(appearNote.updatedAt)).toLocaleDateString(), time: (new Date(appearNote.updatedAt)).toLocaleTimeString() })" class="ti ti-pencil"></i></span>
 							<span v-if="appearNote.deleteAt" style="margin-right: 0.5em;"><i v-tooltip="`${i18n.ts.scheduledNoteDelete}: ${(new Date(appearNote.deleteAt)).toLocaleString()}`" class="ti ti-bomb"></i></span>
 							<span v-if="appearNote.visibility !== 'public'" style="margin-left: 0.5em;">
-							<i v-if="appearNote.visibility === 'home'" v-tooltip="i18n.ts._visibility[appearNote.visibility]" class="ti ti-home"></i>
-							<i v-else-if="appearNote.visibility === 'followers'" v-tooltip="i18n.ts._visibility[appearNote.visibility]" class="ti ti-lock"></i>
-							<i v-else-if="appearNote.visibility === 'specified'" ref="specified" v-tooltip="i18n.ts._visibility[appearNote.visibility]" class="ti ti-mail"></i>
-						</span>
+								<i v-if="appearNote.visibility === 'home'" v-tooltip="i18n.ts._visibility[appearNote.visibility]" class="ti ti-home"></i>
+								<i v-else-if="appearNote.visibility === 'followers'" v-tooltip="i18n.ts._visibility[appearNote.visibility]" class="ti ti-lock"></i>
+								<i v-else-if="appearNote.visibility === 'specified'" ref="specified" v-tooltip="i18n.ts._visibility[appearNote.visibility]" class="ti ti-mail"></i>
+							</span>
 							<span v-if="appearNote.reactionAcceptance != null" style="margin-left: 0.5em;" :class="{ [$style.danger]: ['nonSensitiveOnly', 'nonSensitiveOnlyForLocalLikeOnlyForRemote', 'likeOnly'].includes(<string>appearNote.reactionAcceptance) }" :title="i18n.ts.reactionAcceptance">
-							<i v-if="appearNote.reactionAcceptance === 'likeOnlyForRemote'" v-tooltip="i18n.ts.likeOnlyForRemote" class="ti ti-heart-plus"></i>
-							<i v-else-if="appearNote.reactionAcceptance === 'nonSensitiveOnly'" v-tooltip="i18n.ts.nonSensitiveOnly" class="ti ti-icons"></i>
-							<i v-else-if="appearNote.reactionAcceptance === 'nonSensitiveOnlyForLocalLikeOnlyForRemote'" v-tooltip="i18n.ts.nonSensitiveOnlyForLocalLikeOnlyForRemote" class="ti ti-heart-plus"></i>
-							<i v-else-if="appearNote.reactionAcceptance === 'likeOnly'" v-tooltip="i18n.ts.likeOnly" class="ti ti-heart"></i>
-						</span>
+								<i v-if="appearNote.reactionAcceptance === 'likeOnlyForRemote'" v-tooltip="i18n.ts.likeOnlyForRemote" class="ti ti-heart-plus"></i>
+								<i v-else-if="appearNote.reactionAcceptance === 'nonSensitiveOnly'" v-tooltip="i18n.ts.nonSensitiveOnly" class="ti ti-icons"></i>
+								<i v-else-if="appearNote.reactionAcceptance === 'nonSensitiveOnlyForLocalLikeOnlyForRemote'" v-tooltip="i18n.ts.nonSensitiveOnlyForLocalLikeOnlyForRemote" class="ti ti-heart-plus"></i>
+								<i v-else-if="appearNote.reactionAcceptance === 'likeOnly'" v-tooltip="i18n.ts.likeOnly" class="ti ti-heart"></i>
+							</span>
 							<span v-if="appearNote.localOnly" style="margin-left: 0.5em;"><i v-tooltip="i18n.ts._visibility['disableFederation']" class="ti ti-rocket-off"></i></span>
 							<span
 								v-if="appearNote.deliveryTargets && (appearNote.deliveryTargets.mode === 'include' || appearNote.deliveryTargets.hosts?.length)"
 								v-tooltip="i18n.ts._deliveryTargetControl[appearNote.deliveryTargets.mode === 'include' ? 'deliveryTargetsInclude' : 'deliveryTargetsExclude'] + ':' + (appearNote.deliveryTargets.hosts?.length ? '\n' + appearNote.deliveryTargets.hosts.map((h, i) => appearNote.deliveryTargets.names?.[i] ? `${appearNote.deliveryTargets.names[i]} (${h})` : h).join('\n') : '\n' + i18n.ts.none)"
 								style="margin-right: 0.5em;"
 							>
-							<i :class="appearNote.deliveryTargets.mode === 'include' ? 'ti ti-truck' : 'ti ti-truck-filled'"></i>
-						</span>
+								<i :class="appearNote.deliveryTargets.mode === 'include' ? 'ti ti-truck' : 'ti ti-truck-filled'"></i>
+							</span>
 						</div>
 						<MkInstanceTicker v-if="showTicker" :host="appearNote.user.host" :instance="appearNote.user.instance" @click="showOnRemote"/>
 					</div>
@@ -221,13 +221,13 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<MkTime :class="$style.time" :time="appearNote.createdAt" mode="detail" colored/>
 					</MkA>
 					<span style="margin-left: 0.5em;">
-					<span style="border: 1px solid var(--MI_THEME-divider); margin-right: 0.5em;"/>
-					<i v-if="appearNote.visibility === 'public'" class="ti ti-world"></i>
-					<i v-else-if="appearNote.visibility === 'home'" class="ti ti-home"></i>
-					<i v-else-if="appearNote.visibility === 'followers'" class="ti ti-lock"></i>
-					<i v-else-if="appearNote.visibility === 'specified'" ref="specified" class="ti ti-mail"></i>
-					<span style="margin-left: 0.3em;">{{ i18n.ts._visibility[appearNote.visibility] }}</span>
-				</span>
+						<span style="border: 1px solid var(--MI_THEME-divider); margin-right: 0.5em;"/>
+						<i v-if="appearNote.visibility === 'public'" class="ti ti-world"></i>
+						<i v-else-if="appearNote.visibility === 'home'" class="ti ti-home"></i>
+						<i v-else-if="appearNote.visibility === 'followers'" class="ti ti-lock"></i>
+						<i v-else-if="appearNote.visibility === 'specified'" ref="specified" class="ti ti-mail"></i>
+						<span style="margin-left: 0.3em;">{{ i18n.ts._visibility[appearNote.visibility] }}</span>
+					</span>
 				</div>
 				<MkReactionsViewer
 					v-if="appearNote.reactionAcceptance !== 'likeOnly'"

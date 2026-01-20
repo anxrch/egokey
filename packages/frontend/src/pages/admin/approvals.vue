@@ -4,21 +4,21 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-	<div>
-		<PageWithHeader :tabs="headerTabs">
-			<div class="_spacer" style="--MI_SPACER-w: 900px;">
-				<div class="_gaps_m">
-					<MkPagination :paginator="paginator" :displayLimit="50">
-						<template #default="{ items }">
-							<div class="_gaps_s">
-								<MkApprovalUser v-for="item in items" :key="item.id" :user="(item as any)" :onDeleted="deleted"/>
-							</div>
-						</template>
-					</MkPagination>
-				</div>
+<div>
+	<PageWithHeader :tabs="headerTabs">
+		<div class="_spacer" style="--MI_SPACER-w: 900px;">
+			<div class="_gaps_m">
+				<MkPagination :paginator="paginator" :displayLimit="50">
+					<template #default="{ items }">
+						<div class="_gaps_s">
+							<MkApprovalUser v-for="item in items" :key="item.id" :user="(item as any)" :onDeleted="deleted"/>
+						</div>
+					</template>
+				</MkPagination>
 			</div>
-		</PageWithHeader>
-	</div>
+		</div>
+	</PageWithHeader>
+</div>
 </template>
 
 <script lang="ts" setup>
