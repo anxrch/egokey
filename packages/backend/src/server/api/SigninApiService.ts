@@ -165,6 +165,17 @@ export class SigninApiService {
 			return;
 		}
 
+		if (!user.approved && this.meta.approvalRequiredForSignup) {
+			reply.code(403);
+			return {
+				error: {
+					message: 'The account has not been approved by an admin yet. Try again later.',
+					code: 'NOT_APPROVED',
+					id: '22d05606-fbcf-421a-a2db-b32241faft1b',
+				},
+			};
+		}
+
 		// Compare password
 		const same = await argon2.verify(profile.password!, password) || bcrypt.compareSync(password, profile.password!);
 
@@ -221,6 +232,13 @@ export class SigninApiService {
 						password: newHash,
 					});
 				}
+
+				if (!this.meta.approvalRequiredForSignup && !user.approved) {
+					this.usersRepository.update(user.id, {
+						approved: true,
+					});
+				}
+
 				return this.signinService.signin(request, reply, user);
 			} else {
 				return await fail(403, {
@@ -250,6 +268,12 @@ export class SigninApiService {
 				});
 			}
 
+			if (!this.meta.approvalRequiredForSignup && !user.approved) {
+				this.usersRepository.update(user.id, {
+					approved: true,
+				});
+			}
+
 			return this.signinService.signin(request, reply, user);
 		} else if (body.credential) {
 			if (!same && !profile.usePasswordLessLogin) {
@@ -261,6 +285,11 @@ export class SigninApiService {
 			const authorized = await this.webAuthnService.verifyAuthentication(user.id, body.credential);
 
 			if (authorized) {
+				if (!this.meta.approvalRequiredForSignup && !user.approved) {
+					this.usersRepository.update(user.id, {
+						approved: true,
+					});
+				}
 				return this.signinService.signin(request, reply, user);
 			} else {
 				return await fail(403, {
