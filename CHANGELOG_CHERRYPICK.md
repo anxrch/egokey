@@ -3,8 +3,8 @@
 
 ## Unreleased
 **출시일**: Unreleased  
-**기반 Misskey 버전**: 2025.12.0 
-Misskey의 전체 변경 사항을 확인하려면, [CHANGELOG.md#2025120](CHANGELOG.md#2025120) 문서를 참고하십시오.
+**기반 Misskey 버전**: 2025.12.2
+Misskey의 전체 변경 사항을 확인하려면, [CHANGELOG.md#2025122](CHANGELOG.md#2025122) 문서를 참고하십시오.
 
 ### General
 - Feat: 가입 승인 (TransFem-org/Sharkey [@2f2d88dc](https://activitypub.software/TransFem-org/Sharkey/-/commit/2f2d88dcfc76bac6815d60fa9915b8e797853292#), [@32fc540d](https://activitypub.software/TransFem-org/Sharkey/-/commit/32fc540df4a77076e3365e5471e13ea45a04c508), [@07b72c65](https://activitypub.software/TransFem-org/Sharkey/-/commit/07b72c65b93bff5f13afe28252f4aebf8adac471), [@e1f13f64](https://activitypub.software/TransFem-org/Sharkey/-/commit/e1f13f641e3e0528571e41475cda1718cac4c532), [@288fa114](https://activitypub.software/TransFem-org/Sharkey/-/commit/288fa1143d3a2c8a92a84ee1c4ea7661e0554c4c), [@6e2eabbb](https://activitypub.software/TransFem-org/Sharkey/-/commit/6e2eabbbc9ad02e6e90caa27ce7e1ccb0b8208f6), [@c3f76818](https://activitypub.software/TransFem-org/Sharkey/-/commit/c3f768181ae232a9ac03c69759f5508398b4cd55), [@142f500f](https://activitypub.software/TransFem-org/Sharkey/-/commit/142f500f4bbf3208380b83a4c7764bfe411950ab), [@1d9cb4fa](https://activitypub.software/TransFem-org/Sharkey/-/commit/1d9cb4fad9e825c3389e73f50fa396338b159b5c), [@42530b5a](https://activitypub.software/TransFem-org/Sharkey/-/commit/42530b5a39f0bce386bf408004d1584bf7a36576), [@fea7889e](https://activitypub.software/TransFem-org/Sharkey/-/commit/fea7889e0cd5ed223a4db9cb668be684cead2a52))
