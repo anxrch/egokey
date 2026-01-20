@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <template>
 <div
-	:class="[$style.root, { [$style.modal]: modal, _popup: modal && (!prefer.s.useBlurEffect || !prefer.s.useBlurEffectForModal || !prefer.s.removeModalBgColorForBlur), _popupAcrylic: modal && prefer.s.useBlurEffect && prefer.s.useBlurEffectForModal && prefer.s.removeModalBgColorForBlur }]"
+	:class="[$style.root]"
 	@dragover.stop="onDragover"
 	@dragenter="onDragenter"
 	@dragleave="onDragleave"
@@ -135,7 +135,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { inject, watch, nextTick, onMounted, defineAsyncComponent, provide, shallowRef, ref, computed, useTemplateRef, onUnmounted } from 'vue';
+import { watch, nextTick, onMounted, defineAsyncComponent, provide, shallowRef, ref, computed, useTemplateRef, onUnmounted } from 'vue';
 import * as mfm from 'mfc-js';
 import * as Misskey from 'cherrypick-js';
 import insertTextAtCursor from 'insert-text-at-cursor';
@@ -189,8 +189,6 @@ import * as sound from '@/utility/sound.js';
 import MkDeliveryTargetEditor from '@/components/MkDeliveryTargetEditor.vue';
 
 const $i = ensureSignin();
-
-const modal = inject(DI.inModal, false);
 
 const props = withDefaults(defineProps<PostFormProps & {
 	fixed?: boolean;
@@ -1764,14 +1762,6 @@ defineExpose({
 .root {
 	position: relative;
 	container-type: inline-size;
-	max-width: 800px;
-
-	&.modal {
-		width: 100%;
-		max-width: 640px;
-		overflow-x: clip;
-		overflow-y: auto;
-	}
 }
 
 //#region header
@@ -2081,7 +2071,8 @@ html[data-color-scheme=light] .preview {
 	min-width: 100%;
 	width: 100%;
 	min-height: 140px;
-	height: 100%;
+	max-height: 500px;
+	field-sizing: content;
 }
 
 .textCount {

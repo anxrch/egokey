@@ -9,17 +9,17 @@
     "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
-		"@biomejs/biome": "2.3.6",
+		"@biomejs/biome": "2.3.11",
     "@types/mdast": "4.0.4",
-    "@types/node": "24.10.1",
-    "@vitest/coverage-v8": "4.0.14",
+    "@types/node": "24.10.2",
+    "@vitest/coverage-v8": "4.0.15",
     "mdast-util-to-string": "4.0.0",
     "remark": "15.0.1",
     "remark-parse": "11.0.0",
     "typescript": "5.9.3",
     "unified": "11.0.5",
-    "vite": "7.2.4",
+    "vite": "7.2.7",
     "vite-node": "5.2.0",
-    "vitest": "4.0.14"
+    "vitest": "4.0.15"
   }
 }

@@ -1709,6 +1709,7 @@ _emojiPalette:
   paletteForMain: "메인으로 사용할 팔레트"
   paletteForReaction: "리액션으로 사용할 팔레트"
 _settings:
+  smoothTransitionAnimations: "부드러운 전환 모션"
   cherrypickBanner: "CherryPick의 고유 설정, 패치, UI 설정을 변경할 수 있어요."
   driveBanner: "드라이브 관리, 사용량 확인, 파일 업로드에 관한 설정을 변경할 수 있어요."
   pluginBanner: "플러그인을 사용하면 클라이언트 기능을 확장할 수 있어요. 플러그인 설치와 개별적인 설정을 변경할 수 있어요."
@@ -1747,7 +1748,6 @@ _settings:
   showPageTabBarBottom: "페이지 탭 바를 아래쪽에 표시"
   emojiPaletteBanner: "이모지 선택기에 고정해 표시할 프리셋을 팔레트로 등록하거나 이모지 선택기의 표시 방법을 사용자화할 수 있어요."
   enableAnimatedImages: "움직이는 이미지 활성화"
-  smoothTransitionAnimations: "부드러운 전환 모션"
   _chat:
     showSenderName: "보낸 사람 이름 표시"
     sendOnEnter: "엔터로 쪽지 전송"
@@ -3446,7 +3446,7 @@ _reversi:
   useAvatarAsStone: "돌을 아이콘으로 표시"
 _offlineScreen:
   title: "오프라인 - 서버에 연결할 수 없음"
-  header: "서버에 연결할 수 없어요"
+  header: "서버에 연결할 수 없어요..."
 _urlPreviewSetting:
   title: "URL 미리보기 설정"
   enable: "URL 미리보기 활성화"
