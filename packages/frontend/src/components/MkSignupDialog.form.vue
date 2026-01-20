@@ -77,7 +77,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<MkCaptcha v-if="instance.enableTestcaptcha" ref="testcaptcha" v-model="testcaptchaResponse" :class="$style.captcha" provider="testcaptcha" :sitekey="null"/>
 			<div class="_buttonsCenter">
 				<MkButton inline rounded @click="goBack"><i class="ti ti-arrow-left"></i> {{ i18n.ts.goBack }}</MkButton>
-				<MkButton type="submit" :disabled="shouldDisableSubmitting" inline gradate rounded data-cy-signup-submit style="margin: 0 auto;">
+				<MkButton type="submit" :disabled="shouldDisableSubmitting" inline gradate rounded data-cy-signup-submit>
 					<template v-if="submitting">
 						<MkLoading :em="true" :colored="false"/>
 					</template>
