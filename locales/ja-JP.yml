@@ -1,5 +1,17 @@
 _lang_: "日本語"
 
+approveConfirm: "このアカウントを承認してもよろしいですか？"
+approvalRequiredForSignup: "新規ユーザーの承認が必要"
+approveAccount: "承認する"
+denyAccount: "拒否と削除"
+approved: "承認済み"
+notApproved: "承認されていない"
+approvalStatus: "承認状況"
+approvalRequiredToRegister: "このインスタンスは、登録理由を指定したユーザーのみを受け入れています。"
+pendingUserApprovals: "承認待ちのユーザーがいる。"
+approvals: "登録承認"
+deleteThisAccountConfirm: "このアカウントは永久に削除されます。続けましょうか？"
+signupReason: "登録理由"
 compareContent: "内容比較"
 editHistory: "修正履歴"
 unRenoteAll: "全リノート解除"
@@ -2484,6 +2496,8 @@ _signup:
   almostThere: "ほとんど完了です"
   emailAddressInfo: "あなたが使っているメールアドレスを入力してください。メールアドレスが公開されることはありません。"
   emailSent: "入力されたメールアドレス({email})宛に確認のメールが送信されました。メールに記載されたリンクにアクセスすると、アカウントの作成が完了します。\nもしメールが来なかったらスパムメールボックスを確認してください。\nメールに記載されているリンクの有効期限は30分です。"
+  approvalPending: "アカウントが作成され、承認待ちの状態です。"
+  reasonInfo: "インスタンスに参加したい理由を入力してください。"
 
 _accountDelete:
   accountDelete: "アカウントの削除"
@@ -2932,6 +2946,8 @@ _permissions:
   "write:report-abuse": "違反を報告する"
   "write:chat": "ダイレクトメッセージを操作する"
   "read:chat": "ダイレクトメッセージを閲覧する"
+  "write:admin:approve-user": "新規ユーザー登録承認"
+  "write:admin:decline-user": "新規ユーザー登録拒否"
 
 _auth:
   shareAccessTitle: "アプリへのアクセス許可"
@@ -3430,6 +3446,8 @@ _moderationLogTypes:
   deleteGalleryPost: "ギャラリーの投稿を削除"
   deleteChatRoom: "ダイレクトメッセージのグループを削除"
   updateProxyAccountDescription: "プロキシアカウントの説明を更新"
+  approve: "承認済み"
+  decline: "拒否"
 
 _fileViewer:
   title: "ファイルの詳細"

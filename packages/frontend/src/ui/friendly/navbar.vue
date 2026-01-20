@@ -166,6 +166,14 @@ if ($i && ($i.isAdmin ?? $i.isModerator)) {
 		if (reports.length > 0) controlPanelIndicated.value = true;
 	});
 
+	misskeyApi('admin/show-users', {
+		state: 'pending',
+		origin: 'local',
+		limit: 1,
+	}).then(approvals => {
+		if (approvals.length > 0) controlPanelIndicated.value = true;
+	});
+
 	fetchCherrypickReleases().then((result) => {
 		if (result) controlPanelIndicated.value = true;
 	});

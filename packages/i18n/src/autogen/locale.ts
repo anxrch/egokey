@@ -8,6 +8,54 @@ export interface Locale extends ILocale {
      */
     "_lang_": string;
     /**
+     * このアカウントを承認してもよろしいですか？
+     */
+    "approveConfirm": string;
+    /**
+     * 新規ユーザーの承認が必要
+     */
+    "approvalRequiredForSignup": string;
+    /**
+     * 承認する
+     */
+    "approveAccount": string;
+    /**
+     * 拒否と削除
+     */
+    "denyAccount": string;
+    /**
+     * 承認済み
+     */
+    "approved": string;
+    /**
+     * 承認されていない
+     */
+    "notApproved": string;
+    /**
+     * 承認状況
+     */
+    "approvalStatus": string;
+    /**
+     * このインスタンスは、登録理由を指定したユーザーのみを受け入れています。
+     */
+    "approvalRequiredToRegister": string;
+    /**
+     * 承認待ちのユーザーがいる。
+     */
+    "pendingUserApprovals": string;
+    /**
+     * 登録承認
+     */
+    "approvals": string;
+    /**
+     * このアカウントは永久に削除されます。続けましょうか？
+     */
+    "deleteThisAccountConfirm": string;
+    /**
+     * 登録理由
+     */
+    "signupReason": string;
+    /**
      * 内容比較
      */
     "compareContent": string;
@@ -9565,6 +9613,14 @@ export interface Locale extends ILocale {
          * メールに記載されているリンクの有効期限は30分です。
          */
         "emailSent": ParameterizedString<"email">;
+        /**
+         * アカウントが作成され、承認待ちの状態です。
+         */
+        "approvalPending": string;
+        /**
+         * インスタンスに参加したい理由を入力してください。
+         */
+        "reasonInfo": string;
     };
     "_accountDelete": {
         /**
@@ -11193,6 +11249,14 @@ export interface Locale extends ILocale {
          * ダイレクトメッセージを閲覧する
          */
         "read:chat": string;
+        /**
+         * 新規ユーザー登録承認
+         */
+        "write:admin:approve-user": string;
+        /**
+         * 新規ユーザー登録拒否
+         */
+        "write:admin:decline-user": string;
     };
     "_auth": {
         /**
@@ -12994,6 +13058,14 @@ export interface Locale extends ILocale {
          * プロキシアカウントの説明を更新
          */
         "updateProxyAccountDescription": string;
+        /**
+         * 承認済み
+         */
+        "approve": string;
+        /**
+         * 拒否
+         */
+        "decline": string;
     };
     "_fileViewer": {
         /**
