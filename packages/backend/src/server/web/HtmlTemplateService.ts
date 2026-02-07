@@ -80,7 +80,7 @@ export class HtmlTemplateService {
 			basedMisskeyVersion: this.config.basedMisskeyVersion,
 			config: this.config,
 			langs: [...languages],
-			instanceName: this.meta.name ?? 'CherryPick',
+			instanceName: this.meta.name ?? 'EgoKey',
 			icon: this.meta.iconUrl,
 			appleTouchIcon: this.meta.app512IconUrl,
 			themeColor: this.meta.themeColor,

@@ -46,7 +46,7 @@ const faviconUrl = computed(() => {
 const themeColorStyle = computed<CSSProperties>(() => {
 	const themeColor = (props.host == null ? localInstance.themeColor : props.instance?.themeColor) ?? '#777777';
 	return {
-		background: `${themeColor}`,
+		background: `linear-gradient(to right, ${themeColor}, transparent)`,
 	};
 });
 </script>

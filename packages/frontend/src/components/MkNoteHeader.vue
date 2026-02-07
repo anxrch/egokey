@@ -5,25 +5,26 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <template>
 <header :class="$style.root">
-	<div :class="$style.section">
-		<div style="display: flex; white-space: nowrap; align-items: baseline;">
-			<div v-if="mock" :class="$style.name">
-				<MkUserName :user="note.user"/>
+	<div :class="$style.headerLine">
+		<div :class="$style.left">
+			<div style="display: flex; white-space: nowrap; align-items: baseline;">
+				<div v-if="mock" :class="$style.name">
+					<MkUserName :user="note.user"/>
+				</div>
+				<MkA v-else v-user-preview="note.user.id" :class="$style.name" :to="userPage(note.user)" noteClick>
+					<MkUserName :user="note.user"/>
+				</MkA>
+				<div v-if="note.user.isLocked" :class="$style.userBadge"><i class="ti ti-lock"></i></div>
+				<div v-if="note.user.isBot" :class="$style.userBadge"><i class="ti ti-robot"></i></div>
+				<div v-if="note.user.isProxy" :class="$style.userBadge"><i class="ti ti-ghost"></i></div>
+				<div v-if="note.user.badgeRoles" :class="$style.badgeRoles">
+					<img v-for="(role, i) in note.user.badgeRoles" :key="i" v-tooltip="role.name" :class="$style.badgeRole" :src="role.iconUrl!"/>
+				</div>
+				<div v-if="prefer.s.noteHeaderInlineHandle" :class="$style.username"><MkAcct :user="note.user"/></div>
 			</div>
-			<MkA v-else v-user-preview="note.user.id" :class="$style.name" :to="userPage(note.user)" noteClick>
-				<MkUserName :user="note.user"/>
-			</MkA>
-			<div v-if="note.user.isLocked" :class="$style.userBadge"><i class="ti ti-lock"></i></div>
-			<div v-if="note.user.isBot" :class="$style.userBadge"><i class="ti ti-robot"></i></div>
-			<div v-if="note.user.isProxy" :class="$style.userBadge"><i class="ti ti-ghost"></i></div>
-			<div v-if="note.user.badgeRoles" :class="$style.badgeRoles">
-				<img v-for="(role, i) in note.user.badgeRoles" :key="i" v-tooltip="role.name" :class="$style.badgeRole" :src="role.iconUrl!"/>
-			</div>
+			<div v-if="!prefer.s.noteHeaderInlineHandle" :class="$style.username"><MkAcct :user="note.user"/></div>
 		</div>
-		<div :class="$style.username"><MkAcct :user="note.user"/></div>
-	</div>
-	<div :class="$style.section">
-		<div :class="$style.info">
+		<div :class="$style.right">
 			<span v-if="note.updatedAt" style="margin-right: 0.5em;"><i v-tooltip="i18n.tsx.noteUpdatedAt({ date: (new Date(note.updatedAt)).toLocaleDateString(), time: (new Date(note.updatedAt)).toLocaleTimeString() })" class="ti ti-pencil"></i></span>
 			<span v-if="note.deleteAt" style="margin-right: 0.5em;"><i v-tooltip="`${i18n.ts.scheduledNoteDelete}: ${(new Date(note.deleteAt)).toLocaleString()}`" class="ti ti-bomb"></i></span>
 			<span v-if="note.visibility !== 'public'" style="margin-right: 0.5em;">
@@ -53,7 +54,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkTime :time="note.createdAt" :mode="prefer.s.enableAbsoluteTime ? 'absolute' : 'relative'" colored/>
 			</MkA>
 		</div>
-		<div :style="$style.info"><MkInstanceTicker v-if="showTicker" :host="note.user.host" :instance="note.user.instance" @click.stop="showOnRemote"/></div>
+	</div>
+	<div v-if="prefer.s.noteHeaderInstanceTickerBelow && showTicker" :class="$style.instanceTickerRow">
+		<MkInstanceTicker :host="note.user.host" :instance="note.user.instance" @click.stop="showOnRemote"/>
+	</div>
+	<div v-if="!prefer.s.noteHeaderInstanceTickerBelow" :class="$style.instanceTickerFallback">
+		<MkInstanceTicker v-if="showTicker" :host="note.user.host" :instance="note.user.instance" @click.stop="showOnRemote"/>
 	</div>
 </header>
 </template>
@@ -91,21 +97,29 @@ function showOnRemote() {
 <style lang="scss" module>
 .root {
 	display: flex;
+	flex-direction: column;
 }
 
-.section {
-	align-items: flex-start;
-	white-space: nowrap;
+.headerLine {
+	display: flex;
+	align-items: baseline;
+}
+
+.left {
+	display: flex;
 	flex-direction: column;
 	overflow: hidden;
+	gap: 2px;
+}
 
-	&:last-child {
-		display: flex;
-		align-items: flex-end;
-		margin-left: auto;
-		padding-left: 10px;
-		overflow: clip;
-	}
+.right {
+	display: flex;
+	align-items: center;
+	margin-left: auto;
+	padding-left: 10px;
+	flex-shrink: 0;
+	font-size: 0.9em;
+	white-space: nowrap;
 }
 
 .name {
@@ -114,16 +128,16 @@ function showOnRemote() {
 	margin: 0 .5em 0 0;
 	padding: 0;
 	overflow: hidden;
-  overflow-wrap: anywhere;
-	font-size: 1em;
+	overflow-wrap: anywhere;
+	font-size: 1.05em;
 	font-weight: bold;
 	text-decoration: none;
 	text-overflow: ellipsis;
 	max-width: 300px;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
+	&::-webkit-scrollbar {
+		display: none;
+	}
 
 	&:hover {
 		color: var(--MI_THEME-nameHover);
@@ -150,22 +164,17 @@ function showOnRemote() {
 	margin: 0 .5em 0 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	font-size: .95em;
-  max-width: 300px;
+	font-size: 1em;
+	max-width: 300px;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-.info {
-	flex-shrink: 0;
-	margin-left: auto;
-	font-size: 0.9em;
+	&::-webkit-scrollbar {
+		display: none;
+	}
 }
 
 .time {
 	text-decoration: none;
+	white-space: nowrap;
 
 	&:hover {
 		text-decoration: none;
@@ -188,6 +197,15 @@ function showOnRemote() {
 
 .danger {
 	color: var(--MI_THEME-accent);
+}
+
+.instanceTickerRow {
+	width: 100%;
+}
+
+.instanceTickerFallback {
+	display: flex;
+	justify-content: flex-end;
 }
 
 @container (max-width: 500px) {

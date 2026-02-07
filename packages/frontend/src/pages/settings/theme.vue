@@ -207,8 +207,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import JSON5 from 'json5';
-import defaultLightTheme from '@@/themes/l-cherrypick.json5';
-import defaultDarkTheme from '@@/themes/d-cherrypick.json5';
+import defaultLightTheme from '@@/themes/l-egokey.json5';
+import defaultDarkTheme from '@@/themes/d-egokey.json5';
 import { isSafeMode } from '@@/js/config.js';
 import { uniqueBy } from '@@/js/array.js';
 import type { Theme } from '@/theme.js';

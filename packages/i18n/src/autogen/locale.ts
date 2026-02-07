@@ -124,6 +124,14 @@ export interface Locale extends ILocale {
      */
     "showGapBodyOfTheNote": string;
     /**
+     * ニックネームの横にハンドルを表示
+     */
+    "noteHeaderInlineHandle": string;
+    /**
+     * ノートヘッダーの下にインスタンスティッカーを表示
+     */
+    "noteHeaderInstanceTickerBelow": string;
+    /**
      * {user}さんに返信
      */
     "replyTo": ParameterizedString<"user">;

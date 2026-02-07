@@ -5,8 +5,8 @@
 
 import { markRaw, ref } from 'vue';
 import * as Misskey from 'cherrypick-js';
-import lightTheme from '@@/themes/l-cherrypick.json5';
-import darkTheme from '@@/themes/d-cherrypick.json5';
+import lightTheme from '@@/themes/l-egokey.json5';
+import darkTheme from '@@/themes/d-egokey.json5';
 import { prefersReducedMotion } from '@@/js/config.js';
 import { hemisphere } from '@@/js/intl-const.js';
 import type { DeviceKind } from '@/utility/device-kind.js';

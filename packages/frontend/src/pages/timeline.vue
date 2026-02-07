@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <template>
 <PageWithHeader v-model:tab="src" :actions="headerActions" :tabs="$i ? headerTabs : headerTabsWhenNotLogin" :swipable="true" :displayMyAvatar="true" :canOmitTitle="!isFriendly().value">
-	<div class="_spacer" style="--MI_SPACER-w: 800px;">
+	<div class="_spacer" :style="`--MI_SPACER-w: ${timelineWidth}px;`">
 		<MkTip v-if="isBasicTimeline(src)" :k="`tl.${src}`" style="margin-bottom: var(--MI-margin);">
 			{{ i18n.ts._timelineDescription[src] }}
 		</MkTip>
@@ -41,7 +41,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { computed, watch, provide, useTemplateRef, defineAsyncComponent, ref, onMounted, onActivated, onUnmounted } from 'vue';
+import { computed, watch, provide, useTemplateRef, defineAsyncComponent, ref, onMounted, onActivated, onUnmounted, markRaw } from 'vue';
 import type { Tab } from '@/components/global/MkPageHeader.tabs.vue';
 import type { MenuItem } from '@/types/menu.js';
 import type { BasicTimelineType } from '@/timelines.js';
@@ -63,6 +63,7 @@ import { globalEvents } from '@/events.js';
 import { suggestReload } from '@/utility/reload-suggest.js';
 import { isFriendly } from '@/utility/is-friendly.js';
 import MkInfo from '@/components/MkInfo.vue';
+import MkRange from '@/components/MkRange.vue';
 
 const DESKTOP_THRESHOLD = 1100;
 const MOBILE_THRESHOLD = 500;
@@ -145,6 +146,7 @@ const withSensitive = computed<boolean>({
 
 const showFixedPostForm = prefer.model('showFixedPostForm');
 
+const timelineWidth = ref(prefer.s.timelineWidth);
 const enableWidgetsArea = ref(prefer.s.enableWidgetsArea);
 const friendlyUiEnableNotificationsArea = ref(prefer.s.friendlyUiEnableNotificationsArea);
 
@@ -166,6 +168,10 @@ const collapseDefault = ref(prefer.s.collapseDefault);
 const alwaysShowCw = ref(prefer.s.alwaysShowCw);
 const showReplyTargetNote = ref(prefer.s.showReplyTargetNote);
 const disableNyaize = ref(prefer.s.disableNyaize);
+
+watch(timelineWidth, (x) => {
+	prefer.commit('timelineWidth', x);
+});
 
 watch(enableWidgetsArea, (x) => {
 	prefer.commit('enableWidgetsArea', x);
@@ -416,6 +422,27 @@ const headerActions = computed(() => {
 				icon: 'ti ti-layout-sidebar-right',
 				text: i18n.ts._cherrypick.enableWidgetsArea,
 				ref: enableWidgetsArea,
+			});
+
+			menuItems.push({ type: 'divider' });
+
+			menuItems.push({
+				type: 'parent',
+				icon: 'ti ti-arrows-horizontal',
+				text: 'Timeline Width',
+				children: async () => [{
+					type: 'component' as const,
+					component: markRaw(MkRange),
+					props: {
+						modelValue: timelineWidth.value,
+						'onUpdate:modelValue': (v: number) => { timelineWidth.value = v; },
+						min: 500,
+						max: 1200,
+						step: 50,
+						continuousUpdate: true,
+						textConverter: (v: number) => `${v}px`,
+					},
+				}],
 			});
 
 			menuItems.push({ type: 'divider' });

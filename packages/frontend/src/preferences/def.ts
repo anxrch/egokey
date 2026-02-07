@@ -269,7 +269,7 @@ export const PREF_DEF = definePreferences({
 		default: true,
 	},
 	instanceTicker: {
-		default: 'remote' as 'none' | 'remote' | 'always',
+		default: 'always' as 'none' | 'remote' | 'always',
 	},
 	emojiPickerScale: {
 		default: 3,
@@ -578,7 +578,13 @@ export const PREF_DEF = definePreferences({
 		default: true,
 	},
 	showGapBodyOfTheNote: {
-		default: false,
+		default: true,
+	},
+	noteHeaderInlineHandle: {
+		default: true,
+	},
+	noteHeaderInstanceTickerBelow: {
+		default: true,
 	},
 	showReplyButtonInNoteFooter: {
 		default: true,
@@ -766,6 +772,9 @@ export const PREF_DEF = definePreferences({
 	},
 	renameTheButtonInPostFormToNyaManualSet: {
 		default: false,
+	},
+	timelineWidth: {
+		default: 800,
 	},
 	enableWidgetsArea: {
 		default: true,

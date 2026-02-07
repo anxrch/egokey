@@ -29,6 +29,8 @@ autoDeleteKeepFavoritesDescription: "활성화하면 즐겨찾기한 노트는 �
 autoDeleteNotesWarning: "이 작업은 취소할 수 없으며, 삭제된 노트는 복구할 수 없으니 신중하게 결정해 주세요!"
 scheduledToDeleteOnX: "{x}에 삭제가 예약되어 있어요."
 showGapBodyOfTheNote: "노트 본문 사이를 띄워서 표시"
+noteHeaderInlineHandle: "닉네임 옆에 핸들 표시"
+noteHeaderInstanceTickerBelow: "노트 헤더 아래에 서버 정보 표시"
 replyTo: "{user}님에게 보내는 답글"
 forceCollapseAllRenotes: "모든 리노트 간략화하기"
 forceCollapseAllRenotesDescription: "나 또는 상대방이 리노트한 모든 노트를 접어서 표시해요."

@@ -18,7 +18,7 @@ export const langs = _LANGS_;
 export const version = _VERSION_;
 export const basedMisskeyVersion = _BASEDMISSKEYVERSION_;
 export const gitHash = _GIT_HASH_;
-export const instanceName = (siteName === 'CherryPick' || siteName == null) ? host : siteName;
+export const instanceName = (siteName === 'CherryPick' || siteName === 'EgoKey' || siteName == null) ? host : siteName;
 export const ui = localStorage.getItem('ui');
 export const debug = localStorage.getItem('debug') === 'true';
 export const isSafeMode = localStorage.getItem('isSafeMode') === 'true';

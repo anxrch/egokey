@@ -137,7 +137,7 @@ export const navbarItemDef = reactive({
 		to: '/my/achievements',
 	},
 	games: {
-		title: 'CherryPick Games',
+		title: 'EgoKey Games',
 		icon: 'ti ti-device-gamepad',
 		to: '/games',
 	},
@@ -221,7 +221,7 @@ export const navbarItemDef = reactive({
 	},
 	support: {
 		// title: i18n.tsx.supportThisInstance({ name: instance.name ?? host }),
-		title: i18n.tsx.supportThisInstance({ name: 'CherryPick' }),
+		title: i18n.tsx.supportThisInstance({ name: 'EgoKey' }),
 		icon: 'ti ti-pig-money',
 		action: (ev) => donateCherryPick(ev),
 	},

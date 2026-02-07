@@ -396,6 +396,22 @@ SPDX-License-Identifier: AGPL-3.0-only
 										</MkSwitch>
 									</MkPreferenceContainer>
 								</SearchMarker>
+
+								<SearchMarker :keywords="['note', 'header', 'inline', 'handle']">
+									<MkPreferenceContainer k="noteHeaderInlineHandle">
+										<MkSwitch v-model="noteHeaderInlineHandle">
+											<template #label><SearchLabel>{{ i18n.ts.noteHeaderInlineHandle }}</SearchLabel> <span class="_beta">EgoKey</span></template>
+										</MkSwitch>
+									</MkPreferenceContainer>
+								</SearchMarker>
+
+								<SearchMarker :keywords="['note', 'header', 'instance', 'ticker', 'below']">
+									<MkPreferenceContainer k="noteHeaderInstanceTickerBelow">
+										<MkSwitch v-model="noteHeaderInstanceTickerBelow">
+											<template #label><SearchLabel>{{ i18n.ts.noteHeaderInstanceTickerBelow }}</SearchLabel> <span class="_beta">EgoKey</span></template>
+										</MkSwitch>
+									</MkPreferenceContainer>
+								</SearchMarker>
 							</div>
 
 							<div class="_gaps_s">
@@ -1495,6 +1511,8 @@ const showSubNoteFooterButton = prefer.model('showSubNoteFooterButton');
 const infoButtonForNoteActionsEnabled = prefer.model('infoButtonForNoteActionsEnabled');
 const showTranslateButtonInNote = prefer.model('showTranslateButtonInNote');
 const showGapBodyOfTheNote = prefer.model('showGapBodyOfTheNote');
+const noteHeaderInlineHandle = prefer.model('noteHeaderInlineHandle');
+const noteHeaderInstanceTickerBelow = prefer.model('noteHeaderInstanceTickerBelow');
 const showReplyButtonInNoteFooter = prefer.model('showReplyButtonInNoteFooter');
 const showRenoteButtonInNoteFooter = prefer.model('showRenoteButtonInNoteFooter');
 const showLikeButtonInNoteFooter = prefer.model('showLikeButtonInNoteFooter');
@@ -1633,6 +1651,8 @@ watch([
 	showReplyInNotification,
 	showTranslateButtonInNote,
 	showGapBodyOfTheNote,
+	noteHeaderInlineHandle,
+	noteHeaderInstanceTickerBelow,
 	showSubNoteFooterButton,
 	infoButtonForNoteActionsEnabled,
 	renoteQuoteButtonSeparation,

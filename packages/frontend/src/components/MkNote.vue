@@ -69,7 +69,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<MkAvatar v-if="!prefer.s.hideAvatarsInNote" :class="[$style.avatar, prefer.s.useStickyIcons ? $style.useSticky : null, { [$style.avatarReplyTo]: appearNote.reply, [$style.showEl]: !appearNote.reply && (showEl && ['hideHeaderOnly', 'hideHeaderFloatBtn', 'hide'].includes(<string>prefer.s.displayHeaderNavBarWhenScroll)) && mainRouter.currentRoute.value.name === 'index', [$style.showElTab]: !appearNote.reply && (showEl && ['hideHeaderOnly', 'hideHeaderFloatBtn', 'hide'].includes(<string>prefer.s.displayHeaderNavBarWhenScroll)) && mainRouter.currentRoute.value.name !== 'index' }]" :user="appearNote.user" :link="!mock" :preview="!mock" noteClick/>
 			<div :class="$style.main">
 				<MkNoteHeader :note="appearNote" :mini="true"/>
-				<div v-if="prefer.s.showGapBodyOfTheNote" :style="prefer.s.showGapBodyOfTheNote ? 'margin-top: 4px;' : null" style="container-type: inline-size;">
+				<div v-if="prefer.s.showGapBodyOfTheNote" :style="prefer.s.showGapBodyOfTheNote ? 'margin-top: 2px;' : null" style="container-type: inline-size;">
 					<MkInfo v-if="appearNote.deleteAt != null" warn :class="$style.deleteAt">
 						<I18n :src="i18n.ts.scheduledToDeleteOnX" tag="span">
 							<template #x>
@@ -178,6 +178,75 @@ SPDX-License-Identifier: AGPL-3.0-only
 						</button>
 					</div>
 					<MkA v-if="appearNote.channel && !inChannel" :class="$style.channel" :to="`/channels/${appearNote.channel.id}`"><i class="ti ti-device-tv"></i> {{ appearNote.channel.name }}</MkA>
+				</div>
+				<div v-if="appearNote.renoteId" :class="$style.quote"><MkNoteSimple :note="appearNote?.renote ?? null" :class="$style.quoteNote"/></div>
+				<div>
+					<MkReactionsViewer
+						v-if="appearNote.reactionAcceptance !== 'likeOnly'"
+						style="margin-top: 6px;"
+						:reactions="$appearNote.reactions"
+						:reactionEmojis="$appearNote.reactionEmojis"
+						:myReaction="$appearNote.myReaction"
+						:noteId="appearNote.id"
+						:note="appearNote"
+						:maxNumber="16"
+						@click.stop
+						@contextmenu.prevent.stop
+						@mockUpdateMyReaction="emitUpdReaction"
+					>
+						<template #more>
+							<MkA :to="`/notes/${appearNote.id}/reactions`" :class="[$style.reactionOmitted]">{{ i18n.ts.more }}</MkA>
+						</template>
+					</MkReactionsViewer>
+					<footer :class="$style.footer">
+						<template v-if="prefer.s.showReplyButtonInNoteFooter">
+							<button v-if="!note.isHidden" v-tooltip="i18n.ts.reply" :class="$style.footerButton" class="_button" @click.stop="reply()">
+								<i class="ti ti-arrow-back-up"></i>
+								<p v-if="appearNote.repliesCount > 0" :class="$style.footerButtonCount">{{ number(appearNote.repliesCount) }}</p>
+							</button>
+							<button v-else-if="note.isHidden" :class="$style.footerButton" class="_button" disabled>
+								<i class="ti ti-ban"></i>
+							</button>
+						</template>
+						<template v-if="prefer.s.showRenoteButtonInNoteFooter">
+							<button
+								v-if="canRenote"
+								ref="renoteButton"
+								v-tooltip="i18n.ts.renote"
+								:class="$style.footerButton"
+								class="_button"
+								@click.stop="prefer.s.renoteQuoteButtonSeparation && ((!prefer.s.renoteVisibilitySelection && !appearNote.channel) || (appearNote.channel && !appearNote.channel.allowRenoteToExternal) || appearNote.visibility === 'followers') ? renoteOnly() : renote()"
+							>
+								<i class="ti ti-repeat"></i>
+								<p v-if="appearNote.renoteCount > 0" :class="$style.footerButtonCount">{{ number(appearNote.renoteCount) }}</p>
+							</button>
+							<button v-else-if="!canRenote" :class="$style.footerButton" class="_button" disabled>
+								<i class="ti ti-ban"></i>
+							</button>
+						</template>
+						<button v-if="appearNote.reactionAcceptance !== 'likeOnly' && $appearNote.myReaction == null && prefer.s.showLikeButtonInNoteFooter" ref="heartReactButton" v-tooltip="i18n.ts.like" :class="$style.footerButton" class="_button" @click.stop="heartReact()">
+							<i class="ti ti-heart"></i>
+						</button>
+						<button v-if="prefer.s.showDoReactionButtonInNoteFooter" ref="reactButton" v-tooltip="appearNote.reactionAcceptance === 'likeOnly' && $appearNote.myReaction != null ? i18n.ts.unlike : $appearNote.myReaction != null ? i18n.ts.editReaction : appearNote.reactionAcceptance === 'likeOnly' ? i18n.ts.like : i18n.ts.doReaction" :class="$style.footerButton" class="_button" @click.stop="toggleReact()">
+							<i v-if="appearNote.reactionAcceptance === 'likeOnly' && $appearNote.myReaction != null" class="ti ti-heart-filled" style="color: var(--MI_THEME-love);"></i>
+							<i v-else-if="$appearNote.myReaction != null" class="ti ti-mood-edit" style="color: var(--MI_THEME-accent);"></i>
+							<i v-else-if="appearNote.reactionAcceptance === 'likeOnly'" class="ti ti-heart"></i>
+							<i v-else class="ti ti-mood-plus"></i>
+							<p v-if="(appearNote.reactionAcceptance === 'likeOnly' || prefer.s.showReactionsCount) && $appearNote.reactionCount > 0" :class="$style.footerButtonCount">{{ number($appearNote.reactionCount) }}</p>
+						</button>
+						<button v-if="canRenote && prefer.s.renoteQuoteButtonSeparation && prefer.s.showQuoteButtonInNoteFooter" ref="quoteButton" v-tooltip="i18n.ts.quote" class="_button" :class="$style.footerButton" @click.stop="quote()">
+							<i class="ti ti-quote"></i>
+						</button>
+						<button v-if="prefer.s.showClipButtonInNoteFooter" ref="clipButton" v-tooltip="i18n.ts.clip" :class="$style.footerButton" class="_button" @click.stop="clip()">
+							<i class="ti ti-paperclip"></i>
+						</button>
+						<MkA v-if="prefer.s.infoButtonForNoteActionsEnabled && prefer.s.showNoteActionsOnlyHover" v-tooltip="i18n.ts.details" :to="notePage(note)" :class="$style.footerButton" style="text-decoration: none;" class="_button">
+							<i class="ti ti-info-circle"></i>
+						</MkA>
+						<button v-if="prefer.s.showMoreButtonInNoteFooter" ref="menuButton" v-tooltip="i18n.ts.more" :class="$style.footerButton" class="_button" @click.stop="showMenu()">
+							<i class="ti ti-dots"></i>
+						</button>
+					</footer>
 				</div>
 			</div>
 		</div>
@@ -290,75 +359,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</button>
 			</div>
 			<MkA v-if="appearNote.channel && !inChannel" :class="$style.channel" :to="`/channels/${appearNote.channel.id}`"><i class="ti ti-device-tv"></i> {{ appearNote.channel.name }}</MkA>
-		</div>
-		<div v-if="appearNote.renoteId" :class="$style.quote"><MkNoteSimple :note="appearNote?.renote ?? null" :class="$style.quoteNote"/></div>
-		<div>
-			<MkReactionsViewer
-				v-if="appearNote.reactionAcceptance !== 'likeOnly'"
-				style="margin-top: 6px;"
-				:reactions="$appearNote.reactions"
-				:reactionEmojis="$appearNote.reactionEmojis"
-				:myReaction="$appearNote.myReaction"
-				:noteId="appearNote.id"
-				:note="appearNote"
-				:maxNumber="16"
-				@click.stop
-				@contextmenu.prevent.stop
-				@mockUpdateMyReaction="emitUpdReaction"
-			>
-				<template #more>
-					<MkA :to="`/notes/${appearNote.id}/reactions`" :class="[$style.reactionOmitted]">{{ i18n.ts.more }}</MkA>
-				</template>
-			</MkReactionsViewer>
-			<footer :class="$style.footer">
-				<template v-if="prefer.s.showReplyButtonInNoteFooter">
-					<button v-if="!note.isHidden" v-tooltip="i18n.ts.reply" :class="$style.footerButton" class="_button" @click.stop="reply()">
-						<i class="ti ti-arrow-back-up"></i>
-						<p v-if="appearNote.repliesCount > 0" :class="$style.footerButtonCount">{{ number(appearNote.repliesCount) }}</p>
-					</button>
-					<button v-else-if="note.isHidden" :class="$style.footerButton" class="_button" disabled>
-						<i class="ti ti-ban"></i>
-					</button>
-				</template>
-				<template v-if="prefer.s.showRenoteButtonInNoteFooter">
-					<button
-						v-if="canRenote"
-						ref="renoteButton"
-						v-tooltip="i18n.ts.renote"
-						:class="$style.footerButton"
-						class="_button"
-						@click.stop="prefer.s.renoteQuoteButtonSeparation && ((!prefer.s.renoteVisibilitySelection && !appearNote.channel) || (appearNote.channel && !appearNote.channel.allowRenoteToExternal) || appearNote.visibility === 'followers') ? renoteOnly() : renote()"
-					>
-						<i class="ti ti-repeat"></i>
-						<p v-if="appearNote.renoteCount > 0" :class="$style.footerButtonCount">{{ number(appearNote.renoteCount) }}</p>
-					</button>
-					<button v-else-if="!canRenote" :class="$style.footerButton" class="_button" disabled>
-						<i class="ti ti-ban"></i>
-					</button>
-				</template>
-				<button v-if="appearNote.reactionAcceptance !== 'likeOnly' && $appearNote.myReaction == null && prefer.s.showLikeButtonInNoteFooter" ref="heartReactButton" v-tooltip="i18n.ts.like" :class="$style.footerButton" class="_button" @click.stop="heartReact()">
-					<i class="ti ti-heart"></i>
-				</button>
-				<button v-if="prefer.s.showDoReactionButtonInNoteFooter" ref="reactButton" v-tooltip="appearNote.reactionAcceptance === 'likeOnly' && $appearNote.myReaction != null ? i18n.ts.unlike : $appearNote.myReaction != null ? i18n.ts.editReaction : appearNote.reactionAcceptance === 'likeOnly' ? i18n.ts.like : i18n.ts.doReaction" :class="$style.footerButton" class="_button" @click.stop="toggleReact()">
-					<i v-if="appearNote.reactionAcceptance === 'likeOnly' && $appearNote.myReaction != null" class="ti ti-heart-filled" style="color: var(--MI_THEME-love);"></i>
-					<i v-else-if="$appearNote.myReaction != null" class="ti ti-mood-edit" style="color: var(--MI_THEME-accent);"></i>
-					<i v-else-if="appearNote.reactionAcceptance === 'likeOnly'" class="ti ti-heart"></i>
-					<i v-else class="ti ti-mood-plus"></i>
-					<p v-if="(appearNote.reactionAcceptance === 'likeOnly' || prefer.s.showReactionsCount) && $appearNote.reactionCount > 0" :class="$style.footerButtonCount">{{ number($appearNote.reactionCount) }}</p>
-				</button>
-				<button v-if="canRenote && prefer.s.renoteQuoteButtonSeparation && prefer.s.showQuoteButtonInNoteFooter" ref="quoteButton" v-tooltip="i18n.ts.quote" class="_button" :class="$style.footerButton" @click.stop="quote()">
-					<i class="ti ti-quote"></i>
-				</button>
-				<button v-if="prefer.s.showClipButtonInNoteFooter" ref="clipButton" v-tooltip="i18n.ts.clip" :class="$style.footerButton" class="_button" @click.stop="clip()">
-					<i class="ti ti-paperclip"></i>
-				</button>
-				<MkA v-if="prefer.s.infoButtonForNoteActionsEnabled && prefer.s.showNoteActionsOnlyHover" v-tooltip="i18n.ts.details" :to="notePage(note)" :class="$style.footerButton" style="text-decoration: none;" class="_button">
-					<i class="ti ti-info-circle"></i>
-				</MkA>
-				<button v-if="prefer.s.showMoreButtonInNoteFooter" ref="menuButton" v-tooltip="i18n.ts.more" :class="$style.footerButton" class="_button" @click.stop="showMenu()">
-					<i class="ti ti-dots"></i>
-				</button>
-			</footer>
 		</div>
 	</article>
 </div>
@@ -1159,7 +1159,7 @@ function emitUpdReaction(emoji: string, delta: number) {
 		z-index: 1;
 	}
 
-	&:hover > .article > .main > .footer > .footerButton {
+	&:hover > .article > .main .footer > .footerButton {
 		color: var(--MI_THEME-fg);
 	}
 

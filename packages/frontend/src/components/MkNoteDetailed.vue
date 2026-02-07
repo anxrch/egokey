@@ -62,59 +62,53 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<article :class="$style.note" :style="{ paddingTop: prefer.s.showSubNoteFooterButton && appearNote.reply ? '14px' : '' }" @contextmenu.stop="onContextmenu">
 			<header :class="$style.noteHeader">
 				<MkAvatar v-if="!prefer.s.hideAvatarsInNote" :class="$style.noteHeaderAvatar" :user="appearNote.user" indicator link preview/>
-				<div style="display: flex; align-items: center; white-space: nowrap; overflow: hidden;">
-					<div :class="$style.noteHeaderBody">
-						<div :class="$style.noteHeaderName">
-							<MkA v-user-preview="appearNote.user.id" :class="$style.noteHeaderName" :to="userPage(appearNote.user)">
-								<MkUserName :nowrap="true" :user="appearNote.user"/>
-							</MkA>
-							<span v-if="appearNote.user.isLocked" :class="$style.userBadge"><i class="ti ti-lock"></i></span>
-							<span v-if="appearNote.user.isBot" :class="$style.userBadge"><i class="ti ti-robot"></i></span>
-							<span v-if="appearNote.user.isProxy" :class="$style.userBadge"><i class="ti ti-ghost"></i></span>
-							<span v-if="appearNote.user.badgeRoles" :class="$style.badgeRoles">
-								<img v-for="role in appearNote.user.badgeRoles" :key="role.id" v-tooltip="role.name" :class="$style.badgeRole" :src="role.iconUrl"/>
-							</span>
+				<div :class="$style.noteHeaderContent">
+					<div :class="$style.noteHeaderMainLine">
+						<div style="display: flex; align-items: center; white-space: nowrap; overflow: hidden;">
+							<div :class="$style.noteHeaderBody">
+								<div :class="$style.noteHeaderName">
+									<MkA v-user-preview="appearNote.user.id" :class="$style.noteHeaderName" :to="userPage(appearNote.user)">
+										<MkUserName :nowrap="true" :user="appearNote.user"/>
+									</MkA>
+									<span v-if="appearNote.user.isLocked" :class="$style.userBadge"><i class="ti ti-lock"></i></span>
+									<span v-if="appearNote.user.isBot" :class="$style.userBadge"><i class="ti ti-robot"></i></span>
+									<span v-if="appearNote.user.isProxy" :class="$style.userBadge"><i class="ti ti-ghost"></i></span>
+									<span v-if="appearNote.user.badgeRoles" :class="$style.badgeRoles">
+										<img v-for="role in appearNote.user.badgeRoles" :key="role.id" v-tooltip="role.name" :class="$style.badgeRole" :src="role.iconUrl"/>
+									</span>
+								</div>
+								<div :class="$style.noteHeaderUsername"><MkAcct :user="appearNote.user"/></div>
+							</div>
 						</div>
-						<div :class="$style.noteHeaderUsername"><MkAcct :user="appearNote.user"/></div>
-					</div>
-				</div>
-				<div style="display: flex; align-items: flex-end; margin-left: auto;">
-					<div :class="$style.noteHeaderBody">
-						<div :class="$style.noteHeaderInfo">
-							<span v-if="appearNote.updatedAt" style="margin-right: 0.5em;"><i v-tooltip="i18n.tsx.noteUpdatedAt({ date: (new Date(appearNote.updatedAt)).toLocaleDateString(), time: (new Date(appearNote.updatedAt)).toLocaleTimeString() })" class="ti ti-pencil"></i></span>
-							<span v-if="appearNote.deleteAt" style="margin-right: 0.5em;"><i v-tooltip="`${i18n.ts.scheduledNoteDelete}: ${(new Date(appearNote.deleteAt)).toLocaleString()}`" class="ti ti-bomb"></i></span>
-							<span v-if="appearNote.visibility !== 'public'" style="margin-left: 0.5em;">
-								<i v-if="appearNote.visibility === 'home'" v-tooltip="i18n.ts._visibility[appearNote.visibility]" class="ti ti-home"></i>
-								<i v-else-if="appearNote.visibility === 'followers'" v-tooltip="i18n.ts._visibility[appearNote.visibility]" class="ti ti-lock"></i>
-								<i v-else-if="appearNote.visibility === 'specified'" ref="specified" v-tooltip="i18n.ts._visibility[appearNote.visibility]" class="ti ti-mail"></i>
-							</span>
-							<span v-if="appearNote.reactionAcceptance != null" style="margin-left: 0.5em;" :class="{ [$style.danger]: ['nonSensitiveOnly', 'nonSensitiveOnlyForLocalLikeOnlyForRemote', 'likeOnly'].includes(<string>appearNote.reactionAcceptance) }" :title="i18n.ts.reactionAcceptance">
-								<i v-if="appearNote.reactionAcceptance === 'likeOnlyForRemote'" v-tooltip="i18n.ts.likeOnlyForRemote" class="ti ti-heart-plus"></i>
-								<i v-else-if="appearNote.reactionAcceptance === 'nonSensitiveOnly'" v-tooltip="i18n.ts.nonSensitiveOnly" class="ti ti-icons"></i>
-								<i v-else-if="appearNote.reactionAcceptance === 'nonSensitiveOnlyForLocalLikeOnlyForRemote'" v-tooltip="i18n.ts.nonSensitiveOnlyForLocalLikeOnlyForRemote" class="ti ti-heart-plus"></i>
-								<i v-else-if="appearNote.reactionAcceptance === 'likeOnly'" v-tooltip="i18n.ts.likeOnly" class="ti ti-heart"></i>
-							</span>
-							<span v-if="appearNote.localOnly" style="margin-left: 0.5em;"><i v-tooltip="i18n.ts._visibility['disableFederation']" class="ti ti-rocket-off"></i></span>
-							<span
-								v-if="appearNote.deliveryTargets && (appearNote.deliveryTargets.mode === 'include' || appearNote.deliveryTargets.hosts?.length)"
-								v-tooltip="i18n.ts._deliveryTargetControl[appearNote.deliveryTargets.mode === 'include' ? 'deliveryTargetsInclude' : 'deliveryTargetsExclude'] + ':' + (appearNote.deliveryTargets.hosts?.length ? '\n' + appearNote.deliveryTargets.hosts.map((h, i) => appearNote.deliveryTargets.names?.[i] ? `${appearNote.deliveryTargets.names[i]} (${h})` : h).join('\n') : '\n' + i18n.ts.none)"
-								style="margin-right: 0.5em;"
-							>
-								<i :class="appearNote.deliveryTargets.mode === 'include' ? 'ti ti-truck' : 'ti ti-truck-filled'"></i>
-							</span>
-						</div>
-						<MkInstanceTicker v-if="showTicker" :host="appearNote.user.host" :instance="appearNote.user.instance" @click="showOnRemote"/>
-					</div>
-					<!--
-					<div :class="$style.noteHeaderUsernameAndBadgeRoles">
-						<div :class="$style.noteHeaderUsername">
-							<MkAcct :user="appearNote.user"/>
-						</div>
-						<div v-if="appearNote.user.badgeRoles" :class="$style.noteHeaderBadgeRoles">
-							<img v-for="(role, i) in appearNote.user.badgeRoles" :key="i" v-tooltip="role.name" :class="$style.noteHeaderBadgeRole" :src="role.iconUrl!"/>
+						<div :class="$style.noteHeaderRight">
+							<div :class="$style.noteHeaderInfo">
+								<span v-if="appearNote.updatedAt" style="margin-right: 0.5em;"><i v-tooltip="i18n.tsx.noteUpdatedAt({ date: (new Date(appearNote.updatedAt)).toLocaleDateString(), time: (new Date(appearNote.updatedAt)).toLocaleTimeString() })" class="ti ti-pencil"></i></span>
+								<span v-if="appearNote.deleteAt" style="margin-right: 0.5em;"><i v-tooltip="`${i18n.ts.scheduledNoteDelete}: ${(new Date(appearNote.deleteAt)).toLocaleString()}`" class="ti ti-bomb"></i></span>
+								<span v-if="appearNote.visibility !== 'public'" style="margin-left: 0.5em;">
+									<i v-if="appearNote.visibility === 'home'" v-tooltip="i18n.ts._visibility[appearNote.visibility]" class="ti ti-home"></i>
+									<i v-else-if="appearNote.visibility === 'followers'" v-tooltip="i18n.ts._visibility[appearNote.visibility]" class="ti ti-lock"></i>
+									<i v-else-if="appearNote.visibility === 'specified'" ref="specified" v-tooltip="i18n.ts._visibility[appearNote.visibility]" class="ti ti-mail"></i>
+								</span>
+								<span v-if="appearNote.reactionAcceptance != null" style="margin-left: 0.5em;" :class="{ [$style.danger]: ['nonSensitiveOnly', 'nonSensitiveOnlyForLocalLikeOnlyForRemote', 'likeOnly'].includes(<string>appearNote.reactionAcceptance) }" :title="i18n.ts.reactionAcceptance">
+									<i v-if="appearNote.reactionAcceptance === 'likeOnlyForRemote'" v-tooltip="i18n.ts.likeOnlyForRemote" class="ti ti-heart-plus"></i>
+									<i v-else-if="appearNote.reactionAcceptance === 'nonSensitiveOnly'" v-tooltip="i18n.ts.nonSensitiveOnly" class="ti ti-icons"></i>
+									<i v-else-if="appearNote.reactionAcceptance === 'nonSensitiveOnlyForLocalLikeOnlyForRemote'" v-tooltip="i18n.ts.nonSensitiveOnlyForLocalLikeOnlyForRemote" class="ti ti-heart-plus"></i>
+									<i v-else-if="appearNote.reactionAcceptance === 'likeOnly'" v-tooltip="i18n.ts.likeOnly" class="ti ti-heart"></i>
+								</span>
+								<span v-if="appearNote.localOnly" style="margin-left: 0.5em;"><i v-tooltip="i18n.ts._visibility['disableFederation']" class="ti ti-rocket-off"></i></span>
+								<span
+									v-if="appearNote.deliveryTargets && (appearNote.deliveryTargets.mode === 'include' || appearNote.deliveryTargets.hosts?.length)"
+									v-tooltip="i18n.ts._deliveryTargetControl[appearNote.deliveryTargets.mode === 'include' ? 'deliveryTargetsInclude' : 'deliveryTargetsExclude'] + ':' + (appearNote.deliveryTargets.hosts?.length ? '\n' + appearNote.deliveryTargets.hosts.map((h, i) => appearNote.deliveryTargets.names?.[i] ? `${appearNote.deliveryTargets.names[i]} (${h})` : h).join('\n') : '\n' + i18n.ts.none)"
+									style="margin-right: 0.5em;"
+								>
+									<i :class="appearNote.deliveryTargets.mode === 'include' ? 'ti ti-truck' : 'ti ti-truck-filled'"></i>
+								</span>
+							</div>
 						</div>
 					</div>
-					-->
+					<div v-if="showTicker" :class="$style.noteHeaderTickerRow">
+						<MkInstanceTicker :host="appearNote.user.host" :instance="appearNote.user.instance" @click="showOnRemote"/>
+					</div>
 				</div>
 			</header>
 			<div :class="$style.noteContent">
@@ -1082,7 +1076,7 @@ function loadHistories() {
 	display: flex;
 	position: relative;
 	margin-bottom: 16px;
-	align-items: center;
+	align-items: flex-start;
 }
 
 .noteHeaderAvatar {
@@ -1093,14 +1087,36 @@ function loadHistories() {
 	background: var(--MI_THEME-panel);
 }
 
+.noteHeaderContent {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	padding-left: 16px;
+	overflow: hidden;
+}
+
+.noteHeaderMainLine {
+	display: flex;
+	align-items: baseline;
+}
+
 .noteHeaderBody {
 	flex: 1;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	padding-left: 16px;
 	font-size: 0.95em;
-  max-width: 300px;
+	max-width: 300px;
+}
+
+.noteHeaderRight {
+	display: flex;
+	align-items: center;
+	margin-left: auto;
+	padding-left: 10px;
+	flex-shrink: 0;
+	font-size: 0.9em;
+	white-space: nowrap;
 }
 
 .noteHeaderName {
@@ -1108,14 +1124,14 @@ function loadHistories() {
 	font-weight: bold;
 	line-height: 1.3;
 	margin: 0 .5em 0 0;
-  overflow: hidden;
-  overflow-wrap: anywhere;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+	overflow: hidden;
+	overflow-wrap: anywhere;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
+	&::-webkit-scrollbar {
+		display: none;
+	}
 
 	&:hover {
 		color: var(--MI_THEME-nameHover);
@@ -1138,8 +1154,11 @@ function loadHistories() {
 }
 
 .noteHeaderInfo {
-	float: right;
 	text-align: right;
+}
+
+.noteHeaderTickerRow {
+	width: 100%;
 }
 
 .noteHeaderUsernameAndBadgeRoles {
@@ -1151,14 +1170,14 @@ function loadHistories() {
 	margin-right: 0.5em;
 	line-height: 1.3;
 	word-wrap: anywhere;
-  overflow: hidden;
-  overflow-wrap: anywhere;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+	overflow: hidden;
+	overflow-wrap: anywhere;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
+	&::-webkit-scrollbar {
+		display: none;
+	}
 }
 
 .noteHeaderBadgeRoles {

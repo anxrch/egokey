@@ -11,7 +11,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<div v-panel class="about">
 					<div ref="containerEl" class="container" :class="{ playing: easterEggEngine != null }">
 						<img src="/client-assets/about-icon.png" alt="" class="icon" draggable="false" @load="iconLoaded" @click="gravity"/>
-						<div class="cherrypick">CherryPick</div>
+						<div class="cherrypick">EgoKey</div>
 						<div class="version" @click="whatIsNewCherryPick">v{{ version }} <span class="commit-hash" @click.stop="openCommitPage('kokonect-link/cherrypick', gitHash)">({{ gitHash.substring(0, 8) }})</span></div>
 						<div class="version" style="font-size: 11px;" @click="whatIsNewMisskey">v{{ basedMisskeyVersion }} (Based on Misskey)</div>
 						<span v-for="emoji in easterEggEmojis" :key="emoji.id" class="emoji" :data-physics-x="emoji.left" :data-physics-y="emoji.top" :class="{ _physics_circle_: !emoji.emoji.startsWith(':') }">
@@ -25,7 +25,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 					{{ i18n.ts._aboutMisskey.about }}<br><a href="https://misskey-hub.net/docs/about-misskey/" target="_blank" class="_link">{{ i18n.ts.learnMore }}</a>
 				</div>
 				<div v-if="$i != null" style="text-align: center;">
-					<MkButton primary rounded inline @click="iLoveCherryPick">I <Mfm text="$[jelly ❤]"/> #CherryPick</MkButton>
+					<MkButton primary rounded inline @click="iLoveCherryPick">I <Mfm text="$[jelly ❤]"/> #EgoKey</MkButton>
+
 				</div>
 				<FormSection v-if="isKokonect">
 					<template #label>_KOKONECT_</template>
@@ -568,7 +569,7 @@ function gravity() {
 
 function iLoveCherryPick() {
 	os.post({
-		initialText: 'I $[jelly ❤] #CherryPick',
+		initialText: 'I $[jelly ❤] #EgoKey',
 		instant: true,
 	});
 }

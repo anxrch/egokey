@@ -29,6 +29,8 @@ autoDeleteKeepFavoritesDescription: "Favorited notes will not be automatically d
 autoDeleteNotesWarning: "This action cannot be undone. Deleted notes cannot be recovered."
 scheduledToDeleteOnX: "Deletion is scheduled for {x}"
 showGapBodyOfTheNote: "Show a gap between body on the note"
+noteHeaderInlineHandle: "Show handle next to nickname"
+noteHeaderInstanceTickerBelow: "Show instance ticker below note header"
 replyTo: "Replying to {user}"
 forceCollapseAllRenotes: "Collapse all renotes"
 forceCollapseAllRenotesDescription: "Collapse and display all notes that you or other have renoted."
