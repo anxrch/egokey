@@ -16,6 +16,8 @@ import { TAB_ID } from '@/tab-id.js';
 // クラウド同期用グループ名
 const syncGroup = 'default';
 
+export const hadStoredPreferences = miLocalStorage.getItem('preferences') != null;
+
 const io: StorageProvider = {
 	load: () => {
 		const savedProfileRaw = miLocalStorage.getItem('preferences');

@@ -109,6 +109,13 @@ SPDX-License-Identifier: AGPL-3.0-only
 					</MkColorInput>
 				</SearchMarker>
 
+				<SearchMarker :keywords="['theme', 'default', 'mode', 'light', 'dark', 'system']">
+					<MkSelect v-model="defaultThemeMode" :items="defaultThemeModeItems">
+						<template #label><SearchLabel>{{ i18n.ts.instanceDefaultThemeMode }}</SearchLabel></template>
+						<template #caption>{{ i18n.ts.instanceDefaultThemeModeDescription }}</template>
+					</MkSelect>
+				</SearchMarker>
+
 				<SearchMarker :keywords="['theme', 'default', 'light']">
 					<MkTextarea v-model="defaultLightTheme">
 						<template #label><SearchLabel>{{ i18n.ts.instanceDefaultLightTheme }}</SearchLabel></template>
@@ -177,6 +184,7 @@ import { definePage } from '@/page.js';
 import MkButton from '@/components/MkButton.vue';
 import MkColorInput from '@/components/MkColorInput.vue';
 import MkRadios from '@/components/MkRadios.vue';
+import MkSelect from '@/components/MkSelect.vue';
 import MkSwitch from '@/components/MkSwitch.vue';
 
 const meta = await misskeyApi('admin/meta');
@@ -194,6 +202,7 @@ const app512IconUrl = ref(meta.app512IconUrl);
 const bannerUrl = ref(meta.bannerUrl);
 const backgroundImageUrl = ref(meta.backgroundImageUrl);
 const themeColor = ref(meta.themeColor);
+const defaultThemeMode = ref<'system' | 'light' | 'dark'>(meta.defaultThemeMode ?? 'system');
 const defaultLightTheme = ref(meta.defaultLightTheme);
 const defaultDarkTheme = ref(meta.defaultDarkTheme);
 const serverErrorImageUrl = ref(meta.serverErrorImageUrl);
@@ -204,6 +213,11 @@ const repositoryUrl = ref(meta.repositoryUrl);
 const feedbackUrl = ref(meta.feedbackUrl);
 const manifestJsonOverride = ref(meta.manifestJsonOverride === '' ? '{}' : JSON.stringify(JSON.parse(meta.manifestJsonOverride), null, '\t'));
 const customSplashText = ref(meta.customSplashText.join('\n'));
+const defaultThemeModeItems = [
+	{ label: i18n.ts.system, value: 'system' },
+	{ label: i18n.ts.light, value: 'light' },
+	{ label: i18n.ts.dark, value: 'dark' },
+];
 
 function save() {
 	os.apiWithDialog('admin/update-meta', {
@@ -218,6 +232,7 @@ function save() {
 		bannerUrl: bannerUrl.value,
 		backgroundImageUrl: backgroundImageUrl.value,
 		themeColor: themeColor.value === '' ? null : themeColor.value,
+		defaultThemeMode: defaultThemeMode.value,
 		defaultLightTheme: defaultLightTheme.value === '' ? null : defaultLightTheme.value,
 		defaultDarkTheme: defaultDarkTheme.value === '' ? null : defaultDarkTheme.value,
 		infoImageUrl: infoImageUrl.value === '' ? null : infoImageUrl.value,

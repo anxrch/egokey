@@ -114,6 +114,7 @@ export class MetaEntityService {
 			maxNoteTextLength: MAX_NOTE_TEXT_LENGTH,
 			defaultLightTheme,
 			defaultDarkTheme,
+			defaultThemeMode: instance.defaultThemeMode,
 			clientOptions: instance.clientOptions,
 			ads: ads.map(ad => ({
 				id: ad.id,
@@ -183,4 +184,3 @@ export class MetaEntityService {
 		return packDetailed;
 	}
 }
-

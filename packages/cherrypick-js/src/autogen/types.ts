@@ -5825,6 +5825,8 @@ export type components = {
             feedbackUrl: string | null;
             defaultDarkTheme: string | null;
             defaultLightTheme: string | null;
+            /** @enum {string} */
+            defaultThemeMode: 'system' | 'light' | 'dark';
             clientOptions: Record<string, never>;
             disableRegistration: boolean;
             emailRequiredForSignup: boolean;
@@ -10632,6 +10634,8 @@ export interface operations {
                         libreTranslateApiKey: string | null;
                         defaultDarkTheme: string | null;
                         defaultLightTheme: string | null;
+                        /** @enum {string} */
+                        defaultThemeMode: 'system' | 'light' | 'dark';
                         clientOptions: Record<string, never>;
                         description: string | null;
                         disableRegistration: boolean;
@@ -13916,6 +13920,8 @@ export interface operations {
                     description?: string | null;
                     defaultLightTheme?: string | null;
                     defaultDarkTheme?: string | null;
+                    /** @enum {string} */
+                    defaultThemeMode?: 'system' | 'light' | 'dark';
                     clientOptions?: Record<string, never>;
                     cacheRemoteFiles?: boolean;
                     cacheRemoteSensitiveFiles?: boolean;
@@ -40060,4 +40066,3 @@ export interface operations {
         };
     };
 }
-

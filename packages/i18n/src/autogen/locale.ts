@@ -4549,6 +4549,14 @@ export interface Locale extends ILocale {
      */
     "instanceDefaultThemeDescription": string;
     /**
+     * サーバーデフォルトのテーマモード
+     */
+    "instanceDefaultThemeMode": string;
+    /**
+     * 新規ユーザーとゲストに適用されます。
+     */
+    "instanceDefaultThemeModeDescription": string;
+    /**
      * ミュートする期限
      */
     "mutePeriod": string;

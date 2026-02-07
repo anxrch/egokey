@@ -511,6 +511,11 @@ export const meta = {
 				type: 'string',
 				optional: false, nullable: true,
 			},
+			defaultThemeMode: {
+				type: 'string',
+				optional: false, nullable: false,
+				enum: ['system', 'light', 'dark'],
+			},
 			clientOptions: {
 				type: 'object',
 				optional: false, nullable: false,
@@ -816,6 +821,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				logoImageUrl: instance.logoImageUrl,
 				defaultLightTheme: instance.defaultLightTheme,
 				defaultDarkTheme: instance.defaultDarkTheme,
+				defaultThemeMode: instance.defaultThemeMode,
 				clientOptions: instance.clientOptions,
 				enableEmail: instance.enableEmail,
 				enableServiceWorker: instance.enableServiceWorker,

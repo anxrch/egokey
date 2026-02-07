@@ -70,6 +70,7 @@ export const paramDef = {
 		description: { type: 'string', nullable: true },
 		defaultLightTheme: { type: 'string', nullable: true },
 		defaultDarkTheme: { type: 'string', nullable: true },
+		defaultThemeMode: { type: 'string', enum: ['system', 'light', 'dark'] },
 		clientOptions: { type: 'object', nullable: false },
 		cacheRemoteFiles: { type: 'boolean' },
 		cacheRemoteSensitiveFiles: { type: 'boolean' },
@@ -376,6 +377,9 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 
 			if (ps.defaultDarkTheme !== undefined) {
 				set.defaultDarkTheme = ps.defaultDarkTheme;
+			}
+			if (ps.defaultThemeMode !== undefined) {
+				set.defaultThemeMode = ps.defaultThemeMode;
 			}
 
 			if (ps.clientOptions !== undefined) {

@@ -463,6 +463,12 @@ export class MiMeta {
 	})
 	public defaultDarkTheme: string | null;
 
+	@Column('varchar', {
+		length: 16,
+		default: 'system',
+	})
+	public defaultThemeMode: 'system' | 'light' | 'dark';
+
 	@Column('boolean', {
 		default: false,
 	})

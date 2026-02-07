@@ -27,7 +27,7 @@ import { deckStore } from '@/ui/deck/deck-store.js';
 import { analytics, initAnalytics } from '@/analytics.js';
 import { miLocalStorage } from '@/local-storage.js';
 import { fetchCustomEmojis } from '@/custom-emojis.js';
-import { prefer } from '@/preferences.js';
+import { prefer, hadStoredPreferences } from '@/preferences.js';
 import { $i } from '@/i.js';
 import { launchPlugins } from '@/plugin.js';
 import { popup } from '@/os.js';
@@ -130,6 +130,17 @@ export async function common(createVue: () => Promise<App<Element>>) {
 
 	await store.ready;
 	await deckStore.ready;
+
+	if (!hadStoredPreferences) {
+		const defaultThemeMode = instance.defaultThemeMode ?? 'system';
+		if (defaultThemeMode === 'system') {
+			if (!prefer.s.syncDeviceDarkMode) prefer.commit('syncDeviceDarkMode', true);
+			store.set('darkMode', isDeviceDarkmode());
+		} else {
+			if (prefer.s.syncDeviceDarkMode) prefer.commit('syncDeviceDarkMode', false);
+			store.set('darkMode', defaultThemeMode === 'dark');
+		}
+	}
 
 	const fetchInstanceMetaPromise = fetchInstance();
 

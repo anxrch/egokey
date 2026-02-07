@@ -62,7 +62,7 @@ $height: 2ex;
 	border-radius: .5rem;
 	overflow: clip;
 	color: #000;
-	margin-top: 5px;
+	margin-top: 2px;
 	padding: 1px 5px 1px 0;
 
 	// text-shadowは重いから使うな

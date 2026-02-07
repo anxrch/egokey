@@ -75,6 +75,11 @@ export const packedMetaLiteSchema = {
 			type: 'string',
 			optional: false, nullable: true,
 		},
+		defaultThemeMode: {
+			type: 'string',
+			optional: false, nullable: false,
+			enum: ['system', 'light', 'dark'],
+		},
 		clientOptions: {
 			type: 'object',
 			optional: false, nullable: false,
