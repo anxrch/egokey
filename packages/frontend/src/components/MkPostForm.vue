@@ -278,7 +278,7 @@ onUnmounted(() => {
 });
 
 uploader.events.on('itemUploaded', ctx => {
-	files.value.push(ctx.item.uploaded!);
+	files.value = [...files.value, ctx.item.uploaded!];
 	uploader.removeItem(ctx.item);
 });
 
@@ -578,7 +578,7 @@ function chooseFileFromDrive(ev: MouseEvent) {
 	if (props.mock) return;
 
 	chooseDriveFile({ multiple: true }).then(driveFiles => {
-		files.value.push(...driveFiles);
+		files.value = [...files.value, ...driveFiles];
 	});
 }
 
@@ -970,7 +970,7 @@ function onDrop(ev: DragEvent): void {
 	{
 		const droppedData = getDragData(ev, 'driveFiles');
 		if (droppedData != null) {
-			files.value.push(...droppedData);
+			files.value = [...files.value, ...droppedData];
 			ev.preventDefault();
 		}
 	}
@@ -1057,9 +1057,12 @@ function isAnnoying(text: string): boolean {
 async function uploadFiles() {
 	await uploader.upload();
 
-	for (const uploadedItem of uploader.items.value.filter(x => x.uploaded != null)) {
-		files.value.push(uploadedItem.uploaded!);
-		uploader.removeItem(uploadedItem);
+	const newFiles = uploader.items.value.filter(x => x.uploaded != null);
+	if (newFiles.length > 0) {
+		files.value = [...files.value, ...newFiles.map(x => x.uploaded!)];
+		for (const uploadedItem of newFiles) {
+			uploader.removeItem(uploadedItem);
+		}
 	}
 }
 
