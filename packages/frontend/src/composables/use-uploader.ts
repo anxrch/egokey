@@ -146,7 +146,9 @@ export function useUploader(options: {
 			imageFrameParams: null,
 			file: markRaw(file),
 		});
-		const reactiveItem = items.value.at(-1)!;
+		// Trigger ref immediately after adding item to show preview without delay
+	triggerRef(items);
+	const reactiveItem = items.value.at(-1)!;
 		preprocess(reactiveItem).then(() => {
 			triggerRef(items);
 		});
@@ -578,6 +580,8 @@ export function useUploader(options: {
 	async function preprocess(item: UploaderItem): Promise<void> {
 		item.preprocessing = true;
 		item.preprocessProgress = null;
+		// Trigger ref immediately after setting preprocessing state
+		triggerRef(items);
 
 		if (IMAGE_PREPROCESS_NEEDED_TYPES.includes(item.file.type)) {
 			try {
