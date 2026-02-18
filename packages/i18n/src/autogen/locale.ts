@@ -4453,6 +4453,14 @@ export interface Locale extends ILocale {
      */
     "unmuteThread": string;
     /**
+     * このノートのリノート通知をミュート
+     */
+    "muteRenotesOnThisNote": string;
+    /**
+     * このノートのリノート通知のミュートを解除
+     */
+    "unmuteRenotesOnThisNote": string;
+    /**
      * フォローの公開範囲
      */
     "followingVisibility": string;

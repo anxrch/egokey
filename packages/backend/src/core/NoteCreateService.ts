@@ -15,7 +15,7 @@ import type { IMentionedRemoteUsers } from '@/models/Note.js';
 import { MiNote } from '@/models/Note.js';
 import { MiEvent } from '@/models/Event.js';
 import type { IEvent } from '@/models/Event.js';
-import type { BlockingsRepository, ChannelFollowingsRepository, ChannelsRepository, DriveFilesRepository, FollowingsRepository, InstancesRepository, MiFollowing, MiMeta, MutingsRepository, NotesRepository, NoteThreadMutingsRepository, UserListMembershipsRepository, UserProfilesRepository, UsersRepository } from '@/models/_.js';
+import type { BlockingsRepository, ChannelFollowingsRepository, ChannelsRepository, DriveFilesRepository, FollowingsRepository, InstancesRepository, MiFollowing, MiMeta, MutingsRepository, NoteRenoteMutingsRepository, NotesRepository, NoteThreadMutingsRepository, UserListMembershipsRepository, UserProfilesRepository, UsersRepository } from '@/models/_.js';
 import type { MiDriveFile } from '@/models/DriveFile.js';
 import type { MiApp } from '@/models/App.js';
 import { concat } from '@/misc/prelude/array.js';
@@ -190,6 +190,9 @@ export class NoteCreateService implements OnApplicationShutdown {
 
 		@Inject(DI.channelsRepository)
 		private channelsRepository: ChannelsRepository,
+
+		@Inject(DI.noteRenoteMutingsRepository)
+		private noteRenoteMutingsRepository: NoteRenoteMutingsRepository,
 
 		@Inject(DI.noteThreadMutingsRepository)
 		private noteThreadMutingsRepository: NoteThreadMutingsRepository,
@@ -848,7 +851,15 @@ export class NoteCreateService implements OnApplicationShutdown {
 
 				// Notify
 				if (data.renote.userHost === null) {
-					nm.push(data.renote.userId, type);
+					const isRenoteMuted = await this.noteRenoteMutingsRepository.exists({
+						where: {
+							userId: data.renote.userId,
+							noteId: data.renote.id,
+						},
+					});
+					if (!isRenoteMuted) {
+						nm.push(data.renote.userId, type);
+					}
 				}
 
 				// Publish event

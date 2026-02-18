@@ -4,7 +4,7 @@
  */
 
 import { Inject, Injectable } from '@nestjs/common';
-import type { NotesRepository, NoteThreadMutingsRepository, NoteFavoritesRepository } from '@/models/_.js';
+import type { NotesRepository, NoteRenoteMutingsRepository, NoteThreadMutingsRepository, NoteFavoritesRepository } from '@/models/_.js';
 import { Endpoint } from '@/server/api/endpoint-base.js';
 import { DI } from '@/di-symbols.js';
 
@@ -30,6 +30,10 @@ export const meta = {
 				type: 'boolean',
 				optional: false, nullable: false,
 			},
+			isMutedRenote: {
+				type: 'boolean',
+				optional: false, nullable: false,
+			},
 		},
 	},
 } as const;
@@ -48,6 +52,9 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 		@Inject(DI.notesRepository)
 		private notesRepository: NotesRepository,
 
+		@Inject(DI.noteRenoteMutingsRepository)
+		private noteRenoteMutingsRepository: NoteRenoteMutingsRepository,
+
 		@Inject(DI.noteThreadMutingsRepository)
 		private noteThreadMutingsRepository: NoteThreadMutingsRepository,
 
@@ -57,7 +64,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 		super(meta, paramDef, async (ps, me) => {
 			const note = await this.notesRepository.findOneByOrFail({ id: ps.noteId });
 
-			const [favorite, threadMuting, renoted] = await Promise.all([
+			const [favorite, threadMuting, renoted, renoteMuting] = await Promise.all([
 				this.noteFavoritesRepository.count({
 					where: {
 						userId: me.id,
@@ -79,12 +86,20 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 					},
 					take: 1,
 				}),
+				this.noteRenoteMutingsRepository.count({
+					where: {
+						userId: me.id,
+						noteId: note.id,
+					},
+					take: 1,
+				}),
 			]);
 
 			return {
 				isFavorited: favorite !== 0,
 				isMutedThread: threadMuting !== 0,
 				isRenoted: renoted !== 0,
+				isMutedRenote: renoteMuting !== 0,
 			};
 		});
 	}

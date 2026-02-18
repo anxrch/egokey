@@ -300,6 +300,12 @@ export function getNoteMenu(props: {
 		});
 	}
 
+	function toggleRenoteMute(mute: boolean): void {
+		os.apiWithDialog(mute ? 'notes/renote-muting/create' : 'notes/renote-muting/delete', {
+			noteId: appearNote.id,
+		});
+	}
+
 	function copyContent(): void {
 		copyToClipboard(appearNote.text, 'content');
 	}
@@ -517,6 +523,18 @@ export function getNoteMenu(props: {
 			text: i18n.ts.muteThread,
 			action: () => toggleThreadMute(true),
 		}));
+
+		if (appearNote.userId === $i.id) {
+			menuItems.push(statePromise.then(state => state.isMutedRenote ? {
+				icon: 'ti ti-repeat-off',
+				text: i18n.ts.unmuteRenotesOnThisNote,
+				action: () => toggleRenoteMute(false),
+			} : {
+				icon: 'ti ti-repeat-off',
+				text: i18n.ts.muteRenotesOnThisNote,
+				action: () => toggleRenoteMute(true),
+			}));
+		}
 
 		if (appearNote.userId === $i.id) {
 			if (($i.pinnedNoteIds ?? []).includes(appearNote.id)) {

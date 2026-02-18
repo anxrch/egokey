@@ -4184,7 +4184,29 @@ declare module '../api.js' {
 
     /**
      * No description provided.
-     * 
+     *
+     * **Credential required**: *Yes* / **Permission**: *write:account*
+     */
+    request<E extends 'notes/renote-muting/create', P extends Endpoints[E]['req']>(
+      endpoint: E,
+      params: P,
+      credential?: string | null,
+    ): Promise<SwitchCaseResponseType<E, P>>;
+
+    /**
+     * No description provided.
+     *
+     * **Credential required**: *Yes* / **Permission**: *write:account*
+     */
+    request<E extends 'notes/renote-muting/delete', P extends Endpoints[E]['req']>(
+      endpoint: E,
+      params: P,
+      credential?: string | null,
+    ): Promise<SwitchCaseResponseType<E, P>>;
+
+    /**
+     * No description provided.
+     *
      * **Credential required**: *Yes* / **Permission**: *write:account*
      */
     request<E extends 'notes/thread-muting/create', P extends Endpoints[E]['req']>(
@@ -4195,7 +4217,7 @@ declare module '../api.js' {
 
     /**
      * No description provided.
-     * 
+     *
      * **Credential required**: *Yes* / **Permission**: *write:account*
      */
     request<E extends 'notes/thread-muting/delete', P extends Endpoints[E]['req']>(

@@ -52,6 +52,7 @@ import { MiNote } from '@/models/Note.js';
 import { MiNoteDraft } from '@/models/NoteDraft.js';
 import { MiNoteFavorite } from '@/models/NoteFavorite.js';
 import { MiNoteReaction } from '@/models/NoteReaction.js';
+import { MiNoteRenoteMuting } from '@/models/NoteRenoteMuting.js';
 import { MiNoteThreadMuting } from '@/models/NoteThreadMuting.js';
 import { MiPage } from '@/models/Page.js';
 import { MiPageLike } from '@/models/PageLike.js';
@@ -139,6 +140,7 @@ export {
 	MiNoteDraft,
 	MiNoteFavorite,
 	MiNoteReaction,
+	MiNoteRenoteMuting,
 	MiNoteThreadMuting,
 	MiPage,
 	MiPageLike,
@@ -224,6 +226,7 @@ export type NotesRepository = Repository<MiNote> & MiRepository<MiNote>;
 export type NoteDraftsRepository = Repository<MiNoteDraft> & MiRepository<MiNoteDraft>;
 export type NoteFavoritesRepository = Repository<MiNoteFavorite> & MiRepository<MiNoteFavorite>;
 export type NoteReactionsRepository = Repository<MiNoteReaction> & MiRepository<MiNoteReaction>;
+export type NoteRenoteMutingsRepository = Repository<MiNoteRenoteMuting> & MiRepository<MiNoteRenoteMuting>;
 export type NoteThreadMutingsRepository = Repository<MiNoteThreadMuting> & MiRepository<MiNoteThreadMuting>;
 export type PagesRepository = Repository<MiPage> & MiRepository<MiPage>;
 export type PageLikesRepository = Repository<MiPageLike> & MiRepository<MiPageLike>;

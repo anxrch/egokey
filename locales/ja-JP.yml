@@ -1107,6 +1107,8 @@ makeReactionsPublicDescription: "あなたがしたリアクション一覧を�
 classic: "クラシック"
 muteThread: "スレッドをミュート"
 unmuteThread: "スレッドのミュートを解除"
+muteRenotesOnThisNote: "このノートのリノート通知をミュート"
+unmuteRenotesOnThisNote: "このノートのリノート通知のミュートを解除"
 followingVisibility: "フォローの公開範囲"
 followersVisibility: "フォロワーの公開範囲"
 continueThread: "さらにスレッドを見る"

@@ -358,6 +358,8 @@ export * as 'notes/search-by-tag' from './endpoints/notes/search-by-tag.js';
 export * as 'notes/show' from './endpoints/notes/show.js';
 export * as 'notes/show-partial-bulk' from './endpoints/notes/show-partial-bulk.js';
 export * as 'notes/state' from './endpoints/notes/state.js';
+export * as 'notes/renote-muting/create' from './endpoints/notes/renote-muting/create.js';
+export * as 'notes/renote-muting/delete' from './endpoints/notes/renote-muting/delete.js';
 export * as 'notes/thread-muting/create' from './endpoints/notes/thread-muting/create.js';
 export * as 'notes/thread-muting/delete' from './endpoints/notes/thread-muting/delete.js';
 export * as 'notes/timeline' from './endpoints/notes/timeline.js';

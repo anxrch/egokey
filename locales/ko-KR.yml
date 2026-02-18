@@ -1107,6 +1107,8 @@ makeReactionsPublicDescription: "나의 리액션을 누구나 볼 수 있게 �
 classic: "클래식"
 muteThread: "이 글타래 뮤트"
 unmuteThread: "글타래 뮤트 해제"
+muteRenotesOnThisNote: "이 노트의 리노트 알림 뮤트"
+unmuteRenotesOnThisNote: "이 노트의 리노트 알림 뮤트 해제"
 followingVisibility: "팔로우의 공개 범위"
 followersVisibility: "팔로워의 공개 범위"
 continueThread: "이 글타래 이어서 보기"

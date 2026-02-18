@@ -1107,6 +1107,8 @@ makeReactionsPublicDescription: "This will make the list of all your past reacti
 classic: "Classic"
 muteThread: "Mute thread"
 unmuteThread: "Unmute thread"
+muteRenotesOnThisNote: "Mute renote notifications"
+unmuteRenotesOnThisNote: "Unmute renote notifications"
 followingVisibility: "Visibility of follows"
 followersVisibility: "Visibility of followers"
 continueThread: "View thread continuation"

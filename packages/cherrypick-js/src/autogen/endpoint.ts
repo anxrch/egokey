@@ -573,6 +573,8 @@ import type {
 	NotesShowPartialBulkResponse,
 	NotesStateRequest,
 	NotesStateResponse,
+	NotesRenoteMutingCreateRequest,
+	NotesRenoteMutingDeleteRequest,
 	NotesThreadMutingCreateRequest,
 	NotesThreadMutingDeleteRequest,
 	NotesTimelineRequest,
@@ -1090,6 +1092,8 @@ export type Endpoints = {
 	'notes/show': { req: NotesShowRequest; res: NotesShowResponse };
 	'notes/show-partial-bulk': { req: NotesShowPartialBulkRequest; res: NotesShowPartialBulkResponse };
 	'notes/state': { req: NotesStateRequest; res: NotesStateResponse };
+	'notes/renote-muting/create': { req: NotesRenoteMutingCreateRequest; res: EmptyResponse };
+	'notes/renote-muting/delete': { req: NotesRenoteMutingDeleteRequest; res: EmptyResponse };
 	'notes/thread-muting/create': { req: NotesThreadMutingCreateRequest; res: EmptyResponse };
 	'notes/thread-muting/delete': { req: NotesThreadMutingDeleteRequest; res: EmptyResponse };
 	'notes/timeline': { req: NotesTimelineRequest; res: NotesTimelineResponse };
