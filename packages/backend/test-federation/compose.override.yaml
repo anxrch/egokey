@@ -93,6 +93,12 @@ services:
         target: /cherrypick/packages/misskey-reversi/node_modules
 
 networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.24.0.0/16
+          ip_range: 172.24.0.0/24
   external_network:
     driver: bridge
     ipam:
