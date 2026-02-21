@@ -75,7 +75,7 @@ export const PREF_DEF = definePreferences({
 			name: 'calendar',
 			id: genId(), place: 'right', data: {},
 		}, {
-			name: 'notifiions',
+			name: 'notifications',
 			id: genId(), place: 'right', data: {},
 		}, {
 			name: 'trends',
@@ -319,7 +319,7 @@ export const PREF_DEF = definePreferences({
 	aiChanMode: {
 		default: false,
 	},
-		disableCatSpeech: {
+	disableCatSpeech: {
 		default: false,
 	},
 	devMode: {
@@ -331,7 +331,7 @@ export const PREF_DEF = definePreferences({
 	notificationPosition: {
 		default: 'rightBottom' as 'leftTop' | 'leftBottom' | 'rightTop' | 'rightBottom',
 	},
-	notifiionStackAxis: {
+	notificationStackAxis: {
 		default: 'horizontal' as 'vertical' | 'horizontal',
 	},
 	enableCondensedLine: {
@@ -340,7 +340,7 @@ export const PREF_DEF = definePreferences({
 	keepScreenOn: {
 		default: false,
 	},
-	useGroupedNotifiions: {
+	useGroupedNotifications: {
 		default: true,
 	},
 	dataSaver: {
@@ -413,13 +413,13 @@ export const PREF_DEF = definePreferences({
 			if (sameIdExists) throw new Error();
 			const sameNameExists = a.some(x => b.some(y => x.name === y.name));
 			if (sameNameExists) throw new Error();
-			return a.con(b);
+			return a.concat(b);
 		},
 	},
 	mutingEmojis: {
 		default: [] as string[],
 		mergeStrategy: (a, b) => {
-			return [...new Set(a.con(b))];
+			return [...new Set(a.concat(b))];
 		},
 	},
 	watermarkPresets: {
@@ -427,7 +427,7 @@ export const PREF_DEF = definePreferences({
 		default: [] as WatermarkPreset[],
 		mergeStrategy: (a, b) => {
 			const mergedItems = [] as typeof a;
-			for (const x of a.con(b)) {
+			for (const x of a.concat(b)) {
 				const sameIdItem = mergedItems.find(y => y.id === x.id);
 				if (sameIdItem != null) {
 					if (deepEqual(x, sameIdItem)) { // 完全な重複は無視
@@ -468,7 +468,7 @@ export const PREF_DEF = definePreferences({
 	'sound.on.noteMy': {
 		default: { type: 'syuilo/n-cea-4va', volume: 1 } as SoundStore,
 	},
-	'sound.on.notifiion': {
+	'sound.on.notification': {
 		default: { type: 'syuilo/n-ea', volume: 1 } as SoundStore,
 	},
 	'sound.on.reaction': {

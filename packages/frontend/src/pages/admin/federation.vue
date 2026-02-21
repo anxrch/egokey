@@ -94,16 +94,15 @@ const paginator = markRaw(new Paginator('federation/instances', {
 			state.value === 'federating' ? { federating: true, suspended: false, blocked: false, silenced: false } :
 			state.value === 'subscribing' ? { subscribing: true, suspended: false, blocked: false, silenced: false } :
 			state.value === 'publishing' ? { publishing: true, suspended: false, blocked: false, silenced: false } :
-			state.value === 'silenced' ? { silenced: true } :
 			state.value === 'suspended' ? { suspended: true } :
 			state.value === 'blocked' ? { blocked: true } :
+			state.value === 'silenced' ? { silenced: true } :
 			state.value === 'notResponding' ? { notResponding: true } :
 			{}),
 	})),
 }));
 
 function getStatus(instance: Misskey.entities.FederationInstance) {
-	if (instance.isSilenced) return 'Silenced';
 	switch (instance.suspensionState) {
 		case 'manuallySuspended':
 			return 'Manually Suspended';
@@ -115,6 +114,7 @@ function getStatus(instance: Misskey.entities.FederationInstance) {
 			break;
 	}
 	if (instance.isBlocked) return 'Blocked';
+	if (instance.isSilenced) return 'Silenced';
 	if (instance.isNotResponding) return 'Error';
 	return 'Alive';
 }

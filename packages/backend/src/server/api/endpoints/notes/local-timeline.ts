@@ -115,9 +115,9 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				useDbFallback: this.serverSettings.enableFanoutTimelineDbFallback,
 				redisTimelines:
 					ps.withFiles ? ['localTimelineWithFiles']
-						: ps.withReplies ? ['localTimeline', 'localTimelineWithReplies']
-							: me ? ['localTimeline', `localTimelineWithReplyTo:${me.id}`]
-								: ['localTimeline'],
+					: ps.withReplies ? ['localTimeline', 'localTimelineWithReplies']
+					: me ? ['localTimeline', `localTimelineWithReplyTo:${me.id}`]
+					: ['localTimeline'],
 				alwaysIncludeMyNotes: true,
 				excludePureRenotes: !ps.withRenotes,
 				dbFallback: async (untilId, sinceId, limit) => await this.getFromDb({

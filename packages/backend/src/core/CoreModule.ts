@@ -175,6 +175,7 @@ const $CaptchaService: Provider = { provide: 'CaptchaService', useExisting: Capt
 const $CustomEmojiService: Provider = { provide: 'CustomEmojiService', useExisting: CustomEmojiService };
 const $DeleteAccountService: Provider = { provide: 'DeleteAccountService', useExisting: DeleteAccountService };
 const $TruncateAccountService: Provider = { provide: 'TruncateAccountService', useExisting: TruncateAccountService };
+const $TruncateAccountKeepDriveService: Provider = { provide: 'TruncateAccountKeepDriveService', useExisting: TruncateAccountKeepDriveService };
 const $DownloadService: Provider = { provide: 'DownloadService', useExisting: DownloadService };
 const $DriveService: Provider = { provide: 'DriveService', useExisting: DriveService };
 const $EmailService: Provider = { provide: 'EmailService', useExisting: EmailService };
@@ -482,7 +483,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$CustomEmojiService,
 		$DeleteAccountService,
 		$TruncateAccountService,
-		{ provide: 'TruncateAccountKeepDriveService', useExisting: TruncateAccountKeepDriveService },
+		$TruncateAccountKeepDriveService,
 		$DownloadService,
 		$DriveService,
 		$EmailService,
@@ -786,6 +787,7 @@ const $ApQuestionService: Provider = { provide: 'ApQuestionService', useExisting
 		$CustomEmojiService,
 		$DeleteAccountService,
 		$TruncateAccountService,
+		$TruncateAccountKeepDriveService,
 		$DownloadService,
 		$DriveService,
 		$EmailService,

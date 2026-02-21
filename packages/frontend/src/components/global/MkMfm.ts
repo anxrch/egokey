@@ -159,12 +159,12 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 					case 'spin': {
 						const direction =
 							token.props.args.left ? 'reverse' :
-								token.props.args.alternate ? 'alternate' :
-									'normal';
+							token.props.args.alternate ? 'alternate' :
+							'normal';
 						const anime =
 							token.props.args.x ? 'mfm-spinX' :
-								token.props.args.y ? 'mfm-spinY' :
-									'mfm-spin';
+							token.props.args.y ? 'mfm-spinY' :
+							'mfm-spin';
 						const speed = validTime(token.props.args.speed) ?? '1.5s';
 						const delay = validTime(token.props.args.delay) ?? '0s';
 						style = useAnim ? `animation: ${anime} ${speed} linear infinite; animation-direction: ${direction}; animation-delay: ${delay};` : '';
@@ -185,8 +185,8 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 					case 'flip': {
 						const transform =
 							(token.props.args.h && token.props.args.v) ? 'scale(-1, -1)' :
-								token.props.args.v ? 'scaleY(-1)' :
-									'scaleX(-1)';
+							token.props.args.v ? 'scaleY(-1)' :
+							'scaleX(-1)';
 						style = `transform: ${transform};`;
 						break;
 					}
@@ -208,12 +208,12 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 					case 'font': {
 						const family =
 							token.props.args.serif ? 'serif' :
-								token.props.args.monospace ? 'monospace' :
-									token.props.args.cursive ? 'cursive' :
-										token.props.args.fantasy ? 'fantasy' :
-											token.props.args.emoji ? 'emoji' :
-												token.props.args.math ? 'math' :
-													null;
+							token.props.args.monospace ? 'monospace' :
+							token.props.args.cursive ? 'cursive' :
+							token.props.args.fantasy ? 'fantasy' :
+							token.props.args.emoji ? 'emoji' :
+							token.props.args.math ? 'math' :
+							null;
 						if (family) style = `font-family: ${family};`;
 						break;
 					}
@@ -323,14 +323,12 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 						]);
 					}
 					case 'clickable': {
-						return h('span', {
-							onClick(ev: MouseEvent): void {
-								ev.stopPropagation();
-								ev.preventDefault();
-								const clickEv = typeof token.props.args.ev === 'string' ? token.props.args.ev : '';
-								emit('clickEv', clickEv);
-							},
-						}, genEl(token.children, scale));
+						return h('span', { onClick(ev: MouseEvent): void {
+							ev.stopPropagation();
+							ev.preventDefault();
+							const clickEv = typeof token.props.args.ev === 'string' ? token.props.args.ev : '';
+							emit('clickEv', clickEv);
+						} }, genEl(token.children, scale));
 					}
 				}
 				if (style === undefined) {

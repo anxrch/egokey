@@ -15,8 +15,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 <script lang="ts" setup>
 import isChromatic from 'chromatic/isChromatic';
 import { computed } from 'vue';
-import { i18n } from '@/i18n.js';
 import { dateTimeFormat } from '@@/js/intl-const.js';
+import { i18n } from '@/i18n.js';
 import { useLowresTime } from '@/composables/use-lowres-time.js';
 
 const props = withDefaults(defineProps<{
@@ -42,17 +42,13 @@ function getDateSafe(n: Date | string | number) {
 	}
 }
 
-const _time = computed(() => {
-	if (props.time == null) return NaN;
-	return getDateSafe(props.time).getTime();
-});
+const _time = computed(() => props.time == null ? NaN : getDateSafe(props.time).getTime());
 const invalid = computed(() => Number.isNaN(_time.value));
 const absolute = computed(() => !invalid.value ? dateTimeFormat.format(_time.value) : i18n.ts._ago.invalid);
 
 const actualNow = useLowresTime();
 const now = computed(() => (props.origin ? props.origin.getTime() : actualNow.value));
 
-// eslint-disable-next-line vue/no-setup-props-reactivity-loss
 const ago = computed(() => (now.value - _time.value) / 1000/*ms*/);
 
 const relative = computed<string>(() => {

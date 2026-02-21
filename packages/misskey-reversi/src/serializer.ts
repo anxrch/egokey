@@ -21,10 +21,14 @@ export function serializeLogs(logs: Log[]) {
 		const log = logs[i];
 		const timeDelta = i === 0 ? log.time : log.time - logs[i - 1].time;
 
-		_logs.push([timeDelta, log.player ? 1 : 0, 0, log.pos]);
-		//case 'surrender':
-		//    _logs.push([timeDelta, log.player, 1]);
-		//    break;
+		switch (log.operation) {
+			case 'put':
+				_logs.push([timeDelta, log.player ? 1 : 0, 0, log.pos]);
+				break;
+			//case 'surrender':
+			//	_logs.push([timeDelta, log.player, 1]);
+			//	break;
+		}
 	}
 
 	return _logs;
@@ -42,21 +46,23 @@ export function deserializeLogs(logs: SerializedLog[]) {
 		const player = log[1];
 		const operation = log[2];
 
-		if (operation === 0) {
-			_logs.push({
-				time,
-				player: player === 1,
-				operation: 'put',
-				pos: log[3],
-			});
+		switch (operation) {
+			case 0:
+				_logs.push({
+					time,
+					player: player === 1,
+					operation: 'put',
+					pos: log[3],
+				});
+				break;
+			//case 1:
+			//	_logs.push({
+			//		time,
+			//		player: player === 1,
+			//		operation: 'surrender',
+			//	});
+			//	break;
 		}
-		//case 1:
-		//    _logs.push({
-		//        time,
-		//        player: player === 1,
-		//        operation: 'surrender',
-		//    });
-		//    break;
 	}
 
 	return _logs;
@@ -78,10 +84,14 @@ export function restoreGame(env: {
 	});
 
 	for (const log of logs) {
-		game.putStone(log.pos);
-		//case 'surrender':
-		//    game.surrender(log.player);
-		//    break;
+		switch (log.operation) {
+			case 'put':
+				game.putStone(log.pos);
+				break;
+			//case 'surrender':
+			//	game.surrender(log.player);
+			//	break;
+		}
 	}
 
 	return game;

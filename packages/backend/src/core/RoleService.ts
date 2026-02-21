@@ -130,8 +130,8 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 	private roleAssignmentByUserIdCache: MemoryKVCache<MiRoleAssignment[]>;
 	private notificationService: NotificationService;
 
-	public static AlreadyAssignedError = class extends Error { };
-	public static NotAssignedError = class extends Error { };
+	public static AlreadyAssignedError = class extends Error {};
+	public static NotAssignedError = class extends Error {};
 
 	constructor(
 		private moduleRef: ModuleRef,

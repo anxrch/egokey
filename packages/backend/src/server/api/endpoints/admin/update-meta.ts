@@ -235,7 +235,6 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			if (Array.isArray(ps.sensitiveWords)) {
 				set.sensitiveWords = ps.sensitiveWords.filter(Boolean);
 			}
-
 			if (Array.isArray(ps.prohibitedWords)) {
 				set.prohibitedWords = ps.prohibitedWords.filter(Boolean);
 			}
@@ -250,7 +249,6 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 					return h !== '' && h !== lv && !set.blockedHosts?.includes(h);
 				});
 			}
-
 			if (ps.themeColor !== undefined) {
 				set.themeColor = ps.themeColor;
 			}

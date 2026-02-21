@@ -33,11 +33,7 @@ async function main() {
 	}
 
 	// 3. tabler-icons-classes.cssから、.tiのルールを抽出
-	const classTiBaseRuleMatch = css.match(/\.ti\s*{[^}]*}/);
-	if (!classTiBaseRuleMatch) {
-		throw new Error('Could not find .ti rule in CSS');
-	}
-	const classTiBaseRule = classTiBaseRuleMatch[0];
+	const classTiBaseRule = css.match(/\.ti\s*{[^}]*}/)![0];
 
 	// 4. フォールバック用のtabler-icons.woff2をコピー
 	const fontPath = 'node_modules/@tabler/icons-webfont/dist/fonts/';
@@ -66,13 +62,7 @@ async function main() {
 		}
 
 		// 6. チャンク内で使用されているアイコンのUnicodeの配列を生成
-		const unicodeValues = Array.from(iconsToPack).map((icon) => {
-			const unicode = rgMap.get(icon);
-			if (unicode === undefined) {
-				throw new Error(`Unicode not found for icon: ${icon}`);
-			}
-			return parseInt(unicode, 16);
-		});
+		const unicodeValues = Array.from(iconsToPack).map((icon) => parseInt(rgMap.get(icon)!, 16));
 		unicodeRangeValues.set(key, unicodeValues);
 	}
 
@@ -82,23 +72,19 @@ async function main() {
 	// 8. サブセット化したフォント・CSSを書き出し
 	await Promise.allSettled(Array.from(subsettedFonts.entries()).map(async ([key, buffer]) => {
 		const cssRules = [`@font-face {
-    font-family: "tabler-icons";
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url("./tabler-icons.woff2") format("woff2");
+	font-family: "tabler-icons";
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url("./tabler-icons.woff2") format("woff2");
 }`];
 
 		// サブセット化したフォントの中身がある（＝unicodeRangeValuesの配列が空ではない）場合のみ、サブセットしたものに関する情報を追記
-		const unicodeValuesForKey = unicodeRangeValues.get(key);
-		if (!unicodeValuesForKey) {
-			throw new Error(`Unicode values not found for key: ${key}`);
-		}
-		if (unicodeValuesForKey.length > 0) {
+		if (unicodeRangeValues.get(key)!.length > 0) {
 			await fsp.writeFile(`./built/tabler-icons-${key}.woff2`, buffer);
 
 			const unicodeRangeString = (() => {
-				const values = [...unicodeValuesForKey].sort((a, b) => a - b);
+				const values = unicodeRangeValues.get(key)!.sort((a, b) => a - b);
 				const ranges = [];
 
 				for (let i = 0; i < values.length; i++) {
@@ -121,19 +107,19 @@ async function main() {
 			})();
 
 			cssRules.push(`@font-face {
-    font-family: "tabler-icons";
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url("./tabler-icons-${key}.woff2") format("woff2");
-    unicode-range: ${unicodeRangeString};
+	font-family: "tabler-icons";
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url("./tabler-icons-${key}.woff2") format("woff2");
+	unicode-range: ${unicodeRangeString};
 }`);
 
 			cssRules.push(classTiBaseRule);
 
 			// 使用されているアイコンのclassとの対応を追記
-			for (const icon of unicodeValuesForKey) {
-				const iconClasses = Array.from(rgMap.entries()).filter(([, unicode]) => parseInt(unicode, 16) === icon);
+			for (const icon of unicodeRangeValues.get(key)!) {
+				const iconClasses = Array.from(rgMap.entries()).filter(([_, unicode]) => parseInt(unicode, 16) === icon);
 				if (iconClasses.length > 1) {
 					console.warn(`[WARN] Multiple classes for the same unicode: ${iconClasses.map(([cls]) => cls).join(', ')}. Maybe it's deprecated?`);
 				}

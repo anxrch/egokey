@@ -217,11 +217,11 @@ export class NoteCreateService implements OnApplicationShutdown {
 		private apRendererService: ApRendererService,
 		private roleService: RoleService,
 		private searchService: SearchService,
-		private utilityService: UtilityService,
 		private notesChart: NotesChart,
 		private perUserNotesChart: PerUserNotesChart,
 		private activeUsersChart: ActiveUsersChart,
 		private instanceChart: InstanceChart,
+		private utilityService: UtilityService,
 		private userBlockingService: UserBlockingService,
 		private cacheService: CacheService,
 	) {
@@ -420,14 +420,6 @@ export class NoteCreateService implements OnApplicationShutdown {
 		if (data.channel != null) data.visibleUsers = [];
 		if (data.channel != null) data.localOnly = true;
 
-		if (user.host !== null) {
-			const instance = await this.instancesRepository.findOneBy({ host: this.utilityService.toPuny(user.host) });
-
-			if (instance !== null && instance.isSilenced && (data.visibility === 'public') && ((await this.roleService.getUserPolicies(user.id)).ignoreServerSilence !== true)) {
-				data.visibility = 'home';
-			}
-		}
-
 		if (data.visibility === 'public' && data.channel == null) {
 			const sensitiveWords = this.meta.sensitiveWords;
 			if (this.utilityService.isKeyWordIncluded(data.cw ?? data.text ?? '', sensitiveWords)) {
@@ -445,6 +437,14 @@ export class NoteCreateService implements OnApplicationShutdown {
 
 		if (hasProhibitedWords) {
 			throw new IdentifiableError('689ee33f-f97c-479a-ac49-1b9f8140af99', 'Note contains prohibited words');
+		}
+
+		if (user.host !== null) {
+			const instance = await this.instancesRepository.findOneBy({ host: this.utilityService.toPuny(user.host) });
+
+			if (instance !== null && instance.isSilenced && (data.visibility === 'public') && ((await this.roleService.getUserPolicies(user.id)).ignoreServerSilence !== true)) {
+				data.visibility = 'home';
+			}
 		}
 
 		if (data.renote) {

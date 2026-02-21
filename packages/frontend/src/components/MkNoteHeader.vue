@@ -79,71 +79,71 @@ function showEditHistory() {
 
 <style lang="scss" module>
 .root {
-    display: flex;
-    align-items: baseline;
-    white-space: nowrap;
+	display: flex;
+	align-items: baseline;
+	white-space: nowrap;
 }
 
 .name {
-    flex-shrink: 1;
-    display: block;
-    margin: 0 .5em 0 0;
-    padding: 0;
-    overflow: hidden;
-    font-size: 1em;
-    font-weight: bold;
-    text-decoration: none;
-    text-overflow: ellipsis;
+	flex-shrink: 1;
+	display: block;
+	margin: 0 .5em 0 0;
+	padding: 0;
+	overflow: hidden;
+	font-size: 1em;
+	font-weight: bold;
+	text-decoration: none;
+	text-overflow: ellipsis;
 
-    &:hover {
-        text-decoration: underline;
-    }
+	&:hover {
+		text-decoration: underline;
+	}
 }
 
 .isBot {
-    flex-shrink: 0;
-    align-self: center;
-    margin: 0 .5em 0 0;
-    padding: 1px 6px;
-    font-size: 80%;
-    border: solid 0.5px var(--MI_THEME-divider);
-    border-radius: 3px;
+	flex-shrink: 0;
+	align-self: center;
+	margin: 0 .5em 0 0;
+	padding: 1px 6px;
+	font-size: 80%;
+	border: solid 0.5px var(--MI_THEME-divider);
+	border-radius: 3px;
 }
 
 .username {
-    flex-shrink: 9999999;
-    margin: 0 .5em 0 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
+	flex-shrink: 9999999;
+	margin: 0 .5em 0 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .info {
-    flex-shrink: 0;
-    margin-left: auto;
-    font-size: 0.9em;
+	flex-shrink: 0;
+	margin-left: auto;
+	font-size: 0.9em;
 }
 
 .editedButton {
-    padding: 0;
-    opacity: 0.7;
-    transition: opacity 0.2s;
+	padding: 0;
+	opacity: 0.7;
+	transition: opacity 0.2s;
 
-    &:hover {
-        opacity: 1;
-        text-decoration: underline;
-    }
+	&:hover {
+		opacity: 1;
+		text-decoration: underline;
+	}
 }
 
 .badgeRoles {
-    margin: 0 .5em 0 0;
+	margin: 0 .5em 0 0;
 }
 
 .badgeRole {
-    height: 1.3em;
-    vertical-align: -20%;
+	height: 1.3em;
+	vertical-align: -20%;
 
-    & + .badgeRole {
-        margin-left: 0.2em;
-    }
+	& + .badgeRole {
+		margin-left: 0.2em;
+	}
 }
 </style>
