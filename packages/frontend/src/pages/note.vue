@@ -11,7 +11,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkButton rounded @click="goBack()"><i class="ti ti-arrow-left"></i> {{ i18n.ts.goBack }}</MkButton>
 
 				<div v-if="showNext" class="_margin">
-					<MkNotesTimeline direction="up" :withControl="false" :pullToRefresh="false" class="" :paginator="showNext === 'channel' ? nextChannelPaginator : nextUserPaginator" :noGap="true"/>
+					<MkNotesTimeline direction="up" :withControl="false" :pullToRefresh="false" class="" :paginator="showNext === 'channel' ? nextChannelPaginator : nextUserPaginator" :noGap="true" :forceDisableInfiniteScroll="true" />
 				</div>
 
 				<div class="_margin">

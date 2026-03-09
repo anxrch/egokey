@@ -418,8 +418,7 @@ export const meta = {
 				optional: false, nullable: true,
 			},
 			clientOptions: {
-				type: 'object',
-				optional: false, nullable: false,
+				ref: 'MetaClientOptions',
 			},
 			description: {
 				type: 'string',
