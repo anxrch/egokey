@@ -176,7 +176,7 @@ const meta = ref<Misskey.entities.AdminMetaResponse | null>(null);
 const instance = ref<Misskey.entities.FederationInstance | null>(null);
 const suspensionState = ref<'none' | 'manuallySuspended' | 'goneSuspended' | 'autoSuspendedForNotResponding' | 'softwareSuspended'>('none');
 const isBlocked = ref(false);
-const silenced = ref(false);
+const isSilenced = ref(false);
 const isMediaSilenced = ref(false);
 const faviconUrl = ref<string | null>(null);
 const moderationNote = ref('');
@@ -231,6 +231,15 @@ async function toggleBlock(): Promise<void> {
 	});
 }
 
+async function toggleSilence(): Promise<void> {
+	if (!iAmAdmin) return;
+	if (!instance.value) throw new Error('No instance?');
+	await misskeyApi('admin/federation/update-instance', {
+		host: instance.value.host,
+		isSilenced: isSilenced.value,
+	});
+}
+
 async function toggleMediaSilenced(): Promise<void> {
 	if (!iAmAdmin) return;
 	if (!meta.value) throw new Error('No meta?');
@@ -259,14 +268,6 @@ async function resumeDelivery(): Promise<void> {
 	await misskeyApi('admin/federation/update-instance', {
 		host: instance.value.host,
 		isSuspended: false,
-	});
-}
-
-async function toggleSilence(): Promise<void> {
-	if (!instance.value) throw new Error('No instance?');
-	await misskeyApi('admin/federation/update-instance', {
-		host: instance.value.host,
-		isSilenced: silenced.value,
 	});
 }
 
