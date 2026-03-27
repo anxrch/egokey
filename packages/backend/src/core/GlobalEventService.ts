@@ -25,7 +25,7 @@ import type { Packed } from '@/misc/json-schema.js';
 import { DI } from '@/di-symbols.js';
 import type { Config } from '@/config.js';
 import { bindThis } from '@/decorators.js';
-import { Serialized } from '@/types.js';
+import { Serialized, noteVisibilities } from '@/types.js';
 import type Emitter from 'strict-event-emitter-types';
 import type { EventEmitter } from 'events';
 
@@ -112,8 +112,10 @@ export interface NoteEventTypes {
 	updated: {
 		cw?: string | null;
 		text?: string | null;
-		visibility?: string;
+		visibility?: typeof noteVisibilities[number];
 		updatedAt: Date;
+		fileIds?: MiDriveFile['id'][] | null;
+		hasPoll?: boolean;
 	};
 	reacted: {
 		reaction: string;

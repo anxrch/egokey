@@ -318,8 +318,10 @@ export type NoteUpdatedEvent = { id: Note['id'] } & ({
 	body: {
 		cw?: string | null;
 		text?: string;
-		visibility?: string;
-		updatedAt: Date;
+		visibility?: Note['visibility'];
+		updatedAt: string;
+		fileIds?: string[] | null;
+		hasPoll?: boolean;
 	};
 } | {
 	type: 'pollVoted';

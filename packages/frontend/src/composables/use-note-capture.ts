@@ -25,8 +25,9 @@ export const noteEvents = new EventEmitter<{
 		visibility: Misskey.entities.Note['visibility'];
 		updatedAt: Misskey.entities.Note['updatedAt'];
 		files?: Misskey.entities.DriveFile[];
-		fileIds?: string[];
+		fileIds?: string[] | null;
 		poll?: Misskey.entities.Note['poll'];
+		hasPoll?: boolean;
 	}) => void;
 }>();
 
@@ -170,13 +171,16 @@ function realtimeSubscribe(props: {
 					text: body.text,
 					visibility: body.visibility,
 					updatedAt: body.updatedAt,
+					fileIds: body.fileIds ?? undefined,
 				});
 
 				noteEvents.emit(`noteUpdated:${id}`, {
-					cw: body.cw,
-					text: body.text,
-					visibility: body.visibility,
+					cw: body.cw ?? null,
+					text: body.text ?? null,
+					visibility: body.visibility ?? 'public',
 					updatedAt: body.updatedAt,
+					fileIds: body.fileIds,
+					hasPoll: body.hasPoll,
 				});
 				break;
 			}
@@ -324,8 +328,9 @@ export function useNoteCapture(props: {
 		visibility: Misskey.entities.Note['visibility'];
 		updatedAt: Misskey.entities.Note['updatedAt'];
 		files?: Misskey.entities.DriveFile[];
-		fileIds?: string[];
+		fileIds?: string[] | null;
 		poll?: Misskey.entities.Note['poll'];
+		hasPoll?: boolean;
 	}): void {
 		console.log(`Note updated: ${note.id}`, ctx);
 		if (ctx.cw !== undefined) {
@@ -345,7 +350,7 @@ export function useNoteCapture(props: {
 			note.files = ctx.files;
 		}
 		if (ctx.fileIds !== undefined) {
-			note.fileIds = ctx.fileIds;
+			note.fileIds = ctx.fileIds ?? [];
 		}
 		// Update poll if provided
 		if (ctx.poll !== undefined) {
