@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/anxrch/egokey">
-    <img src="./assets/title_float_egokey.svg" alt="EgoKey logo" width="300" />
+    <img src="./packages/frontend/assets/egokey.svg" alt="EgoKey logo" width="300" />
   </a>
 
   **EgoKey is a free, open-source, federated social-media platform.**
