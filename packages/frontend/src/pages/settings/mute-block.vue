@@ -114,10 +114,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 						<MkSwitch v-model="deidentifyMutedUsers">{{ i18n.ts.deidentifyMutedUsers }}</MkSwitch>
 
 						<SearchMarker
-							:label="i18n.ts.hideMutedUsers"
 							:keywords="['mute', 'notification', 'reaction', 'hide', 'user']"
 						>
-							<MkSwitch :modelValue="$i.hideMutedUsers" @update:model-value="updateHideMutedUsers">
+							<MkSwitch :modelValue="$i.hideMutedUsers" @update:modelValue="updateHideMutedUsers">
 								<template #label><SearchLabel>{{ i18n.ts.hideMutedUsers }}</SearchLabel></template>
 								<template #caption><SearchText>{{ i18n.ts.hideMutedUsersDescription }}</SearchText></template>
 							</MkSwitch>
