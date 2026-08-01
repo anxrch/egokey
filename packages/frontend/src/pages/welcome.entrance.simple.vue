@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<MkFeaturedPhotos :class="$style.bg"/>
 	<div :class="$style.logoWrapper">
 		<div :class="$style.poweredBy">Powered by</div>
-		<img :src="cherrypicksvg" :class="$style.cherrypick"/>
+		<img :src="egoKeySvg" :class="$style.egoKey"/>
 	</div>
 	<div :class="$style.contents">
 		<MkVisitorDashboard/>
@@ -18,7 +18,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <script lang="ts" setup>
 import MkFeaturedPhotos from '@/components/MkFeaturedPhotos.vue';
-import cherrypicksvg from '/client-assets/cherrypick.svg';
+import egoKeySvg from '/client-assets/egokey.svg';
 import misskeysvg from '/client-assets/misskey.svg';
 import MkVisitorDashboard from '@/components/MkVisitorDashboard.vue';
 import { instance as meta } from '@/instance.js';
@@ -53,7 +53,7 @@ import { instance as meta } from '@/instance.js';
 	margin-bottom: 2px;
 }
 
-.misskey, .cherrypick {
+.misskey, .egoKey {
 	width: 120px;
 
 	@media (max-width: 450px) {

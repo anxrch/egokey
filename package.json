@@ -1,11 +1,11 @@
 {
-	"name": "cherrypick",
-	"version": "4.18.0-beta.1",
+	"name": "egokey",
+	"version": "4.18.0-egokey.0",
 	"basedMisskeyVersion": "2025.12.2",
 	"codename": "nasubi",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/kokonect-link/cherrypick.git"
+		"url": "https://github.com/anxrch/egokey.git"
 	},
 	"packageManager": "pnpm@10.25.0",
 	"workspaces": [

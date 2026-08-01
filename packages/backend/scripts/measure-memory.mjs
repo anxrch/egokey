@@ -4,7 +4,7 @@
  */
 
 /**
- * This script starts the CherryPick backend server, waits for it to be ready,
+ * This script starts the EgoKey backend server, waits for it to be ready,
  * measures memory usage, and outputs the result as JSON.
  *
  * Usage: node scripts/measure-memory.mjs
@@ -24,7 +24,7 @@ const MEMORY_SETTLE_TIME = 10000; // Wait 10 seconds after startup for memory to
 async function measureMemory() {
 	const startTime = Date.now();
 
-	// Start the CherryPick backend server using fork to enable IPC
+	// Start the EgoKey backend server using fork to enable IPC
 	const serverProcess = fork(join(__dirname, '../built/boot/entry.js'), [], {
 		cwd: join(__dirname, '..'),
 		env: {

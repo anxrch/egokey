@@ -7,7 +7,7 @@ export type paths = {
          * admin/abuse-report-resolver/create
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *arr-create*
          */
         post: operations['admin___abuse-report-resolver___create'];
@@ -17,7 +17,7 @@ export type paths = {
          * admin/abuse-report-resolver/delete
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *No* / **Permission**: *arr-delete*
          */
         post: operations['admin___abuse-report-resolver___delete'];
@@ -27,7 +27,7 @@ export type paths = {
          * admin/abuse-report-resolver/list
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *arr-list*
          */
         post: operations['admin___abuse-report-resolver___list'];
@@ -37,7 +37,7 @@ export type paths = {
          * admin/abuse-report-resolver/update
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *arr-update*
          */
         post: operations['admin___abuse-report-resolver___update'];
@@ -47,7 +47,7 @@ export type paths = {
          * admin/abuse-report/notification-recipient/create
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *write:admin:abuse-report:notification-recipient*
          */
         post: operations['admin___abuse-report___notification-recipient___create'];
@@ -57,7 +57,7 @@ export type paths = {
          * admin/abuse-report/notification-recipient/delete
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *write:admin:abuse-report:notification-recipient*
          */
         post: operations['admin___abuse-report___notification-recipient___delete'];
@@ -67,7 +67,7 @@ export type paths = {
          * admin/abuse-report/notification-recipient/list
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *read:admin:abuse-report:notification-recipient*
          */
         post: operations['admin___abuse-report___notification-recipient___list'];
@@ -77,7 +77,7 @@ export type paths = {
          * admin/abuse-report/notification-recipient/show
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *read:admin:abuse-report:notification-recipient*
          */
         post: operations['admin___abuse-report___notification-recipient___show'];
@@ -87,7 +87,7 @@ export type paths = {
          * admin/abuse-report/notification-recipient/update
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *write:admin:abuse-report:notification-recipient*
          */
         post: operations['admin___abuse-report___notification-recipient___update'];
@@ -394,7 +394,7 @@ export type paths = {
          * admin/emoji/import-zip
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['admin___emoji___import-zip'];
@@ -881,7 +881,7 @@ export type paths = {
          * admin/system-webhook/create
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *write:admin:system-webhook*
          */
         post: operations['admin___system-webhook___create'];
@@ -891,7 +891,7 @@ export type paths = {
          * admin/system-webhook/delete
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *write:admin:system-webhook*
          */
         post: operations['admin___system-webhook___delete'];
@@ -901,7 +901,7 @@ export type paths = {
          * admin/system-webhook/list
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *write:admin:system-webhook*
          */
         post: operations['admin___system-webhook___list'];
@@ -911,7 +911,7 @@ export type paths = {
          * admin/system-webhook/show
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *write:admin:system-webhook*
          */
         post: operations['admin___system-webhook___show'];
@@ -921,7 +921,7 @@ export type paths = {
          * admin/system-webhook/test
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *read:admin:system-webhook*
          */
         post: operations['admin___system-webhook___test'];
@@ -931,7 +931,7 @@ export type paths = {
          * admin/system-webhook/update
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *write:admin:system-webhook*
          */
         post: operations['admin___system-webhook___update'];
@@ -1112,7 +1112,7 @@ export type paths = {
          * auth/accept
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['auth___accept'];
@@ -2013,7 +2013,7 @@ export type paths = {
          * export-custom-emojis
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['export-custom-emojis'];
@@ -2095,7 +2095,7 @@ export type paths = {
          * fetch-external-resources
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['fetch-external-resources'];
@@ -2141,7 +2141,7 @@ export type paths = {
          * flash/gen-token
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['flash___gen-token'];
@@ -2457,7 +2457,7 @@ export type paths = {
          * i/2fa/done
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___2fa___done'];
@@ -2467,7 +2467,7 @@ export type paths = {
          * i/2fa/key-done
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___2fa___key-done'];
@@ -2477,7 +2477,7 @@ export type paths = {
          * i/2fa/password-less
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___2fa___password-less'];
@@ -2487,7 +2487,7 @@ export type paths = {
          * i/2fa/register
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___2fa___register'];
@@ -2497,7 +2497,7 @@ export type paths = {
          * i/2fa/register-key
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___2fa___register-key'];
@@ -2507,7 +2507,7 @@ export type paths = {
          * i/2fa/remove-key
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___2fa___remove-key'];
@@ -2517,7 +2517,7 @@ export type paths = {
          * i/2fa/unregister
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___2fa___unregister'];
@@ -2527,7 +2527,7 @@ export type paths = {
          * i/2fa/update-key
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___2fa___update-key'];
@@ -2537,7 +2537,7 @@ export type paths = {
          * i/apps
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___apps'];
@@ -2547,7 +2547,7 @@ export type paths = {
          * i/authorized-apps
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___authorized-apps'];
@@ -2566,7 +2566,7 @@ export type paths = {
          * i/change-password
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___change-password'];
@@ -2585,7 +2585,7 @@ export type paths = {
          * i/delete-account
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___delete-account'];
@@ -2595,7 +2595,7 @@ export type paths = {
          * i/export-antennas
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___export-antennas'];
@@ -2605,7 +2605,7 @@ export type paths = {
          * i/export-blocking
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___export-blocking'];
@@ -2615,7 +2615,7 @@ export type paths = {
          * i/export-clips
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___export-clips'];
@@ -2625,7 +2625,7 @@ export type paths = {
          * i/export-favorites
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___export-favorites'];
@@ -2635,7 +2635,7 @@ export type paths = {
          * i/export-following
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___export-following'];
@@ -2645,7 +2645,7 @@ export type paths = {
          * i/export-mute
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___export-mute'];
@@ -2655,7 +2655,7 @@ export type paths = {
          * i/export-notes
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___export-notes'];
@@ -2665,7 +2665,7 @@ export type paths = {
          * i/export-user-lists
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___export-user-lists'];
@@ -2711,7 +2711,7 @@ export type paths = {
          * i/import-antennas
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___import-antennas'];
@@ -2721,7 +2721,7 @@ export type paths = {
          * i/import-blocking
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___import-blocking'];
@@ -2731,7 +2731,7 @@ export type paths = {
          * i/import-following
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___import-following'];
@@ -2741,7 +2741,7 @@ export type paths = {
          * i/import-muting
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___import-muting'];
@@ -2751,7 +2751,7 @@ export type paths = {
          * i/import-user-lists
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___import-user-lists'];
@@ -2761,7 +2761,7 @@ export type paths = {
          * i/move
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___move'];
@@ -2825,7 +2825,7 @@ export type paths = {
          * i/regenerate-token
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___regenerate-token'];
@@ -2889,7 +2889,7 @@ export type paths = {
          * i/registry/scopes-with-domain
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___registry___scopes-with-domain'];
@@ -2908,7 +2908,7 @@ export type paths = {
          * i/revoke-token
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___revoke-token'];
@@ -2918,7 +2918,7 @@ export type paths = {
          * i/signin-history
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___signin-history'];
@@ -2928,7 +2928,7 @@ export type paths = {
          * i/truncate-account
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___truncate-account'];
@@ -2965,7 +2965,7 @@ export type paths = {
          * i/update-email
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['i___update-email'];
@@ -3020,7 +3020,7 @@ export type paths = {
          * i/webhooks/test
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes* / **Permission**: *read:account*
          */
         post: operations['i___webhooks___test'];
@@ -3084,7 +3084,7 @@ export type paths = {
          * miauth/gen-token
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['miauth___gen-token'];
@@ -3368,6 +3368,24 @@ export type paths = {
          */
         post: operations['notes___reactions___delete'];
     };
+    '/notes/renote-muting/create': {
+        /**
+         * notes/renote-muting/create
+         * @description No description provided.
+         *
+         *     **Credential required**: *Yes* / **Permission**: *write:account*
+         */
+        post: operations['notes___renote-muting___create'];
+    };
+    '/notes/renote-muting/delete': {
+        /**
+         * notes/renote-muting/delete
+         * @description No description provided.
+         *
+         *     **Credential required**: *Yes* / **Permission**: *write:account*
+         */
+        post: operations['notes___renote-muting___delete'];
+    };
     '/notes/renotes': {
         /**
          * notes/renotes
@@ -3430,24 +3448,6 @@ export type paths = {
          *     **Credential required**: *Yes* / **Permission**: *read:account*
          */
         post: operations['notes___state'];
-    };
-    '/notes/renote-muting/create': {
-        /**
-         * notes/renote-muting/create
-         * @description No description provided.
-         *
-         *     **Credential required**: *Yes* / **Permission**: *write:account*
-         */
-        post: operations['notes___renote-muting___create'];
-    };
-    '/notes/renote-muting/delete': {
-        /**
-         * notes/renote-muting/delete
-         * @description No description provided.
-         *
-         *     **Credential required**: *Yes* / **Permission**: *write:account*
-         */
-        post: operations['notes___renote-muting___delete'];
     };
     '/notes/thread-muting/create': {
         /**
@@ -3553,7 +3553,7 @@ export type paths = {
          * page-push
          * @description No description provided.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['page-push'];
@@ -3833,7 +3833,7 @@ export type paths = {
          * sw/register
          * @description Register to receive push notifications.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['sw___register'];
@@ -3843,7 +3843,7 @@ export type paths = {
          * sw/show-registration
          * @description Check push notification registration exists.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['sw___show-registration'];
@@ -3862,7 +3862,7 @@ export type paths = {
          * sw/update-registration
          * @description Update push notification registration.
          *
-         *     **Internal Endpoint**: This endpoint is an API for the cherrypick mainframe and is not intended for use by third parties.
+         *     **Internal Endpoint**: This endpoint is an API for the EgoKey mainframe and is not intended for use by third parties.
          *     **Credential required**: *Yes*
          */
         post: operations['sw___update-registration'];
@@ -4338,7 +4338,7 @@ export type components = {
             username: string;
             /**
              * @description The local host is represented with `null`.
-             * @example cherrypick.example.com
+             * @example egokey.example.com
              */
             host: string | null;
             /** Format: url */
@@ -5287,7 +5287,7 @@ export type components = {
             blockee: components['schemas']['UserDetailedNotMe'];
         };
         Hashtag: {
-            /** @example cherrypick */
+            /** @example egokey */
             tag: string;
             mentionedUsersCount: number;
             mentionedLocalUsersCount: number;
@@ -5486,7 +5486,7 @@ export type components = {
             id: string;
             /** Format: date-time */
             firstRetrievedAt: string;
-            /** @example cherrypick.example.com */
+            /** @example egokey.example.com */
             host: string;
             usersCount: number;
             notesCount: number;
@@ -5497,7 +5497,7 @@ export type components = {
             /** @enum {string} */
             suspensionState: 'none' | 'manuallySuspended' | 'goneSuspended' | 'autoSuspendedForNotResponding' | 'softwareSuspended';
             isBlocked: boolean;
-            /** @example cherrypick */
+            /** @example egokey */
             softwareName: string | null;
             softwareVersion: string | null;
             /** @example true */
@@ -5832,15 +5832,15 @@ export type components = {
             shortName: string | null;
             /**
              * Format: url
-             * @example https://cherrypick.example.com
+             * @example https://egokey.example.com
              */
             uri: string;
             description: string | null;
             langs: string[];
             tosUrl: string | null;
-            /** @default https://github.com/kokonect-link/cherrypick */
+            /** @default https://github.com/anxrch/egokey */
             repositoryUrl: string | null;
-            /** @default https://github.com/kokonect-link/cherrypick/issues/new */
+            /** @default https://github.com/anxrch/egokey/issues/new */
             feedbackUrl: string | null;
             defaultDarkTheme: string | null;
             defaultLightTheme: string | null;
@@ -32901,6 +32901,141 @@ export interface operations {
             };
         };
     };
+    'notes___renote-muting___create': {
+        requestBody: {
+            content: {
+                'application/json': {
+                    /** Format: misskey:id */
+                    noteId: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK (without any results) */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+            };
+            /** @description Client error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Authentication error */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Forbidden error */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description I'm Ai */
+            418: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Too many requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+        };
+    };
+    'notes___renote-muting___delete': {
+        requestBody: {
+            content: {
+                'application/json': {
+                    /** Format: misskey:id */
+                    noteId: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK (without any results) */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+            };
+            /** @description Client error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Authentication error */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Forbidden error */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description I'm Ai */
+            418: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+            /** @description Internal server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    'application/json': components['schemas']['Error'];
+                };
+            };
+        };
+    };
     notes___renotes: {
         requestBody: {
             content: {
@@ -33385,141 +33520,6 @@ export interface operations {
                         isRenoted: boolean;
                         isMutedRenote: boolean;
                     };
-                };
-            };
-            /** @description Client error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    'application/json': components['schemas']['Error'];
-                };
-            };
-            /** @description Authentication error */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    'application/json': components['schemas']['Error'];
-                };
-            };
-            /** @description Forbidden error */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    'application/json': components['schemas']['Error'];
-                };
-            };
-            /** @description I'm Ai */
-            418: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    'application/json': components['schemas']['Error'];
-                };
-            };
-            /** @description Internal server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    'application/json': components['schemas']['Error'];
-                };
-            };
-        };
-    };
-    'notes___renote-muting___create': {
-        requestBody: {
-            content: {
-                'application/json': {
-                    /** Format: misskey:id */
-                    noteId: string;
-                };
-            };
-        };
-        responses: {
-            /** @description OK (without any results) */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-            };
-            /** @description Client error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    'application/json': components['schemas']['Error'];
-                };
-            };
-            /** @description Authentication error */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    'application/json': components['schemas']['Error'];
-                };
-            };
-            /** @description Forbidden error */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    'application/json': components['schemas']['Error'];
-                };
-            };
-            /** @description I'm Ai */
-            418: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    'application/json': components['schemas']['Error'];
-                };
-            };
-            /** @description Too many requests */
-            429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    'application/json': components['schemas']['Error'];
-                };
-            };
-            /** @description Internal server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    'application/json': components['schemas']['Error'];
-                };
-            };
-        };
-    };
-    'notes___renote-muting___delete': {
-        requestBody: {
-            content: {
-                'application/json': {
-                    /** Format: misskey:id */
-                    noteId: string;
-                };
-            };
-        };
-        responses: {
-            /** @description OK (without any results) */
-            204: {
-                headers: {
-                    [name: string]: unknown;
                 };
             };
             /** @description Client error */

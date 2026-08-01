@@ -1,4 +1,4 @@
-name: Request release review
+name: Request EgoKey release review
 
 on:
   issue_comment:
@@ -17,7 +17,7 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            const body = `To dev team (@kokonect-link/dev):
+            const body = `EgoKey maintainers:
 
             リリースが提案されています :rocket:
 
@@ -26,7 +26,7 @@ jobs:
             判断にあたって考慮すべき観点は、
 
             - やり残したことはないか？
-            - CHANGELOG_CHERRYPICKは過不足ないか？
+            - CHANGELOG_EGOKEYは過不足ないか？
             - バージョンに問題はないか？(月跨いでいるのに更新忘れているなど)
             - 再考すべき仕様・実装はないか？
             - ベータ版を検証したサーバーから不具合の報告等は上がってないか？

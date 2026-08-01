@@ -1,11 +1,11 @@
 # Reporting Security Issues
 
-If you discover a security issue in Misskey, please report it by **[this form](https://github.com/misskey-dev/misskey/security/advisories/new)**.
+If you discover a security issue in EgoKey, please report it using **[EgoKey's private security advisory form](https://github.com/anxrch/egokey/security/advisories/new)**.
 
 This will allow us to assess the risk, and make a fix available before we add a
 bug report to the GitHub repository.
 
-CherryPick shares security fixes with Misskey.
+EgoKey tracks relevant upstream security fixes and publishes its own advisories and patches.
 
 Thanks for helping make Misskey safe for everyone.
 
@@ -16,7 +16,4 @@ Thanks for helping make Misskey safe for everyone.
 
 ## When create a patch
 
-If you can also create a patch to fix the vulnerability, please create a PR on the private fork.
-
-> [!note]
-> There is a GitHub bug that prevents merging if a PR not following the develop branch of upstream, so please keep follow the develop branch.
+If you can also create a patch to fix the vulnerability, coordinate with the maintainers through the private advisory before opening a public pull request.

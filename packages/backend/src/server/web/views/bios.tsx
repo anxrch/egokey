@@ -12,14 +12,14 @@ export function BiosPage(props: {
 			<html>
 				<head>
 					<meta charset="UTF-8" />
-					<meta name="application-name" content="CherryPick" />
-					<title>CherryPick Repair Tool</title>
+					<meta name="application-name" content="EgoKey" />
+					<title>EgoKey Repair Tool</title>
 					<link rel="stylesheet" href="/static-assets/misc/bios.css" />
 				</head>
 
 				<body>
 					<header>
-						<h1 safe>CherryPick Repair Tool {props.version}</h1>
+						<h1 safe>EgoKey Repair Tool {props.version}</h1>
 					</header>
 					<main>
 						<div class="tabs">

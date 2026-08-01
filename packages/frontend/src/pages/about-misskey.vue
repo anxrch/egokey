@@ -11,8 +11,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<div v-panel class="about">
 					<div ref="containerEl" class="container" :class="{ playing: easterEggEngine != null }">
 						<img src="/client-assets/about-icon.png" alt="" class="icon" draggable="false" @load="iconLoaded" @click="gravity"/>
-						<div class="cherrypick">EgoKey</div>
-						<div class="version" @click="whatIsNewCherryPick">v{{ version }} <span class="commit-hash" @click.stop="openCommitPage('kokonect-link/cherrypick', gitHash)">({{ gitHash.substring(0, 8) }})</span></div>
+						<div class="egoKey">EgoKey</div>
+						<div class="version" @click="whatIsNewEgoKey">v{{ version }} <span class="commit-hash" @click.stop="openCommitPage('anxrch/egokey', gitHash)">({{ gitHash.substring(0, 8) }})</span></div>
 						<div class="version" style="font-size: 11px;" @click="whatIsNewMisskey">v{{ basedMisskeyVersion }} (Based on Misskey)</div>
 						<span v-for="emoji in easterEggEmojis" :key="emoji.id" class="emoji" :data-physics-x="emoji.left" :data-physics-y="emoji.top" :class="{ _physics_circle_: !emoji.emoji.startsWith(':') }">
 							<MkCustomEmoji v-if="emoji.emoji[0] === ':'" class="emoji" :name="emoji.emoji" :normal="true" :noStyle="true" :fallbackToImage="true"/>
@@ -22,49 +22,20 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<button v-if="thereIsTreasure" class="_button treasure" @click="getTreasure"><img src="/fluent-emoji/1f3c6.png" class="treasureImg"></button>
 				</div>
 				<div style="text-align: center;">
-					{{ i18n.ts._aboutMisskey.about }}<br><a href="https://misskey-hub.net/docs/about-misskey/" target="_blank" class="_link">{{ i18n.ts.learnMore }}</a>
+					{{ i18n.ts._aboutMisskey.about }}<br><a href="https://github.com/anxrch/egokey" target="_blank" class="_link">{{ i18n.ts.learnMore }}</a>
 				</div>
 				<div v-if="$i != null" style="text-align: center;">
-					<MkButton primary rounded inline @click="iLoveCherryPick">I <Mfm text="$[jelly ❤]"/> #EgoKey</MkButton>
+					<MkButton primary rounded inline @click="iLoveEgoKey">I <Mfm text="$[jelly ❤]"/> #EgoKey</MkButton>
 
 				</div>
-				<FormSection v-if="isKokonect">
-					<template #label>_KOKONECT_</template>
-					<div class="_gaps_s">
-						<FormLink to="https://status.kokonect.link" external>
-							<template #icon><i class="ti ti-activity"></i></template>
-							{{ i18n.ts._aboutMisskey._kokonect.serverStatus }}
-							<template #suffix>Server Status</template>
-						</FormLink>
-					</div>
-				</FormSection>
 				<FormSection>
-					<template #label>CherryPick</template>
+					<template #label>EgoKey</template>
 					<div class="_gaps_s">
-						<FormLink to="https://github.com/kokonect-link/cherrypick" external>
+						<FormLink to="https://github.com/anxrch/egokey" external>
 							<template #icon><i class="ti ti-code"></i></template>
-							{{ i18n.ts._aboutMisskey.source }} ({{ i18n.ts._aboutMisskey.original }})
+							{{ i18n.ts._aboutMisskey.source }}
 							<template #suffix>GitHub</template>
 						</FormLink>
-						<!--
-						<FormLink to="https://crowdin.com/project/misskey" external>
-							<template #icon><i class="ti ti-language-hiragana"></i></template>
-							{{ i18n.ts._aboutMisskey.translation }}
-							<template #suffix>Crowdin</template>
-						</FormLink>
-						-->
-						<FormLink to="https://discord.gg/V8qghB28Aj" external>
-							<template #icon><i class="ti ti-brand-discord"></i></template>
-							{{ i18n.ts._aboutMisskey._cherrypick.community }}
-							<template #suffix>Discord</template>
-						</FormLink>
-						<button :class="$style.main" class="_button" @click="donateCherryPick">
-							<span :class="$style.icon"><i class="ti ti-pig-money"></i></span>
-							<span :class="$style.text">{{ i18n.ts._aboutMisskey._cherrypick.donate }}</span>
-							<span :class="$style.suffix">
-								<i class="ti ti-external-link"></i>
-							</span>
-						</button>
 					</div>
 				</FormSection>
 				<FormSection>
@@ -87,7 +58,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 						</FormLink>
 					</div>
 				</FormSection>
-				<FormSection v-if="instance.repositoryUrl !== 'https://github.com/kokonect-link/cherrypick'">
+				<FormSection v-if="instance.repositoryUrl !== 'https://github.com/anxrch/egokey'">
 					<div class="_gaps_s">
 						<MkInfo>
 							{{ i18n.tsx._aboutMisskey.thisIsModifiedVersion({ name: instance.name ?? host }) }}
@@ -96,7 +67,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<template #icon><i class="ti ti-code"></i></template>
 							{{ i18n.ts._aboutMisskey.source }}
 						</FormLink>
-						<FormLink v-if="instance.providesTarball" :to="`/tarball/cherrypick-${version}.tar.gz`" external>
+						<FormLink v-if="instance.providesTarball" :to="`/tarball/egokey-${version}.tar.gz`" external>
 							<template #icon><i class="ti ti-download"></i></template>
 							{{ i18n.ts._aboutMisskey.source }}
 							<template #suffix>Tarball</template>
@@ -113,7 +84,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<img src="https://avatars.githubusercontent.com/u/11006910?v=4" :class="$style.contributorAvatar">
 							<span :class="$style.contributorUsername">@noridev
 								<span :class="$style.contributorClient">
-									<span :class="$style.cherry">Cherry</span><span :class="$style.pick">Pick</span>
+									<span :class="$style.egoKey">EgoKey</span>
 								</span>
 							</span>
 						</a>
@@ -192,20 +163,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</FormSection>
 				<FormSection>
 					<template #label><Mfm text="$[jelly ❤]"/> {{ i18n.ts._aboutMisskey.patrons }}</template>
-					<p style="font-weight: bold;">
-						<span style="color: var(--CP-cherry);">Cherry</span>
-						<span style="color: var(--CP-pick);">Pick</span>
-					</p>
-					<div :class="$style.patronsWithIcon">
-						<div v-for="patron in patronsWithIconWithCherryPick" :class="$style.patronWithIcon">
-							<img :src="patron.icon" :class="$style.patronIcon">
-							<span :class="$style.patronName">{{ patron.name }}</span>
-						</div>
-					</div>
-					<div style="margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); grid-gap: 12px;">
-						<div v-for="patron in patronsWithCherryPick" :key="patron">{{ patron }}</div>
-					</div>
-					<p style="font-weight: bold; padding-top: 20px; color: var(--CP-misskey);"><b>Misskey</b></p>
+					<p style="font-weight: bold; color: var(--CP-misskey);"><b>Misskey</b></p>
 					<div :class="$style.patronsWithIcon">
 						<div v-for="patron in patronsWithIconWithMisskey" :class="$style.patronWithIcon">
 							<img :src="patron.icon" :class="$style.patronIcon">
@@ -224,7 +182,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, computed } from 'vue';
+import { nextTick, onBeforeUnmount, ref, useTemplateRef, computed } from 'vue';
 import { host, version, basedMisskeyVersion, gitHash } from '@@/js/config.js';
 import FormLink from '@/components/form/link.vue';
 import FormSection from '@/components/form/section.vue';
@@ -238,19 +196,7 @@ import { definePage } from '@/page.js';
 import { claimAchievement, claimedAchievements } from '@/utility/achievements.js';
 import { $i } from '@/i.js';
 import { prefer } from '@/preferences.js';
-import { donateCherryPick } from '@/utility/donate-cherrypick.js';
 import { openCommitPage } from '@/utility/fetch-releases.js';
-
-const patronsWithIconWithCherryPick = [{
-	name: 'Etone Sabasappugawa',
-	icon: 'https://s3.kokonect.link/cherrypick/patreons/b3bd97949b664c81857cc7286552c65e.png',
-}, {
-	name: 'Kitty',
-	icon: 'https://s3.kokonect.link/cherrypick/patreons/5f8e4bac9cf34984bc59875f6d8d5c1d.gif',
-}, {
-	name: 'Buachi',
-	icon: 'https://s3.kokonect.link/cherrypick/patreons/cropped_%E7%84%A1%E9%A1%8C3_20250119014817.png-web.webp%20(1).png',
-}];
 
 const patronsWithIconWithMisskey = [{
 	name: 'カイヤン',
@@ -401,10 +347,6 @@ const patronsWithIconWithMisskey = [{
 	icon: 'https://assets.misskey-hub.net/patrons/c701a797d1df4125970f25d3052250ac.jpg',
 }];
 
-const patronsWithCherryPick = [
-	'',
-];
-
 const patronsWithMisskey = [
 	'まっちゃとーにゅ',
 	'mametsuko',
@@ -520,8 +462,6 @@ const patronsWithMisskey = [
 	'蒼井よみこ',
 ];
 
-let isKokonect = false;
-
 const thereIsTreasure = ref($i && !claimedAchievements.includes('foundTreasure'));
 
 let easterEggReady = false;
@@ -534,8 +474,8 @@ const easterEggEmojis = ref<{
 const easterEggEngine = ref<{ stop: () => void } | null>(null);
 const containerEl = useTemplateRef('containerEl');
 
-const whatIsNewCherryPick = () => {
-	window.open(`https://github.com/kokonect-link/cherrypick/blob/develop/CHANGELOG_CHERRYPICK.md#${version.replace(/\./g, '')}`, '_blank');
+const whatIsNewEgoKey = () => {
+	window.open(`https://github.com/anxrch/egokey/blob/main/CHANGELOG_EGOKEY.md#${version.replace(/\./g, '')}`, '_blank');
 };
 
 const whatIsNewMisskey = () => {
@@ -567,7 +507,7 @@ function gravity() {
 	easterEggEngine.value = physics(containerEl.value);
 }
 
-function iLoveCherryPick() {
+function iLoveEgoKey() {
 	os.post({
 		initialText: 'I $[jelly ❤] #EgoKey',
 		instant: true,
@@ -578,18 +518,6 @@ function getTreasure() {
 	thereIsTreasure.value = false;
 	claimAchievement('foundTreasure');
 }
-
-onMounted(() => {
-	const kokonectHosts = [
-		'kokonect.link',
-		'beta.kokonect.link',
-		'universe.noridev.moe',
-	];
-
-	if (kokonectHosts.includes(window.location.host)) {
-		isKokonect = true;
-	}
-});
 
 onBeforeUnmount(() => {
 	if (easterEggEngine.value) {
@@ -655,7 +583,7 @@ definePage(() => ({
 				z-index: 1;
 			}
 
-			> .cherrypick {
+			> .egoKey {
 				margin: 0.75em auto 0 auto;
 				width: max-content;
 				position: relative;
@@ -748,12 +676,8 @@ definePage(() => ({
 		color: #86b300;
 	}
 
-	> .cherry {
-		color: var(--CP-cherry);
-	}
-
-	> .pick {
-		color: var(--CP-pick);
+	> .egoKey {
+		color: var(--MI_THEME-accent);
 	}
 }
 

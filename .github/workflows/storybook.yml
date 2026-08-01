@@ -3,19 +3,16 @@ name: Storybook
 on:
   push:
     branches:
-      - master
-      - develop
+      - main
   pull_request_target:
     branches-ignore:
-      # Since pull requests targets master mostly is the "develop" branch.
-      # Storybook CI is checked on the "push" event of "develop" branch so it would cause a duplicate build.
-      # This is a waste of chromatic build quota, so we don't run storybook CI on pull requests targets master.
-      - master
+      # Main already receives a push build, so avoid a duplicate Chromatic build.
+      - main
 
 jobs:
   build:
-    # Chromatic is not likely to be available for fork repositories, so we disable for fork repositories.
-    if: github.repository == 'kokonect-link/cherrypick'
+    # Enable only after this repository has its own Chromatic project and token.
+    if: github.repository == 'anxrch/egokey' && vars.ENABLE_CHROMATIC == 'true'
     runs-on: ubuntu-latest
 
     env:
@@ -51,12 +48,12 @@ jobs:
     - name: Build storybook
       run: pnpm --filter frontend build-storybook
     - name: Publish to Chromatic
-      if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/master'
+      if: github.event_name != 'pull_request_target' && github.ref == 'refs/heads/main'
       run: pnpm --filter frontend chromatic --exit-once-uploaded -d storybook-static
       env:
         CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
     - name: Publish to Chromatic
-      if: github.event_name != 'pull_request_target' && github.ref != 'refs/heads/master'
+      if: github.event_name != 'pull_request_target' && github.ref != 'refs/heads/main'
       id: chromatic_push
       run: |
         DIFF="${{ github.event.before }} HEAD"
@@ -83,7 +80,7 @@ jobs:
           echo "skip=true" >> $GITHUB_OUTPUT
         fi
         BRANCH="${{ github.event.pull_request.head.user.login }}:$GITHUB_HEAD_REF"
-        if [ "$BRANCH" = "kokonect-link:$GITHUB_HEAD_REF" ]; then
+        if [ "$BRANCH" = "anxrch:$GITHUB_HEAD_REF" ]; then
           BRANCH="$GITHUB_HEAD_REF"
         fi
         pnpm --filter frontend chromatic --exit-once-uploaded -d storybook-static --branch-name "$BRANCH" $(echo "$CHROMATIC_PARAMETER")

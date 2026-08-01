@@ -2133,6 +2133,8 @@ declare namespace entities {
         NotesReactionsResponse,
         NotesReactionsCreateRequest,
         NotesReactionsDeleteRequest,
+        NotesRenoteMutingCreateRequest,
+        NotesRenoteMutingDeleteRequest,
         NotesRenotesRequest,
         NotesRenotesResponse,
         NotesRepliesRequest,
@@ -3341,6 +3343,12 @@ type NotesReactionsRequest = operations['notes___reactions']['requestBody']['con
 
 // @public (undocumented)
 type NotesReactionsResponse = operations['notes___reactions']['responses']['200']['content']['application/json'];
+
+// @public (undocumented)
+type NotesRenoteMutingCreateRequest = operations['notes___renote-muting___create']['requestBody']['content']['application/json'];
+
+// @public (undocumented)
+type NotesRenoteMutingDeleteRequest = operations['notes___renote-muting___delete']['requestBody']['content']['application/json'];
 
 // @public (undocumented)
 type NotesRenotesRequest = operations['notes___renotes']['requestBody']['content']['application/json'];

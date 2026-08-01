@@ -1,2 +1,2 @@
-# CherryPick Backend
+# EgoKey Backend
 ![](../../assets/backend.png)

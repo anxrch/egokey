@@ -60,7 +60,7 @@ import { prefer } from '@/preferences.js';
 import { getAccountMenu } from '@/accounts.js';
 import { $i } from '@/i.js';
 import { getHTMLElementOrNull } from '@/utility/get-dom-node-or-null.js';
-import { fetchCherrypickReleases } from '@/utility/fetch-releases.js';
+import { fetchEgoKeyReleases } from '@/utility/fetch-releases.js';
 import { haptic } from '@/utility/haptic.js';
 
 const WINDOW_THRESHOLD = 1400;
@@ -104,7 +104,7 @@ if ($i && ($i.isAdmin ?? $i.isModerator)) {
 		if (approvals.length > 0) controlPanelIndicated.value = true;
 	});
 
-	fetchCherrypickReleases().then((result) => {
+	fetchEgoKeyReleases().then((result) => {
 		if (result) controlPanelIndicated.value = true;
 	});
 }

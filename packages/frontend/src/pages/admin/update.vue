@@ -13,35 +13,35 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</MkSwitch>
 			</div>
 
-			<template v-if="(version && version.length > 0) && (releasesCherryPick && releasesCherryPick.length > 0)">
-				<FormInfo v-if="compareVersions(version, releasesCherryPick[0].tag_name) > 0">{{ i18n.ts.youAreRunningBetaClient }}</FormInfo>
-				<FormInfo v-else-if="compareVersions(version, releasesCherryPick[0].tag_name) === 0" check>{{ i18n.ts.youAreRunningUpToDateClient }}</FormInfo>
+			<template v-if="(version && version.length > 0) && latestEgoKeyRelease">
+				<FormInfo v-if="compareVersions(version, latestEgoKeyRelease.tag_name) > 0">{{ i18n.ts.youAreRunningBetaClient }}</FormInfo>
+				<FormInfo v-else-if="compareVersions(version, latestEgoKeyRelease.tag_name) === 0" check>{{ i18n.ts.youAreRunningUpToDateClient }}</FormInfo>
 				<FormInfo v-else warn>{{ i18n.ts.newVersionOfClientAvailable }}</FormInfo>
 			</template>
 			<FormInfo v-else>{{ i18n.ts.loading }}</FormInfo>
 
 			<FormSection first>
 				<template #label>{{ instanceName }}</template>
-				<MkKeyValue @click="whatIsNewCherryPick">
+				<MkKeyValue @click="whatIsNewEgoKey">
 					<template #key>{{ i18n.ts.currentVersion }} <i class="ti ti-external-link"></i></template>
-					<template #value>{{ version }} <span :class="$style.commitHash" @click.stop="openCommitPage('kokonect-link/cherrypick', gitHash)">({{ gitHash.substring(0, 8) }})</span></template>
+					<template #value>{{ version }} <span :class="$style.commitHash" @click.stop="openCommitPage('anxrch/egokey', gitHash)">({{ gitHash.substring(0, 8) }})</span></template>
 				</MkKeyValue>
-				<MkKeyValue v-if="version < releasesCherryPick[0].tag_name && !skipVersion" style="margin-top: 10px;" @click="whatIsNewLatestCherryPick">
+				<MkKeyValue v-if="latestEgoKeyRelease && version < latestEgoKeyRelease.tag_name && !skipVersion" style="margin-top: 10px;" @click="whatIsNewLatestEgoKey">
 					<template #key>{{ i18n.ts.latestVersion }} <i class="ti ti-external-link"></i></template>
-					<template #value>{{ releasesCherryPick[0].tag_name }} <span :class="$style.commitHash" @click.stop="openCommitPage('kokonect-link/cherrypick', cherryPickTagsMap.get(releasesCherryPick[0].tag_name) || '')">({{ (cherryPickTagsMap.get(releasesCherryPick[0].tag_name) || 'unknown').substring(0, 8) }})</span></template>
+					<template #value>{{ latestEgoKeyRelease.tag_name }} <span :class="$style.commitHash" @click.stop="openCommitPage('anxrch/egokey', egoKeyTagsMap.get(latestEgoKeyRelease.tag_name) || '')">({{ (egoKeyTagsMap.get(latestEgoKeyRelease.tag_name) || 'unknown').substring(0, 8) }})</span></template>
 				</MkKeyValue>
-				<MkButton v-if="releasesCherryPick.length > 0 && !skipVersion && (compareVersions(version, releasesCherryPick[0].tag_name) < 0)" style="margin-top: 10px;" @click="skipThisVersion">{{ i18n.ts.skipThisVersion }}</MkButton>
+				<MkButton v-if="latestEgoKeyRelease && !skipVersion && (compareVersions(version, latestEgoKeyRelease.tag_name) < 0)" style="margin-top: 10px;" @click="skipThisVersion">{{ i18n.ts.skipThisVersion }}</MkButton>
 			</FormSection>
 
-			<FormSection @click="whatIsNewLatestCherryPick">
-				<template #label>CherryPick <i class="ti ti-external-link"></i></template>
+			<FormSection @click="whatIsNewLatestEgoKey">
+				<template #label>EgoKey <i class="ti ti-external-link"></i></template>
 				<MkKeyValue>
 					<template #key>{{ i18n.ts.latestVersion }}</template>
-					<template v-if="releasesCherryPick" #value>{{ releasesCherryPick[0].tag_name }} <span :class="$style.commitHash" @click.stop="openCommitPage('kokonect-link/cherrypick', cherryPickTagsMap.get(releasesCherryPick[0].tag_name) || '')">({{ (cherryPickTagsMap.get(releasesCherryPick[0].tag_name) || 'unknown').substring(0, 8) }})</span></template>
+					<template v-if="latestEgoKeyRelease" #value>{{ latestEgoKeyRelease.tag_name }} <span :class="$style.commitHash" @click.stop="openCommitPage('anxrch/egokey', egoKeyTagsMap.get(latestEgoKeyRelease.tag_name) || '')">({{ (egoKeyTagsMap.get(latestEgoKeyRelease.tag_name) || 'unknown').substring(0, 8) }})</span></template>
 					<template v-else #value><MkEllipsis/></template>
 				</MkKeyValue>
 				<MkKeyValue style="margin: 8px 0 0; color: color(from var(--MI_THEME-fg) srgb r g b / 0.75); font-size: 0.85em;">
-					<template v-if="releasesCherryPick" #value><MkTime :time="releasesCherryPick[0].published_at" mode="detail"/></template>
+					<template v-if="latestEgoKeyRelease" #value><MkTime :time="latestEgoKeyRelease.published_at" mode="detail"/></template>
 					<template v-else #value><MkEllipsis/></template>
 				</MkKeyValue>
 			</FormSection>
@@ -50,11 +50,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<template #label>Misskey <i class="ti ti-external-link"></i></template>
 				<MkKeyValue>
 					<template #key>{{ i18n.ts.latestVersion }}</template>
-					<template v-if="releasesMisskey" #value>{{ releasesMisskey[0].tag_name }} <span :class="$style.commitHash" @click.stop="openCommitPage('misskey-dev/misskey', misskeyTagsMap.get(releasesMisskey[0].tag_name) || '')">({{ (misskeyTagsMap.get(releasesMisskey[0].tag_name) || 'unknown').substring(0, 8) }})</span></template>
+					<template v-if="latestMisskeyRelease" #value>{{ latestMisskeyRelease.tag_name }} <span :class="$style.commitHash" @click.stop="openCommitPage('misskey-dev/misskey', misskeyTagsMap.get(latestMisskeyRelease.tag_name) || '')">({{ (misskeyTagsMap.get(latestMisskeyRelease.tag_name) || 'unknown').substring(0, 8) }})</span></template>
 					<template v-else #value><MkEllipsis/></template>
 				</MkKeyValue>
 				<MkKeyValue style="margin: 8px 0 0; color: color(from var(--MI_THEME-fg) srgb r g b / 0.75); font-size: 0.85em;">
-					<template v-if="releasesMisskey" #value><MkTime :time="releasesMisskey[0].published_at" mode="detail"/></template>
+					<template v-if="latestMisskeyRelease" #value><MkTime :time="latestMisskeyRelease.published_at" mode="detail"/></template>
 					<template v-else #value><MkEllipsis/></template>
 				</MkKeyValue>
 			</FormSection>
@@ -84,18 +84,20 @@ const meta = await misskeyApi('admin/meta');
 const enableReceivePrerelease = ref(meta.enableReceivePrerelease);
 const skipVersion = ref(meta.skipVersion);
 const skipCherryPickVersion = ref(meta.skipCherryPickVersion);
-const cherryPickResponse = await window.fetch('https://api.github.com/repos/kokonect-link/cherrypick/releases');
-const cherryPickData = await cherryPickResponse.json();
-const releasesCherryPick = ref(meta.enableReceivePrerelease ? cherryPickData : cherryPickData.filter(x => !x.prerelease));
+const egoKeyResponse = await window.fetch('https://api.github.com/repos/anxrch/egokey/releases');
+const egoKeyData = await egoKeyResponse.json();
+const releasesEgoKey = ref(meta.enableReceivePrerelease ? egoKeyData : egoKeyData.filter(x => !x.prerelease));
 const misskeyResponse = await window.fetch('https://api.github.com/repos/misskey-dev/misskey/releases');
 const misskeyData = await misskeyResponse.json();
 const releasesMisskey = ref(meta.enableReceivePrerelease ? misskeyData : misskeyData.filter(x => !x.prerelease));
-const cherryPickTagsMap = new Map<string, string>();
+const latestEgoKeyRelease = computed(() => releasesEgoKey.value[0] ?? null);
+const latestMisskeyRelease = computed(() => releasesMisskey.value[0] ?? null);
+const egoKeyTagsMap = new Map<string, string>();
 const misskeyTagsMap = new Map<string, string>();
 
-if (releasesCherryPick.value.length > 0) {
-	const hash = await getCommitHashForRelease('kokonect-link/cherrypick', releasesCherryPick.value[0]);
-	cherryPickTagsMap.set(releasesCherryPick.value[0].tag_name, hash);
+if (releasesEgoKey.value.length > 0) {
+	const hash = await getCommitHashForRelease('anxrch/egokey', releasesEgoKey.value[0]);
+	egoKeyTagsMap.set(releasesEgoKey.value[0].tag_name, hash);
 }
 
 if (releasesMisskey.value.length > 0) {
@@ -103,12 +105,14 @@ if (releasesMisskey.value.length > 0) {
 	misskeyTagsMap.set(releasesMisskey.value[0].tag_name, hash);
 }
 
-const whatIsNewCherryPick = () => {
-	window.open(`https://github.com/kokonect-link/cherrypick/blob/develop/CHANGELOG_CHERRYPICK.md#${version.replace(/\./g, '')}`, '_blank');
+const whatIsNewEgoKey = () => {
+	window.open(`https://github.com/anxrch/egokey/blob/main/CHANGELOG_EGOKEY.md#${version.replace(/\./g, '')}`, '_blank');
 };
 
-const whatIsNewLatestCherryPick = () => {
-	window.open(`https://github.com/kokonect-link/cherrypick/blob/develop/CHANGELOG_CHERRYPICK.md#${releasesCherryPick.value[0].tag_name.replace(/\./g, '')}`, '_blank');
+const whatIsNewLatestEgoKey = () => {
+	const release = latestEgoKeyRelease.value;
+	if (release == null) return;
+	window.open(`https://github.com/anxrch/egokey/blob/main/CHANGELOG_EGOKEY.md#${release.tag_name.replace(/\./g, '')}`, '_blank');
 };
 
 /**
@@ -118,7 +122,9 @@ const whatIsNewLatestCherryPick = () => {
  */
 
 const whatIsNewLatestMisskey = () => {
-	window.open(`https://github.com/misskey-dev/misskey/blob/develop/CHANGELOG.md#${releasesMisskey.value[0].tag_name.replace(/\./g, '')}`, '_blank');
+	const release = latestMisskeyRelease.value;
+	if (release == null) return;
+	window.open(`https://github.com/misskey-dev/misskey/blob/develop/CHANGELOG.md#${release.tag_name.replace(/\./g, '')}`, '_blank');
 };
 
 function save() {
@@ -130,7 +136,9 @@ function save() {
 }
 
 function skipThisVersion() {
-	skipCherryPickVersion.value = releasesCherryPick.value[0].tag_name;
+	const release = latestEgoKeyRelease.value;
+	if (release == null) return;
+	skipCherryPickVersion.value = release.tag_name;
 	skipVersion.value = true;
 
 	os.apiWithDialog('admin/update-meta', {

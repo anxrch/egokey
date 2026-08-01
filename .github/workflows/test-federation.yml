@@ -3,8 +3,7 @@ name: Test (federation)
 on:
   push:
     branches:
-      - master
-      - develop
+      - main
     paths:
       - packages/backend/**
       - packages/cherrypick-js/**
@@ -72,7 +71,7 @@ jobs:
         with:
           node-version-file: ${{ matrix.node-version-file }}
           cache: 'pnpm'
-      - name: Build CherryPick
+      - name: Build EgoKey
         run: |
           pnpm i --frozen-lockfile
           pnpm build

@@ -37,18 +37,18 @@ export function Layout(props: PropsWithChildren<CommonProps<{
 			<html>
 				<head>
 					<meta charset="UTF-8" />
-					<meta name="application-name" content="CherryPick" />
+					<meta name="application-name" content="EgoKey" />
 					<meta name="referer" content="origin" />
 					<meta name="theme-color" content={props.themeColor ?? '#ffbcdc'} />
 					<meta name="theme-color-orig" content={props.themeColor ?? '#ffbcdc'} />
-					<meta property="og:site_name" content={props.instanceName || 'CherryPick'} />
+					<meta property="og:site_name" content={props.instanceName || 'EgoKey'} />
 					<meta property="instance_url" content={props.instanceUrl} />
 					<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
 					<meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no" />
 					<link rel="icon" href={props.icon || '/favicon.ico'} />
 					<link rel="apple-touch-icon" href={props.appleTouchIcon || '/apple-touch-icon.png'} />
 					<link rel="manifest" href="/manifest.json" />
-					<link rel="search" type="application/opensearchdescription+xml" title={props.title || 'CherryPick'} href={`${props.config.url}/opensearch.xml`} />
+					<link rel="search" type="application/opensearchdescription+xml" title={props.title || 'EgoKey'} href={`${props.config.url}/opensearch.xml`} />
 					{props.serverErrorImageUrl != null ? <link rel="prefetch" as="image" href={props.serverErrorImageUrl} /> : null}
 					{props.infoImageUrl != null ? <link rel="prefetch" as="image" href={props.infoImageUrl} /> : null}
 					{props.notFoundImageUrl != null ? <link rel="prefetch" as="image" href={props.notFoundImageUrl} /> : null}
@@ -59,7 +59,7 @@ export function Layout(props: PropsWithChildren<CommonProps<{
 						<link rel="stylesheet" href={`/vite/${href}`} />
 					)) : null}
 
-					{props.titleSlot ?? <title safe>{props.title || 'CherryPick'}</title>}
+					{props.titleSlot ?? <title safe>{props.title || 'EgoKey'}</title>}
 
 					{props.noindex ? <meta name="robots" content="noindex" /> : null}
 
@@ -69,7 +69,7 @@ export function Layout(props: PropsWithChildren<CommonProps<{
 
 					{props.ogSlot ?? (
 						<>
-							<meta property="og:title" content={props.title || 'CherryPick'} />
+							<meta property="og:title" content={props.title || 'EgoKey'} />
 							<meta property="og:description" content={props.desc || defaultDescription} />
 							{props.img != null ? <meta property="og:image" content={props.img} /> : null}
 							<meta property="twitter:card" content="summary" />

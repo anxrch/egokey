@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "cherrypick.fullname" . }}
+  name: {{ include "egokey.fullname" . }}
   labels:
-    {{- include "cherrypick.labels" . | nindent 4 }}
+    {{- include "egokey.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "cherrypick.selectorLabels" . | nindent 6 }}
+      {{- include "egokey.selectorLabels" . | nindent 6 }}
   replicas: 1
   template:
     metadata:
       labels:
-        {{- include "cherrypick.selectorLabels" . | nindent 8 }}
+        {{- include "egokey.selectorLabels" . | nindent 8 }}
     spec:
       containers:
-        - name: cherrypick
+        - name: egokey
           image: {{ .Values.image }}
           env:
             - name: NODE_ENV
               value: {{ .Values.environment }}
           volumeMounts:
-            - name: {{ include "cherrypick.fullname" . }}-configuration
+            - name: {{ include "egokey.fullname" . }}-configuration
               mountPath: /cherrypick/.config
               readOnly: true
           ports:
@@ -30,9 +30,9 @@ spec:
           image: postgres:18-alpine
           env:
             - name: POSTGRES_USER
-              value: "example-cherrypick-user"
+              value: "example-egokey-user"
             - name: POSTGRES_PASSWORD
-              value: "example-cherrypick-pass"
+              value: "example-egokey-pass"
             - name: POSTGRES_DB
               value: "cherrypick"
           ports:
@@ -42,6 +42,6 @@ spec:
           ports:
             - containerPort: 6379
       volumes:
-        - name: {{ include "cherrypick.fullname" . }}-configuration
+        - name: {{ include "egokey.fullname" . }}-configuration
           configMap:
-            name: {{ include "cherrypick.fullname" . }}-configuration
+            name: {{ include "egokey.fullname" . }}-configuration

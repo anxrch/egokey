@@ -1,14 +1,14 @@
-name: Check CherryPick JS version
+name: Check EgoKey SDK compatibility version
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ main ]
     paths:
       - packages/cherrypick-js/package.json
       - package.json
       - .github/workflows/check-cherrypick-js-version.yml
   pull_request:
-    branches: [ develop ]
+    branches: [ main ]
     paths:
       - packages/cherrypick-js/package.json
       - package.json

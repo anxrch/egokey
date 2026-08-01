@@ -476,7 +476,7 @@ export const store = markRaw(new Pizzax('base', {
 		},
 	},
 
-	// #region CherryPick
+	// #region EgoKey
 	// - Settings/Appearance
 	fontSize: {
 		where: 'device',
@@ -767,7 +767,7 @@ export const store = markRaw(new Pizzax('base', {
 		default: true,
 	},
 
-	// - Settings/CherryPick
+	// - Settings/EgoKey
 	nicknameEnabled: {
 		where: 'account',
 		default: true,

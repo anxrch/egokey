@@ -67,13 +67,13 @@ const props = withDefaults(defineProps<{
 	full?: boolean,
 	large?: boolean,
 
-	// CherryPick
+	// EgoKey
 	disableIfFollowing?: boolean,
 }>(), {
 	full: false,
 	large: false,
 
-	// CherryPick
+	// EgoKey
 	disableIfFollowing: false,
 });
 

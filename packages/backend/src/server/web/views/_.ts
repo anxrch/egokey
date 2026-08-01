@@ -15,9 +15,9 @@ export const comment = `<!--
                                __/ |
                               |___/
 
- Thank you for using CherryPick!
+ Thank you for using EgoKey!
  If you are reading this message... how about joining the development?
- https://github.com/kokonect-link/cherrypick
+ https://github.com/anxrch/egokey
 
 -->`;
 

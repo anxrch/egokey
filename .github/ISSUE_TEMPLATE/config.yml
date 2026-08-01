@@ -6,9 +6,6 @@ contact_links:
   - name: 💬 Start discussion (Misskey)
     url: https://github.com/misskey-dev/misskey/discussions
     about: The official forum to join conversation and ask question
-  - name: 💬 CherryPick official Discord
-    url: https://discord.gg/V8qghB28Aj
-    about: Chat freely about CherryPick
-  - name: 💬 Start discussion (CherryPick)
-    url: https://github.com/kokonect-link/cherrypick/discussions
+  - name: 💬 Start an EgoKey discussion
+    url: https://github.com/anxrch/egokey/discussions
     about: The official forum to join conversation and ask question

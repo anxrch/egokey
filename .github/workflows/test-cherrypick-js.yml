@@ -1,22 +1,22 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Test (cherrypick.js)
+name: Test (EgoKey SDK compatibility)
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ main ]
     paths:
       - packages/cherrypick-js/**
       - .github/workflows/test-cherrypick-js.yml
   pull_request:
-    branches: [ develop ]
+    branches: [ main ]
     paths:
       - packages/cherrypick-js/**
       - .github/workflows/test-cherrypick-js.yml
 jobs:
   test:
-    name: Unit tests (cherrypick.js)
+    name: Unit tests (EgoKey SDK compatibility)
 
     runs-on: ubuntu-latest
 

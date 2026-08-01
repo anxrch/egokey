@@ -43,7 +43,7 @@ describe('Note', () => {
 	});
 
 	test('ファイルを添付できる', async () => {
-		const file = await uploadUrl(alice, 'https://raw.githubusercontent.com/kokonect-link/cherrypick/develop/packages/backend/test/resources/192.jpg');
+		const file = await uploadUrl(alice, 'https://raw.githubusercontent.com/anxrch/egokey/main/packages/backend/test/resources/192.jpg');
 
 		const res = await api('notes/create', {
 			fileIds: [file.id],
@@ -55,7 +55,7 @@ describe('Note', () => {
 	}, 1000 * 10);
 
 	test('他人のファイルで怒られる', async () => {
-		const file = await uploadUrl(bob, 'https://raw.githubusercontent.com/kokonect-link/cherrypick/develop/packages/backend/test/resources/192.jpg');
+		const file = await uploadUrl(bob, 'https://raw.githubusercontent.com/anxrch/egokey/main/packages/backend/test/resources/192.jpg');
 
 		const res = await api('notes/create', {
 			text: 'test',

@@ -19,7 +19,7 @@ export function InfoCardPage(props: CommonPropsMinimum<{
 			<html>
 				<head>
 					<meta charset="UTF-8" />
-					<meta name="application-name" content="CherryPick" />
+					<meta name="application-name" content="EgoKey" />
 					<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 					<title safe>{props.meta.name ?? props.config.url}</title>
 					<link rel="stylesheet" href="/static-assets/misc/info-card.css" />

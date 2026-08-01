@@ -4,8 +4,7 @@ name: Get backend memory usage
 on:
   pull_request:
     branches:
-      - master
-      - develop
+      - main
     paths:
       - packages/backend/**
       - packages/cherrypick-js/**

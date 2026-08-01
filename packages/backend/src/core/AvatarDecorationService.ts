@@ -137,7 +137,7 @@ export class AvatarDecorationService implements OnApplicationShutdown {
 		const userHostUrl = `https://${user.host}`;
 		const showUserApiUrl = `${userHostUrl}/api/users/show`;
 
-		if (!['misskey', 'cherrypick', 'sharkey'].includes(<string>instance?.softwareName)) return;
+		if (!['misskey', 'egokey', 'cherrypick', 'sharkey'].includes(<string>instance?.softwareName)) return;
 
 		const res = await this.httpRequestService.send(showUserApiUrl, {
 			method: 'POST',
@@ -277,7 +277,7 @@ export class AvatarDecorationService implements OnApplicationShutdown {
 		const instance = await this.instancesRepository.findOneBy({ host: decoration.host });
 		if (!instance) return null;
 
-		if (!['misskey', 'cherrypick', 'sharkey'].includes(<string>instance.softwareName)) {
+		if (!['misskey', 'egokey', 'cherrypick', 'sharkey'].includes(<string>instance.softwareName)) {
 			return null;
 		}
 

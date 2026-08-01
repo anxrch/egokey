@@ -1,9 +1,9 @@
 {
 	"type": "module",
 	"name": "cherrypick-js",
-	"version": "4.18.0-beta.1",
+	"version": "4.18.0-egokey.0",
 	"basedMisskeyVersion": "2025.12.2",
-	"description": "CherryPick SDK for JavaScript",
+	"description": "EgoKey compatibility SDK for JavaScript",
 	"license": "MIT",
 	"main": "./built/index.js",
 	"types": "./built/index.d.ts",
@@ -37,7 +37,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/kokonect-link/cherrypick.git",
+		"url": "git+https://github.com/anxrch/egokey.git",
 		"directory": "packages/cherrypick-js"
 	},
 	"devDependencies": {

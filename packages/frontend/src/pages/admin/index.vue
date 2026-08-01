@@ -47,7 +47,7 @@ import { lookupUser, lookupUserByEmail, lookupFile } from '@/utility/admin-looku
 import { definePage, provideMetadataReceiver, provideReactiveMetadata } from '@/page.js';
 import { useRouter } from '@/router.js';
 import { genSearchIndexes } from '@/utility/inapp-search.js';
-import { fetchCherrypickReleases } from '@/utility/fetch-releases.js';
+import { fetchEgoKeyReleases } from '@/utility/fetch-releases.js';
 
 const searchIndex = await import('search-index:admin').then(({ searchIndexes }) => genSearchIndexes(searchIndexes));
 
@@ -93,7 +93,7 @@ misskeyApi('admin/show-users', {
 	if (approvals.length > 0) pendingUserApprovals.value = true;
 });
 
-fetchCherrypickReleases().then((result) => {
+fetchEgoKeyReleases().then((result) => {
 	if (result) updateAvailable.value = true;
 });
 

@@ -537,7 +537,7 @@ export const PREF_DEF = definePreferences({
 		},
 	},
 
-	// #region CherryPick
+	// #region EgoKey
 	// - Settings/Appearance
 	fontSize: {
 		default: 8,
@@ -733,7 +733,7 @@ export const PREF_DEF = definePreferences({
 		default: true,
 	},
 
-	// - Settings/CherryPick
+	// - Settings/EgoKey
 	nicknameEnabled: {
 		default: true,
 	},

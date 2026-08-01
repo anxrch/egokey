@@ -35,11 +35,11 @@ export function BaseEmbed(props: PropsWithChildren<CommonProps<{
 			<html>
 				<head>
 					<meta charset="UTF-8" />
-					<meta name="application-name" content="CherryPick" />
+					<meta name="application-name" content="EgoKey" />
 					<meta name="referer" content="origin" />
 					<meta name="theme-color" content={props.themeColor ?? '#ffbcdc'} />
 					<meta name="theme-color-orig" content={props.themeColor ?? '#ffbcdc'} />
-					<meta property="og:site_name" content={props.instanceName || 'CherryPick'} />
+					<meta property="og:site_name" content={props.instanceName || 'EgoKey'} />
 					<meta property="instance_url" content={props.instanceUrl} />
 					<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
 					<meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no" />
@@ -52,7 +52,7 @@ export function BaseEmbed(props: PropsWithChildren<CommonProps<{
 						<link rel="stylesheet" href={`/embed_vite/${href}`} />
 					)) : null}
 
-					{props.titleSlot ?? <title safe>{props.title || 'CherryPick'}</title>}
+					{props.titleSlot ?? <title safe>{props.title || 'EgoKey'}</title>}
 
 					{props.metaSlot}
 

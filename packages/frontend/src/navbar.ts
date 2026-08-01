@@ -13,7 +13,7 @@ import { lookup } from '@/utility/lookup.js';
 import * as os from '@/os.js';
 import { i18n } from '@/i18n.js';
 import { unisonReload } from '@/utility/unison-reload.js';
-import { donateCherryPick } from '@/utility/donate-cherrypick.js';
+import { openEgoKeyProject } from '@/utility/open-egokey-project.js';
 
 export const navbarItemDef = reactive({
 	notifications: {
@@ -220,10 +220,9 @@ export const navbarItemDef = reactive({
 		to: `/@${$i?.username}`,
 	},
 	support: {
-		// title: i18n.tsx.supportThisInstance({ name: instance.name ?? host }),
-		title: i18n.tsx.supportThisInstance({ name: 'EgoKey' }),
-		icon: 'ti ti-pig-money',
-		action: (ev) => donateCherryPick(ev),
+		title: 'EgoKey',
+		icon: 'ti ti-brand-github',
+		action: (ev) => openEgoKeyProject(ev),
 	},
 	cacheClear: {
 		title: i18n.ts.clearCache,

@@ -73,7 +73,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<SearchMarker>
 					<MkFolder :defaultOpen="true">
 						<template #icon><SearchIcon><i class="ti ti-bolt"></i></SearchIcon></template>
-						<template #label><SearchLabel>CherryPick® Fan-out Timeline Technology™ (FTT)</SearchLabel></template>
+						<template #label><SearchLabel>EgoKey® Fan-out Timeline Technology™ (FTT)</SearchLabel></template>
 						<template v-if="fttForm.savedState.enableFanoutTimeline" #suffix>Enabled</template>
 						<template v-else #suffix>Disabled</template>
 						<template v-if="fttForm.modified.value" #footer>
@@ -130,7 +130,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<SearchMarker>
 					<MkFolder :defaultOpen="true">
 						<template #icon><SearchIcon><i class="ti ti-bolt"></i></SearchIcon></template>
-						<template #label><SearchLabel>CherryPick® Reactions Boost Technology™ (RBT)</SearchLabel></template>
+						<template #label><SearchLabel>EgoKey® Reactions Boost Technology™ (RBT)</SearchLabel></template>
 						<template v-if="rbtForm.savedState.enableReactionsBuffering" #suffix>Enabled</template>
 						<template v-else #suffix>Disabled</template>
 						<template v-if="rbtForm.modified.value" #footer>

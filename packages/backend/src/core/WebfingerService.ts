@@ -46,7 +46,8 @@ export class WebfingerService {
 		const m = query.match(mRegex);
 		if (m) {
 			const hostname = m[2];
-			const useHttp = process.env.CHERRYPICK_WEBFINGER_USE_HTTP && process.env.CHERRYPICK_WEBFINGER_USE_HTTP.toLowerCase() === 'true';
+			const webfingerUseHttp = process.env.EGOKEY_WEBFINGER_USE_HTTP ?? process.env.CHERRYPICK_WEBFINGER_USE_HTTP;
+			const useHttp = webfingerUseHttp?.toLowerCase() === 'true';
 			return `http${useHttp ? '' : 's'}://${hostname}/.well-known/webfinger?${urlQuery({ resource: `acct:${query}` })}`;
 		}
 

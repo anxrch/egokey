@@ -4,7 +4,7 @@
  */
 
 /**
- * CherryPick Entry Point!
+ * EgoKey Entry Point!
  */
 
 import cluster from 'node:cluster';
@@ -20,7 +20,7 @@ import { readyRef } from './ready.js';
 
 import 'reflect-metadata';
 
-process.title = `CherryPick (${cluster.isPrimary ? 'master' : 'worker'})`;
+process.title = `EgoKey (${cluster.isPrimary ? 'master' : 'worker'})`;
 
 Error.stackTraceLimit = Infinity;
 EventEmitter.defaultMaxListeners = 128;
@@ -83,7 +83,7 @@ process.on('exit', code => {
 });
 
 process.on('warning', warning => {
-	if ((warning as never)['code'] !== 'CHERRYPICK_SHUTDOWN') return;
+	if (!['EGOKEY_SHUTDOWN', 'CHERRYPICK_SHUTDOWN'].includes((warning as never)['code'])) return;
 	logger.warn(chalk.yellow(`${warning.message}: ${(warning as never)['detail']}`));
 	for (const id in cluster.workers) cluster.workers[id]?.process.kill('SIGTERM');
 	process.exit();

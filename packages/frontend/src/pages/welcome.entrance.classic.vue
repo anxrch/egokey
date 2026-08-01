@@ -11,7 +11,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div :class="$style.shape2"></div>
 	<div :class="$style.logoWrapper">
 		<div :class="$style.poweredBy">Powered by</div>
-		<img :src="cherrypicksvg" :class="$style.cherrypick"/>
+		<img :src="egoKeySvg" :class="$style.egoKey"/>
 	</div>
 	<div :class="$style.contents">
 		<MkVisitorDashboard/>
@@ -34,7 +34,7 @@ import * as Misskey from 'cherrypick-js';
 import XTimeline from './welcome.timeline.vue';
 import MkMarqueeText from '@/components/MkMarqueeText.vue';
 import MkFeaturedPhotos from '@/components/MkFeaturedPhotos.vue';
-import cherrypicksvg from '/client-assets/cherrypick.svg';
+import egoKeySvg from '/client-assets/egokey.svg';
 import misskeysvg from '/client-assets/misskey.svg';
 import { misskeyApiGet } from '@/utility/misskey-api.js';
 import MkVisitorDashboard from '@/components/MkVisitorDashboard.vue';
@@ -127,7 +127,7 @@ misskeyApiGet('federation/instances', {
 	margin-bottom: 2px;
 }
 
-.misskey, .cherrypick {
+.misskey, .egoKey {
 	width: 120px;
 
 	@media (max-width: 450px) {

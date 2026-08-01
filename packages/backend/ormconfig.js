@@ -2,7 +2,7 @@ import { DataSource } from 'typeorm';
 import { loadConfig } from './built/config.js';
 import { entities } from './built/postgres.js';
 
-const isConcurrentIndexMigrationEnabled = process.env.CHERRYPICK_MIGRATION_CREATE_INDEX_CONCURRENTLY === '1';
+const isConcurrentIndexMigrationEnabled = (process.env.EGOKEY_MIGRATION_CREATE_INDEX_CONCURRENTLY ?? process.env.CHERRYPICK_MIGRATION_CREATE_INDEX_CONCURRENTLY) === '1';
 
 const config = loadConfig();
 

@@ -15,7 +15,7 @@ describe('nodeinfo', () => {
 		assert.strictEqual(res.headers.get('Access-Control-Allow-Origin'), '*');
 
 		const nodeInfo = await res.json() as any;
-		assert.strictEqual(nodeInfo.software.name, 'cherrypick');
+		assert.strictEqual(nodeInfo.software.name, 'egokey');
 	});
 
 	test('nodeinfo 2.0', async () => {
@@ -24,6 +24,18 @@ describe('nodeinfo', () => {
 		assert.strictEqual(res.headers.get('Access-Control-Allow-Origin'), '*');
 
 		const nodeInfo = await res.json() as any;
-		assert.strictEqual(nodeInfo.software.name, 'cherrypick');
+		assert.strictEqual(nodeInfo.software.name, 'egokey');
+	});
+
+	test('keeps the JoinMisskey compatibility response', async () => {
+		const res = await relativeFetch('nodeinfo/2.1', {
+			headers: {
+				'User-Agent': 'JoinMisskey',
+			},
+		});
+		assert.ok(res.ok);
+
+		const nodeInfo = await res.json() as any;
+		assert.strictEqual(nodeInfo.software.name, 'misskey');
 	});
 });

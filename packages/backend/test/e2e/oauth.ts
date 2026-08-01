@@ -140,7 +140,7 @@ function assertIndirectError(response: Response, error: string): void {
 	assert.strictEqual(location.searchParams.get('error'), error);
 
 	// https://datatracker.ietf.org/doc/html/rfc9207#name-response-parameter-iss
-	assert.strictEqual(location.searchParams.get('iss'), 'http://cherrypick.local');
+	assert.strictEqual(location.searchParams.get('iss'), 'http://egokey.local');
 	// https://datatracker.ietf.org/doc/html/rfc6749.html#section-4.1.2.1
 	assert.ok(location.searchParams.has('state'));
 }
@@ -172,6 +172,7 @@ describe('OAuth', () => {
 	}, 1000 * 60 * 2);
 
 	beforeEach(async () => {
+		await sendEnvUpdateRequest({ key: 'EGOKEY_TEST_CHECK_IP_RANGE', value: '' });
 		await sendEnvUpdateRequest({ key: 'CHERRYPICK_TEST_CHECK_IP_RANGE', value: '' });
 		sender = (reply): void => {
 			reply.send(`
@@ -217,7 +218,7 @@ describe('OAuth', () => {
 		assert.ok(location.searchParams.has('code'));
 		assert.strictEqual(location.searchParams.get('state'), 'state');
 		// https://datatracker.ietf.org/doc/html/rfc9207#name-response-parameter-iss
-		assert.strictEqual(location.searchParams.get('iss'), 'http://cherrypick.local');
+		assert.strictEqual(location.searchParams.get('iss'), 'http://egokey.local');
 
 		const code = new URL(location).searchParams.get('code');
 		assert.ok(code);
@@ -606,7 +607,7 @@ describe('OAuth', () => {
 				bearer: true,
 			});
 			assert.strictEqual(createResult.status, 403);
-			assert.ok(createResult.headers.get('WWW-Authenticate')?.startsWith('Bearer realm="CherryPick", error="insufficient_scope", error_description'));
+			assert.ok(createResult.headers.get('WWW-Authenticate')?.startsWith('Bearer realm="EgoKey", error="insufficient_scope", error_description'));
 		});
 	});
 
@@ -705,7 +706,7 @@ describe('OAuth', () => {
 		assert.strictEqual(response.status, 200);
 
 		const body = await response.json() as any;
-		assert.strictEqual(body.issuer, 'http://cherrypick.local');
+		assert.strictEqual(body.issuer, 'http://egokey.local');
 		assert.ok(body.scopes_supported.includes('write:notes'));
 	});
 
@@ -883,8 +884,8 @@ describe('OAuth', () => {
 			});
 		});
 
-		test('Disallow loopback', async () => {
-			await sendEnvUpdateRequest({ key: 'CHERRYPICK_TEST_CHECK_IP_RANGE', value: '1' });
+		test('Disallow loopback with the EgoKey environment variable', async () => {
+			await sendEnvUpdateRequest({ key: 'EGOKEY_TEST_CHECK_IP_RANGE', value: '1' });
 
 			const client = new AuthorizationCode(clientConfig);
 			const response = await fetch(client.authorizeURL({

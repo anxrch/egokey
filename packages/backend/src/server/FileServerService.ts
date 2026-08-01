@@ -321,7 +321,7 @@ export class FileServerService {
 
 		if (!request.headers['user-agent']) {
 			throw new StatusError('User-Agent is required', 400, 'User-Agent is required');
-		} else if (request.headers['user-agent'].toLowerCase().indexOf('cherrypick/') !== -1) {
+		} else if (['egokey/', 'cherrypick/'].some(userAgent => request.headers['user-agent'].toLowerCase().includes(userAgent))) {
 			throw new StatusError('Refusing to proxy a request from another proxy', 403, 'Proxy is recursive');
 		}
 

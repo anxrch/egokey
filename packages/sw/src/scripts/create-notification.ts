@@ -23,7 +23,7 @@ const iconUrl = (name: BadgeNames): string => `/static-assets/tabler-badges/${na
 /* How to add a new badge:
  * 1. Find the icon and download png from https://tabler-icons.io/
  * 2. vips resize ~/Downloads/icon-name.png vipswork.png 0.4; vips scRGB2BW vipswork.png ~/icon-name.png"[compression=9,strip]"; rm vipswork.png;
- * 3. mv ~/icon-name.png ~/cherrypick/packages/backend/assets/tabler-badges/
+ * 3. mv ~/icon-name.png ~/egokey/packages/backend/assets/tabler-badges/
  * 4. Add 'icon-name' to BadgeNames
  * 5. Add `badge: iconUrl('icon-name'),`
  */
@@ -351,7 +351,7 @@ export async function createEmptyNotification(): Promise<void> {
 		await globalThis.registration.showNotification(
 			(new URL(origin)).host,
 			{
-				body: `CherryPick v${_VERSION_}`,
+				body: `EgoKey v${_VERSION_}`,
 				silent: true,
 				badge: iconUrl('null'),
 				tag: 'read_notification',

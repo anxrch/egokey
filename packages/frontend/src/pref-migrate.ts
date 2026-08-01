@@ -149,7 +149,7 @@ export function migrateOldSettings() {
 		prefer.commit('defaultNoteVisibility', store.s.defaultNoteVisibility);
 		prefer.commit('defaultNoteLocalOnly', store.s.defaultNoteLocalOnly);
 
-		// #region CherryPick
+		// #region EgoKey
 		// - Settings/Appearance
 		prefer.commit('fontSize', store.s.fontSize);
 		prefer.commit('showUnreadNotificationsCount', store.s.showUnreadNotificationsCount);
@@ -224,7 +224,7 @@ export function migrateOldSettings() {
 		prefer.commit('enableAntennaTimeline', store.s.enableAntennaTimeline);
 		prefer.commit('enableChannelTimeline', store.s.enableChannelTimeline);
 
-		// - Settings/CherryPick
+		// - Settings/EgoKey
 		prefer.commit('nicknameEnabled', store.s.nicknameEnabled);
 		prefer.commit('nicknameMap', store.s.nicknameMap);
 		prefer.commit('useEnterToSend', store.s.useEnterToSend);

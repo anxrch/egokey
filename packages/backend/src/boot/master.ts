@@ -25,32 +25,24 @@ const meta = JSON.parse(fs.readFileSync(`${_dirname}/../../../../built/meta.json
 const logger = new Logger('core', 'cyan');
 const bootLogger = logger.createSubLogger('boot', 'magenta');
 
-const themeColorCherry = chalk.hex('#ffbcdc');
-const themeColorPick = chalk.hex('#b1d3ff');
+const themeColorEgo = chalk.hex('#ffbcdc');
+const themeColorKey = chalk.hex('#b1d3ff');
 const themeColorMisskey = chalk.hex('#9ec23f');
 const themeColorWarning = chalk.hex('#ffbb00');
 
 function greet() {
 	if (!envOption.quiet) {
-		//#region CherryPick logo
-		const v = `v${meta.version}`;
-		console.log(themeColorCherry.bold('   _____ _                         ') + themeColorPick.bold(' _____ _      _'));
-		console.log(themeColorCherry.bold('  / ____| |                        ') + themeColorPick.bold('|  __ (_)    | |'));
-		console.log(themeColorCherry.bold(' | |    | |__   ___ _ __ _ __ _   _') + themeColorPick.bold('| |__) |  ___| | __'));
-		console.log(themeColorCherry.bold(' | |    | \'_ \\ / _ \\ \'__| \'__| | | ') + themeColorPick.bold('|  ___/ |/ __| |/ /'));
-		console.log(themeColorCherry.bold(' | |____| | | |  __/ |  | |  | |_| ') + themeColorPick.bold('| |   | | (__|   <'));
-		console.log(themeColorCherry.bold('  \\_____|_| |_|\\___|_|  |_|   \\__, ') + themeColorPick.bold('|_|   |_|\\___|_|\\_\\'));
-		console.log(themeColorCherry.bold('                               __/ |'));
-		console.log(themeColorCherry.bold('                              |___/'));
+		//#region EgoKey logo
+		console.log(themeColorEgo.bold('  _____             ') + themeColorKey.bold('_  __'));
+		console.log(themeColorEgo.bold(' | ____|__ _  ___  ') + themeColorKey.bold('| |/ /___ _   _'));
+		console.log(themeColorEgo.bold(' |  _| / _` |/ _ \\ ') + themeColorKey.bold("| ' // _ \\ | | |"));
+		console.log(themeColorEgo.bold(' | |__| (_| | (_) |') + themeColorKey.bold(' . \\  __/ |_| |'));
+		console.log(themeColorEgo.bold(' |_____\\__, |\\___/ ') + themeColorKey.bold('|_|\\_\\___|\\__, |'));
+		console.log(themeColorEgo.bold('        |___/                 ') + themeColorKey.bold('|___/'));
 		//#endregion
 
-		console.log(themeColorCherry.bold(' Cherry') + themeColorPick.bold('Pick') + (' is an open-source decentralized microblogging platform based from') + (themeColorMisskey.bold(' Misskey') + ('.')));
-		console.log(themeColorWarning(' If you like ') + themeColorCherry.bold('Cherry') + themeColorPick.bold('Pick') + themeColorWarning(', please consider donating to support dev.'));
-		console.log(themeColorWarning(' ・Patreon: https://www.patreon.com/noridev'));
-		console.log(themeColorWarning(' ・Paypal: https://www.paypal.me/noridev'));
-		console.log(themeColorWarning(' ・GitHub Sponsers: https://github.com/sponsors/noridev'));
-		console.log(themeColorWarning(' ・Kakao Pay: https://qr.kakaopay.com/Ej9SHx6pQ'));
-		console.log(themeColorWarning(' ・pixivFANBOX: https://noridev.fanbox.cc/plans'));
+		console.log(themeColorEgo.bold(' Ego') + themeColorKey.bold('Key') + (' is an open-source decentralized microblogging platform based on') + (themeColorMisskey.bold(' Misskey') + ('.')));
+		console.log(themeColorWarning(' Source: https://github.com/anxrch/egokey'));
 
 		let config!: Config;
 
@@ -62,40 +54,12 @@ function greet() {
 			process.exit(1);
 		}
 
-		const kokonectHosts = [
-			'kokonect.link',
-			'beta.kokonect.link',
-			'universe.noridev.moe',
-		];
-
-		function getHostToCompare(url: string): string | null {
-			try {
-				const fullUrl = url.startsWith('http') ? url : `http://${url}`;
-				const urlObject = new URL(fullUrl);
-
-				if (urlObject.port && urlObject.port !== '80' && urlObject.port !== '443') {
-					return `${urlObject.hostname}:${urlObject.port}`;
-				}
-				return urlObject.hostname;
-			} catch (e) {
-				console.error(`Invalid URL in config: ${url}`);
-				return null;
-			}
-		}
-
-		const currentHost = getHostToCompare(config.url);
-
-		if (currentHost && kokonectHosts.includes(currentHost)) {
-			console.log('');
-			console.log(themeColorCherry.bold(' KOKO') + themeColorPick.bold('NECT') + ' with' + themeColorCherry.bold(' Nori') + themeColorPick.bold('Dev') + '.');
-		}
-
 		console.log('');
 		console.log(chalkTemplate`--- ${os.hostname()} {gray (PID: ${process.pid.toString()})} ---`);
 	}
 
-	bootLogger.info('Welcome to CherryPick!');
-	bootLogger.info(`CherryPick v${meta.version}`, null, true);
+	bootLogger.info('Welcome to EgoKey!');
+	bootLogger.info(`EgoKey v${meta.version}`, null, true);
 	bootLogger.info(`Based on Misskey v${meta.basedMisskeyVersion}`, null, true);
 }
 
@@ -119,7 +83,7 @@ export async function masterMain() {
 		process.exit(1);
 	}
 
-	bootLogger.succ(themeColorCherry('Cherry') + themeColorPick('Pick') + (' initialized'));
+	bootLogger.succ(themeColorEgo('Ego') + themeColorKey('Key') + (' initialized'));
 
 	if (config.sentryForBackend) {
 		const Sentry = await import('@sentry/node');

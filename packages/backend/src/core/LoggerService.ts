@@ -24,7 +24,7 @@ export class LoggerService {
 
 	@bindThis
 	public getLogger(domain: string, color?: KEYWORD | undefined) {
-		const logger = this.cloudLogging?.log(this.config.cloudLogging?.logName ?? 'cherrypick');
+		const logger = this.cloudLogging?.log(this.config.cloudLogging?.logName ?? 'egokey');
 		return new Logger(domain, color, logger);
 	}
 }

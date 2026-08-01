@@ -52,7 +52,7 @@ export const Long = {
 		user: {
 			...userDetailed(),
 			username: 'the_quick_brown_fox_jumped_over_the_lazy_dog',
-			host: 'cherrypick.example',
+			host: 'egokey.example',
 		},
 	},
 	decorators: [

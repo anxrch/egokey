@@ -19,7 +19,7 @@ type Events = {
 	driveFoldersUpdated: (folders: Misskey.entities.DriveFolder[]) => void;
 	driveFoldersDeleted: (folders: Misskey.entities.DriveFolder[]) => void;
 
-	// CherryPick
+	// EgoKey
 	showEl: (value: boolean) => void;
 	showEl2: (value: boolean) => void;
 	queueUpdated: (q: number) => void;

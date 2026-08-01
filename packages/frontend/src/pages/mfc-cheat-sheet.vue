@@ -430,7 +430,7 @@ const preview_scale = ref('$[scale.x=2 🍮]\n$[scale.y=2 🍮]\n\n$[scale.x=2.5
 const preview_fg = ref('$[fg.color=ffbcdc Cherry]$[fg.color=b1d3ff Pick]');
 const preview_bg = ref('$[bg.color=ffbcdc Cherry]$[bg.color=b1d3ff Pick]');
 const preview_plain = ref('<plain>**bold** @mention #hashtag `code` $[x2 🍮]</plain>');
-const preview_ruby = ref('$[ruby CherryPick Misskey]');
+const preview_ruby = ref('$[ruby EgoKey Misskey]');
 
 const headerActions = computed(() => []);
 

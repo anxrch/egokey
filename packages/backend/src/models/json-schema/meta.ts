@@ -39,7 +39,7 @@ export const packedMetaLiteSchema = {
 			type: 'string',
 			optional: false, nullable: false,
 			format: 'url',
-			example: 'https://cherrypick.example.com',
+			example: 'https://egokey.example.com',
 		},
 		description: {
 			type: 'string',
@@ -60,12 +60,12 @@ export const packedMetaLiteSchema = {
 		repositoryUrl: {
 			type: 'string',
 			optional: false, nullable: true,
-			default: 'https://github.com/kokonect-link/cherrypick',
+			default: 'https://github.com/anxrch/egokey',
 		},
 		feedbackUrl: {
 			type: 'string',
 			optional: false, nullable: true,
-			default: 'https://github.com/kokonect-link/cherrypick/issues/new',
+			default: 'https://github.com/anxrch/egokey/issues/new',
 		},
 		defaultDarkTheme: {
 			type: 'string',

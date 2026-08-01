@@ -10,7 +10,7 @@ import { popupAsyncWithDialog } from '@/os.js';
 
 export type OpenOnRemoteOptions = {
 	/**
-	 * 外部のCherryPick Webで特定のパスを開く
+	 * 外部のEgoKey Webで特定のパスを開く
 	 */
 	type: 'web';
 
@@ -20,19 +20,19 @@ export type OpenOnRemoteOptions = {
 	path: string;
 } | {
 	/**
-	 * 外部のCherryPick Webで照会する
+	 * 外部のEgoKey Webで照会する
 	 */
 	type: 'lookup';
 
 	/**
 	 * 照会したいエンティティのURL
 	 *
-	 * （例: `https://cherrypick.example.com/notes/abcdexxxxyz`）
+	 * （例: `https://egokey.example.com/notes/abcdexxxxyz`）
 	 */
 	url: string;
 } | {
 	/**
-	 * 外部のCherryPickでノートする
+	 * 外部のEgoKeyでノートする
 	 */
 	type: 'share';
 

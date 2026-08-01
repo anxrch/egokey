@@ -1,10 +1,9 @@
-name: Check CherryPick JS autogen
+name: Check EgoKey SDK autogen
 
 on:
   pull_request_target:
     branches:
-      - master
-      - develop
+      - main
       - improve-cherrypick-js-autogen-check
     paths:
       - packages/backend/**

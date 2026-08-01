@@ -1,7 +1,7 @@
 {
 	"name": "cherrypick-js-type-generator",
 	"version": "0.0.0",
-	"description": "CherryPick TypeGenerator",
+	"description": "EgoKey compatibility SDK type generator",
 	"type": "module",
 	"scripts": {
 		"generate": "tsx src/generator.ts && eslint ./built/**/*.ts --fix"

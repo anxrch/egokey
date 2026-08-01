@@ -10,8 +10,9 @@ import * as yaml from 'js-yaml';
 import buildTarball from './tarball.mjs';
 
 const configDir = fileURLToPath(new URL('../.config', import.meta.url));
-const configPath = process.env.CHERRYPICK_CONFIG_YML
-	? path.resolve(configDir, process.env.CHERRYPICK_CONFIG_YML)
+const configYml = process.env.EGOKEY_CONFIG_YML ?? process.env.CHERRYPICK_CONFIG_YML;
+const configPath = configYml
+	? path.resolve(configDir, configYml)
 	: process.env.NODE_ENV === 'test'
 		? path.resolve(configDir, 'test.yml')
 		: path.resolve(configDir, 'default.yml');

@@ -1,6 +1,6 @@
 (async () => {
 	const msg = document.getElementById('msg');
-	const successText = '\nSuccess Flush! <a href="/">Back to CherryPick</a>\n성공했습니다. <a href="/">CherryPick을 다시 열어주세요.</a>\n成功しました。<a href="/">CherryPickを開き直してください。</a>';
+	const successText = '\nSuccess Flush! <a href="/">Back to EgoKey</a>\n성공했습니다. <a href="/">EgoKey를 다시 열어주세요.</a>\n成功しました。<a href="/">EgoKeyを開き直してください。</a>';
 
 	if (!document.cookie) {
 		message('Your site data is fully cleared by your browser.');
@@ -11,7 +11,7 @@
 			localStorage.clear();
 			message('localStorage cleared.');
 
-			const idbPromises = ['CherryPickClient', 'keyval-store'].map((name, i, arr) => new Promise((res, rej) => {
+			const idbPromises = ['EgoKeyClient', 'CherryPickClient', 'keyval-store'].map((name, i, arr) => new Promise((res, rej) => {
 				const delidb = indexedDB.deleteDatabase(name);
 				delidb.onsuccess = () => res(message(`indexedDB "${name}" cleared. (${i + 1}/${arr.length})`));
 				delidb.onerror = e => rej(e);

@@ -1,21 +1,20 @@
-# cherrypick.js
-**Strongly-typed official CherryPick SDK for browsers/Node.js.**
+# EgoKey SDK
+**Strongly typed EgoKey SDK for browsers and Node.js.**
 
-[![Test](https://github.com/misskey-dev/misskey.js/actions/workflows/test.yml/badge.svg)](https://github.com/misskey-dev/misskey.js/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/misskey-dev/misskey.js/branch/develop/graph/badge.svg?token=PbrTtk3nVD)](https://codecov.io/gh/misskey-dev/misskey.js)
+[![Test](https://github.com/anxrch/egokey/actions/workflows/test-cherrypick-js.yml/badge.svg)](https://github.com/anxrch/egokey/actions/workflows/test-cherrypick-js.yml)
 
 [![NPM](https://nodei.co/npm/cherrypick-js.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/cherrypick-js)
 
-JavaScript(TypeScript)用の公式CherryPickSDKです。ブラウザ/Node.js上で動作します。
+JavaScript(TypeScript)用のEgoKey SDKです。既存利用者との互換性のため、npmパッケージ名は引き続き`cherrypick-js`です。ブラウザ/Node.js上で動作します。
 
 以下が提供されています:
 - ユーザー認証
 - APIリクエスト
 - ストリーミング
 - ユーティリティ関数
-- CherryPickの各種型定義
+- EgoKeyの各種型定義
 
-対応するCherryPickのバージョンは12以上です。
+EgoKey 4以降を対象としています。
 
 ## Install
 ```
@@ -26,15 +25,15 @@ npm i cherrypick-js
 インポートは以下のようにまとめて行うと便利です。
 
 ``` ts
-import * as Misskey from 'cherrypick-js';
+import * as EgoKey from 'cherrypick-js';
 ```
 
-便宜上、以後のコード例は上記のように`* as Misskey`としてインポートしている前提のものになります。
+便宜上、以後のコード例は上記のように`* as EgoKey`としてインポートしている前提のものになります。
 
 ただし、このインポート方法だとTree-Shakingできなくなるので、コードサイズが重要なユースケースでは以下のような個別インポートをお勧めします。
 
 ``` ts
-import { api as misskeyApi } from 'cherrypick-js';
+import { api as egokeyApi } from 'cherrypick-js';
 ```
 
 ## Authenticate
@@ -44,8 +43,8 @@ todo
 APIを利用する際は、利用するサーバーの情報とアクセストークンを与えて`APIClient`クラスのインスタンスを初期化し、そのインスタンスの`request`メソッドを呼び出してリクエストを行います。
 
 ``` ts
-const cli = new Misskey.api.APIClient({
-	origin: 'https://cherrypick.test',
+const cli = new EgoKey.api.APIClient({
+	origin: 'https://egokey.test',
 	credential: 'TOKEN',
 });
 
@@ -55,12 +54,12 @@ const meta = await cli.request('meta', { detail: true });
 `request`の第一引数には呼び出すエンドポイント名、第二引数にはパラメータオブジェクトを渡します。レスポンスはPromiseとして返ります。
 
 ## Streaming
-cherrypick.jsのストリーミングでは、二つのクラスが提供されます。
+EgoKey SDKのストリーミングでは、二つのクラスが提供されます。
 ひとつは、ストリーミングのコネクション自体を司る`Stream`クラスと、もうひとつはストリーミング上のチャンネルの概念を表す`Channel`クラスです。
 ストリーミングを利用する際は、まず`Stream`クラスのインスタンスを初期化し、その後で`Stream`インスタンスのメソッドを利用して`Channel`クラスのインスタンスを取得する形になります。
 
 ``` ts
-const stream = new Misskey.Stream('https://cherrypick.test', { token: 'TOKEN' });
+const stream = new EgoKey.Stream('https://egokey.test', { token: 'TOKEN' });
 const mainChannel = stream.useChannel('main');
 mainChannel.on('notification', notification => {
 	console.log('notification received', notification);
@@ -74,14 +73,14 @@ mainChannel.on('notification', notification => {
 
 パラメータなし
 ``` ts
-const stream = new Misskey.Stream('https://cherrypick.test', { token: 'TOKEN' });
+const stream = new EgoKey.Stream('https://egokey.test', { token: 'TOKEN' });
 
 const mainChannel = stream.useChannel('main');
 ```
 
 パラメータあり
 ``` ts
-const stream = new Misskey.Stream('https://cherrypick.test', { token: 'TOKEN' });
+const stream = new EgoKey.Stream('https://egokey.test', { token: 'TOKEN' });
 
 const chatChannel = stream.useChannel('chat', {
 	other: 'xxxxxxxxxx',
@@ -92,7 +91,7 @@ const chatChannel = stream.useChannel('chat', {
 `Channel`クラスの`dispose`メソッドを呼び出します。
 
 ``` ts
-const stream = new Misskey.Stream('https://cherrypick.test', { token: 'TOKEN' });
+const stream = new EgoKey.Stream('https://egokey.test', { token: 'TOKEN' });
 
 const mainChannel = stream.useChannel('main');
 
@@ -103,7 +102,7 @@ mainChannel.dispose();
 `Channel`クラスはEventEmitterを継承しており、メッセージがサーバーから受信されると受け取ったイベント名でペイロードをemitします。
 
 ``` ts
-const stream = new Misskey.Stream('https://cherrypick.test', { token: 'TOKEN' });
+const stream = new EgoKey.Stream('https://egokey.test', { token: 'TOKEN' });
 const mainChannel = stream.useChannel('main');
 mainChannel.on('notification', notification => {
 	console.log('notification received', notification);
@@ -114,7 +113,7 @@ mainChannel.on('notification', notification => {
 `Channel`クラスの`send`メソッドを使用してメッセージをサーバーに送信することができます。
 
 ``` ts
-const stream = new Misskey.Stream('https://cherrypick.test', { token: 'TOKEN' });
+const stream = new EgoKey.Stream('https://egokey.test', { token: 'TOKEN' });
 const chatChannel = stream.useChannel('chat', {
 	other: 'xxxxxxxxxx',
 });
@@ -128,7 +127,7 @@ chatChannel.send('read', {
 `Stream`クラスの`_connected_`イベントが利用可能です。
 
 ``` ts
-const stream = new Misskey.Stream('https://cherrypick.test', { token: 'TOKEN' });
+const stream = new EgoKey.Stream('https://egokey.test', { token: 'TOKEN' });
 stream.on('_connected_', () => {
 	console.log('connected');
 });
@@ -138,7 +137,7 @@ stream.on('_connected_', () => {
 `Stream`クラスの`_disconnected_`イベントが利用可能です。
 
 ``` ts
-const stream = new Misskey.Stream('https://cherrypick.test', { token: 'TOKEN' });
+const stream = new EgoKey.Stream('https://egokey.test', { token: 'TOKEN' });
 stream.on('_disconnected_', () => {
 	console.log('disconnected');
 });
@@ -154,5 +153,5 @@ stream.on('_disconnected_', () => {
 ---
 
 <div align="center">
-	<a href="https://github.com/kokonect-link/cherrypick/blob/develop/CONTRIBUTING.md"><img src="https://assets.misskey-hub.net/public/i-want-you.png" width="300"></a>
+	<a href="https://github.com/anxrch/egokey/blob/main/CONTRIBUTING.md"><img src="https://assets.misskey-hub.net/public/i-want-you.png" width="300" alt="Contribute to EgoKey"></a>
 </div>

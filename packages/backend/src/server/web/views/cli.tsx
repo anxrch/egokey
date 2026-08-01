@@ -12,15 +12,15 @@ export function CliPage(props: {
 			<html>
 				<head>
 					<meta charset="UTF-8" />
-					<meta name="application-name" content="CherryPick" />
-					<title>CherryPick CLI Tool</title>
+					<meta name="application-name" content="EgoKey" />
+					<title>EgoKey CLI Tool</title>
 
 					<link rel="stylesheet" href="/static-assets/misc/cli.css" />
 				</head>
 
 				<body>
 					<header>
-						<h1 safe>CherryPick CLI {props.version}</h1>
+						<h1 safe>EgoKey CLI {props.version}</h1>
 					</header>
 					<main>
 						<div id="form">

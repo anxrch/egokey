@@ -4,8 +4,7 @@ name: Dockle
 on:
   push:
     branches:
-      - master
-      - develop
+      - main
   pull_request:
 
 jobs:
@@ -30,7 +29,7 @@ jobs:
       - run: |
           docker compose up -d web
           IMAGE_ID=$(docker compose images --format json web | jq -r '.[0].ID')
-          docker tag "${IMAGE_ID}" cherrypick-web:latest
+          docker tag "${IMAGE_ID}" egokey-web:latest
 
       - name: Prune docker junk (optional but recommended)
         run: |
@@ -39,10 +38,9 @@ jobs:
 
       - name: Save image for Dockle
         run: |
-          docker save cherrypick-web:latest -o ./cherrypick-web.tar
-          ls -lh ./cherrypick-web.tar
+          docker save egokey-web:latest -o ./egokey-web.tar
+          ls -lh ./egokey-web.tar
 
       - name: Run Dockle with tar input
         run: |
-          dockle --exit-code 1 --input ./cherrypick-web.tar
-
+          dockle --exit-code 1 --input ./egokey-web.tar

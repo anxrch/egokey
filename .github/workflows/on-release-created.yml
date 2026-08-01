@@ -1,14 +1,17 @@
-name: On Release Created (Publish cherrypick-js)
+name: Publish EgoKey compatibility SDK (manual)
 
 on:
-  release:
-    types: [created]
-
   workflow_dispatch:
+    inputs:
+      confirmation:
+        description: "Type publish-compatibility-sdk to publish the legacy cherrypick-js package"
+        required: true
+        type: string
 
 jobs:
-  publish-cherrypick-js:
-    name: Publish cherrypick-js
+  publish-egokey-compatibility-sdk:
+    name: Publish compatibility SDK
+    if: inputs.confirmation == 'publish-compatibility-sdk'
     runs-on: ubuntu-latest
 
     permissions:

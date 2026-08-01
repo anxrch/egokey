@@ -44,8 +44,10 @@ function yamlToJson(ymlPath) {
 	}), 'utf-8');
 }
 
-if (process.env.CHERRYPICK_CONFIG_YML) {
-	const customYmlPath = resolve(configDir, process.env.CHERRYPICK_CONFIG_YML);
+const configYml = process.env.EGOKEY_CONFIG_YML ?? process.env.CHERRYPICK_CONFIG_YML;
+
+if (configYml) {
+	const customYmlPath = resolve(configDir, configYml);
 	yamlToJson(customYmlPath);
 } else {
 	yamlToJson(resolve(configDir, process.env.NODE_ENV === 'test' ? 'test.yml' : 'default.yml'));

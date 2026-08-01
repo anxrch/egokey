@@ -11,7 +11,7 @@ Before creating an issue, please check the following:
 - To avoid duplication, please search for similar issues before creating a new issue.
 - Do not use Issues as a question.
 	- Issues should only be used to feature requests, suggestions, and report problems.
-	- Please ask questions in [GitHub Discussions](https://github.com/kokonect-link/cherrypick/discussions) or [Discord](https://discord.gg/V8qghB28Aj).
+	- Please ask questions in [GitHub Discussions](https://github.com/anxrch/egokey/discussions).
 
 ## Creating a PR
 Thank you for your PR! Before creating a PR, please check the following:
@@ -19,7 +19,7 @@ Thank you for your PR! Before creating a PR, please check the following:
   - fix / refactor / feat / enhance / perf / chore etc.
   - Also, make sure that the granularity of this PR is appropriate. Please do not include more than one type of change or interest in a single PR.
 - If there is an Issue which will be resolved by this PR, please include a reference to the Issue in the text.
-- Please add the summary of the changes to [`CHANGELOG_CHERRYPICK.md`](/CHANGELOG_CHERRYPICK.md). However, this is not necessary for changes that do not affect the users, such as refactoring.
+- Please add the summary of the changes to [`CHANGELOG_EGOKEY.md`](/CHANGELOG_EGOKEY.md). However, this is not necessary for changes that do not affect users, such as refactoring.
 - Check if there are any documents that need to be created or updated due to this change.
 - If you have added a feature or fixed a bug, please add a test case if possible.
 - Please make sure that tests and Lint are passed in advance.
@@ -27,4 +27,3 @@ Thank you for your PR! Before creating a PR, please check the following:
 - Run `npm run api` to update the API report and commit it if there are any diffs.
 
 Thanks for your cooperation 🤗
-

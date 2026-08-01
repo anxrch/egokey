@@ -1,5 +1,5 @@
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# CherryPick configuration
+# EgoKey configuration
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 #   ┌──────────────────────────────┐
@@ -9,14 +9,14 @@
 # First of all, let me tell you a story that may possibly be
 # boring to you and possibly important to you.
 #
-# CherryPick is licensed under the AGPLv3 license. This license is
+# EgoKey is licensed under the AGPLv3 license. This license is
 # known to be often misunderstood.  Please read the following
 # instructions carefully and select the appropriate option so
 # that you do not negligently cause a license violation.
 #
 
 # --------
-# Option 1: If you host CherryPick AS-IS (without any changes to
+# Option 1: If you host EgoKey AS-IS (without any changes to
 #           the source code. forks are not included).
 #
 # Step 1: Congratulations! You don't need to do anything.
@@ -28,8 +28,8 @@
 #           this repository.  Strictly speaking, it doesn't have
 #           to be a Git repository, but you'll probably use Git!
 #
-# Step 1: Build and run the CherryPick server first.
-# Step 2: Open <https://your.cherrypick.example/admin/settings> in
+# Step 1: Build and run the EgoKey server first.
+# Step 2: Open <https://your.egokey.example/admin/settings> in
 #         your browser with the administrator account.
 # Step 3: Enter the URL of your Git repository in the
 #         "Repository URL" field.
@@ -37,7 +37,7 @@
 # --------
 # Option 3: If neither of the above applies to you.
 #           (In this case, the source code should be published
-#           on the CherryPick interface.  IT IS NOT ENOUGH TO
+#           on the EgoKey interface.  IT IS NOT ENOUGH TO
 #           DISCLOSE THE SOURCE CODE WHEN A USER REQUESTS IT BY
 #           E-MAIL OR OTHER MEANS.  If you are not satisfied
 #           with this, it is recommended that you read the
@@ -65,10 +65,10 @@
 # Password to initiate setting up admin account.
 # It will not be used after the initial setup is complete.
 #
-# Be sure to change this when you set up CherryPick via the Internet.
+# Be sure to change this when you set up EgoKey via the Internet.
 #
-# The provider of the service who sets up CherryPick on behalf of the customer should
-# set this value to something unique when generating the CherryPick config file,
+# The provider of the service who sets up EgoKey on behalf of the customer should
+# set this value to something unique when generating the EgoKey config file,
 # and provide it to the customer.
 #
 # setupPassword: example_password_please_change_this_or_you_will_get_hacked
@@ -86,11 +86,11 @@ url: https://example.tld/
 #───┘ Port and TLS settings └───────────────────────────────────
 
 #
-# CherryPick requires a reverse proxy to support HTTPS connections.
+# EgoKey requires a reverse proxy to support HTTPS connections.
 #
 #                 +-------- https://example.tld/ ------------+
 #   +------+      |+-------------+      +-------------------+|
-#   | User | ---> || Proxy (443) | ---> | CherryPick (3000) ||
+#   | User | ---> || Proxy (443) | ---> | EgoKey (3000) ||
 #   +------+      |+-------------+      +-------------------+|
 #                 +------------------------------------------+
 #
@@ -98,32 +98,32 @@ url: https://example.tld/
 #   An encrypted connection with HTTPS is highly recommended
 #   because tokens may be transferred in GET requests.
 
-# The port that your CherryPick server should listen on.
+# The port that your EgoKey server should listen on.
 port: 3000
 
 # You can also use UNIX domain socket.
-# socket: /path/to/cherrypick.sock
+# socket: /path/to/egokey.sock
 # chmodSocket: '777'
 
 # Proxy trust settings
 #
-# Specifies the IP addresses that CherryPick will use as trusted
+# Specifies the IP addresses that EgoKey will use as trusted
 # reverse proxies (e.g., nginx, Cloudflare). This affects how
-# CherryPick determines the source IP for each request and is used
+# EgoKey determines the source IP for each request and is used
 # for important rate limiting and security features. If the value
-# is not set correctly, CherryPick may use the IP address of the
+# is not set correctly, EgoKey may use the IP address of the
 # reverse proxy instead of the actual source IP, which may lead to
 # unintended rate limiting or security vulnerabilities.
 # By default, the loopback network and private network address
 # ranges shown below are trusted.
 # If you are using a single reverse proxy and it is on the same
-# machine or the same private network as CherryPick, it is unlikely you
+# machine or the same private network as EgoKey, it is unlikely you
 # need to change this setting, and the default setting is fine.
 # Also, if you are using multiple reverse proxy servers and they are
-# all on the same private network as CherryPick, the default setting
+# all on the same private network as EgoKey, the default setting
 # is fine.
 # However, if you are using a reverse proxy server that accesses
-# CherryPick web servers and streaming servers via public IP addresses
+# EgoKey web servers and streaming servers via public IP addresses
 # (for example, Cloudflare), you must set this variable.
 # When changing this setting, you can use one of the following values:
 #
@@ -164,8 +164,8 @@ db:
   db: cherrypick
 
   # Auth
-  user: example-cherrypick-user
-  pass: example-cherrypick-pass
+  user: example-egokey-user
+  pass: example-egokey-pass
 
   # Whether disable Caching queries
   #disableCache: true
@@ -354,7 +354,7 @@ id: 'aidx'
 #cloudLogging:
 #  projectId: example-project-id
 #  saKeyPath: /path/to/service-account-key.json
-#  logName: cherrypick
+#  logName: egokey
 
 # Override the file URL rendering in ActivityPub (Object Storage file only)
 #apFileBaseUrl: https://example.tld/
@@ -382,7 +382,7 @@ proxyBypassHosts:
 
 # Movie Thumbnail Generation URL
 # There is no reference implementation.
-# For example, CherryPick will point to the following URL:
+# For example, EgoKey will point to the following URL:
 #   https://example.com/thumbnail.webp?thumbnail=1&url=https%3A%2F%2Fstorage.example.com%2Fpath%2Fto%2Fvideo.mp4
 #videoThumbnailGenerator: https://example.com
 
@@ -397,7 +397,7 @@ proxyBypassHosts:
 #maxFileSize: 262144000
 
 # PID File of master process
-#pidFile: /tmp/cherrypick.pid
+#pidFile: /tmp/egokey.pid
 
 # Log settings
 # logging:

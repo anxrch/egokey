@@ -256,7 +256,7 @@ export function loadConfig(): Config {
 
 	const config = JSON.parse(fs.readFileSync(compiledConfigFilePath, 'utf-8')) as Source;
 
-	const url = tryCreateUrl(config.url ?? process.env.CHERRYPICK_URL ?? '');
+	const url = tryCreateUrl(config.url ?? process.env.EGOKEY_URL ?? process.env.CHERRYPICK_URL ?? '');
 	const version = meta.version;
 	const basedMisskeyVersion = meta.basedMisskeyVersion;
 	const host = url.host;
@@ -336,7 +336,7 @@ export function loadConfig(): Config {
 		videoThumbnailGenerator: config.videoThumbnailGenerator ?
 			config.videoThumbnailGenerator.endsWith('/') ? config.videoThumbnailGenerator.substring(0, config.videoThumbnailGenerator.length - 1) : config.videoThumbnailGenerator
 			: null,
-		userAgent: `CherryPick/${version} (${config.url})`,
+		userAgent: `EgoKey/${version} (${config.url})`,
 		frontendEntry: frontendManifest['src/_boot_.ts'],
 		frontendManifestExists: frontendManifestExists,
 		frontendEmbedEntry: frontendEmbedManifest['src/boot.ts'],

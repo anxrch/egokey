@@ -9,7 +9,7 @@ import type { StoryObj } from '@storybook/vue3';
 import { userDetailed } from '@/../.storybook/fakes.js';
 import { commonHandlers } from '@/../.storybook/mocks.js';
 
-const localUser = userDetailed('someuserid', 'cherrypikist', null, 'Local CherryPick User');
+const localUser = userDetailed('someuserid', 'cherrypikist', null, 'Local EgoKey User');
 
 export const Default = {
 	render(args) {
