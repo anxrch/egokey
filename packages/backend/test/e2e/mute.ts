@@ -6,6 +6,7 @@
 process.env.NODE_ENV = 'test';
 
 import * as assert from 'assert';
+import { setTimeout } from 'node:timers/promises';
 import { api, post, react, signup, waitFire } from '../utils.js';
 import type * as misskey from 'misskey-js';
 
@@ -293,6 +294,72 @@ describe('Mute', () => {
 
 			assert.strictEqual(res.body.some(notification => 'userId' in notification && notification.userId === bob.id), true);
 			assert.strictEqual(res.body.some(notification => 'userId' in notification && notification.userId === carol.id), false);
+		});
+
+		test('ミュート前に作成されたグループ化リアクション通知からミュートしたユーザーが除外される', async () => {
+			const dave = await signup();
+			const eve = await signup();
+			const aliceNote = await post(alice, { text: 'hi' });
+			await react(bob, aliceNote, 'like');
+			await react(dave, aliceNote, 'like');
+			await react(eve, aliceNote, 'like');
+
+			// NotificationService#createNotification は非同期なので、通知がRedisに追加されるのを待つ
+			await setTimeout(100);
+
+			const beforeMute = await api('i/notifications-grouped', {
+				limit: 100,
+				markAsRead: false,
+			}, alice);
+			const beforeMuteGrouped = beforeMute.body.find(notification => notification.type === 'reaction:grouped' && notification.note.id === aliceNote.id);
+
+			if (beforeMuteGrouped?.type !== 'reaction:grouped') {
+				assert.fail('expected a grouped reaction notification before muting');
+			}
+			assert.strictEqual(beforeMuteGrouped.reactions.some(reaction => reaction.user.id === bob.id), true);
+			assert.strictEqual(beforeMuteGrouped.reactions.some(reaction => reaction.user.id === dave.id), true);
+			assert.strictEqual(beforeMuteGrouped.reactions.some(reaction => reaction.user.id === eve.id), true);
+
+			let daveMuted = false;
+			try {
+				const muteResult = await api('mute/create', { userId: dave.id }, alice);
+				daveMuted = muteResult.status === 204;
+				assert.strictEqual(muteResult.status, 204);
+
+				const afterMute = await api('i/notifications-grouped', {
+					limit: 100,
+					markAsRead: false,
+				}, alice);
+				const afterMuteGrouped = afterMute.body.find(notification => notification.type === 'reaction:grouped' && notification.note.id === aliceNote.id);
+
+				if (afterMuteGrouped?.type !== 'reaction:grouped') {
+					assert.fail('expected the grouped reaction notification to remain after filtering');
+				}
+				assert.strictEqual(afterMuteGrouped.reactions.some(reaction => reaction.user.id === bob.id), true);
+				assert.strictEqual(afterMuteGrouped.reactions.some(reaction => reaction.user.id === dave.id), false);
+				assert.strictEqual(afterMuteGrouped.reactions.some(reaction => reaction.user.id === eve.id), true);
+			} finally {
+				if (daveMuted) {
+					await api('mute/delete', { userId: dave.id }, alice);
+				}
+			}
+		});
+	});
+
+	describe('Reactions', () => {
+		test('ミュートしているユーザーがリアクション一覧に含まれない', async () => {
+			const aliceNote = await post(alice, { text: 'hi' });
+			await react(bob, aliceNote, 'like');
+			await react(carol, aliceNote, 'like');
+
+			const res = await api('notes/reactions', {
+				noteId: aliceNote.id,
+				limit: 100,
+			}, alice);
+
+			assert.strictEqual(res.status, 200);
+			assert.strictEqual(res.body.some(reaction => reaction.user.id === bob.id), true);
+			assert.strictEqual(res.body.some(reaction => reaction.user.id === carol.id), false);
 		});
 	});
 });

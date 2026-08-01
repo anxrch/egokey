@@ -269,6 +269,7 @@ export class NotificationService implements OnApplicationShutdown {
 	): Promise<MiNotification[]> {
 		let sinceTime = sinceId ? this.toXListId(sinceId) : null;
 		let untilTime = untilId ? this.toXListId(untilId) : null;
+		const mutedUserIds = await this.cacheService.userMutingsCache.fetch(userId);
 
 		let notifications: MiNotification[];
 		for (; ;) {
@@ -293,7 +294,8 @@ export class NotificationService implements OnApplicationShutdown {
 				return [];
 			}
 
-			notifications = notificationsRes.map(x => JSON.parse(x[1][1])) as MiNotification[];
+			notifications = (notificationsRes.map(x => JSON.parse(x[1][1])) as MiNotification[])
+				.filter(notification => !('notifierId' in notification) || !mutedUserIds.has(notification.notifierId));
 
 			if (includeTypes && includeTypes.length > 0) {
 				notifications = notifications.filter(notification => includeTypes.includes(notification.type));
