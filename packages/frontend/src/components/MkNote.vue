@@ -180,7 +180,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<MkA v-if="appearNote.channel && !inChannel" :class="$style.channel" :to="`/channels/${appearNote.channel.id}`"><i class="ti ti-device-tv"></i> {{ appearNote.channel.name }}</MkA>
 				</div>
 				<div v-if="appearNote.renoteId" :class="$style.quote"><MkNoteSimple :note="appearNote?.renote ?? null" :class="$style.quoteNote"/></div>
-				<div>
+				<Teleport defer :disabled="prefer.s.showGapBodyOfTheNote" :to="`#${footerTargetId}`">
+					<div>
 					<MkReactionsViewer
 						v-if="appearNote.reactionAcceptance !== 'likeOnly'"
 						style="margin-top: 6px;"
@@ -247,7 +248,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<i class="ti ti-dots"></i>
 						</button>
 					</footer>
-				</div>
+					</div>
+				</Teleport>
 			</div>
 		</div>
 		<div v-if="!prefer.s.showGapBodyOfTheNote" style="container-type: inline-size;">
@@ -359,6 +361,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</button>
 			</div>
 			<MkA v-if="appearNote.channel && !inChannel" :class="$style.channel" :to="`/channels/${appearNote.channel.id}`"><i class="ti ti-device-tv"></i> {{ appearNote.channel.name }}</MkA>
+			<div :id="footerTargetId"></div>
 		</div>
 	</article>
 </div>
@@ -523,6 +526,7 @@ const galleryEl = useTemplateRef('galleryEl');
 const isMyRenote = $i && ($i.id === note.userId);
 const showContent = ref(false);
 const parsed = computed(() => appearNote.text ? parseMfmCached(appearNote.text) : null);
+const footerTargetId = `note-actions-${appearNote.id}`;
 const urls = computed(() => parsed.value ? extractUrlFromMfm(parsed.value).filter((url) => appearNote.renote?.url !== url && appearNote.renote?.uri !== url) : null);
 const isLong = shouldCollapsed(appearNote, urls.value ?? []);
 const isMFM = shouldMfmCollapsed(appearNote);
