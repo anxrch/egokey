@@ -1,5 +1,14 @@
 # EgoKey changelog
 
+## 4.19.0-egokey.0
+
+**Released:** 2026-08-02
+**Based on Misskey:** 2025.12.2
+
+### Changes
+
+- The README now uses the built-in default logo (`packages/frontend/assets/egokey.svg`) instead of a duplicated temporary asset, which has been removed.
+
 ## 4.18.0-egokey.0
 
 **Released:** 2026-08-01
