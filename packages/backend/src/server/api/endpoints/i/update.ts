@@ -199,6 +199,7 @@ export const paramDef = {
 		mutedInstances: { type: 'array', items: {
 			type: 'string',
 		} },
+		hideMutedUsers: { type: 'boolean' },
 		notificationRecieveConfig: {
 			type: 'object',
 			nullable: false,
@@ -349,6 +350,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				profileUpdates.hardMutedWords = ps.hardMutedWords;
 			}
 			if (ps.mutedInstances !== undefined) profileUpdates.mutedInstances = ps.mutedInstances;
+			if (typeof ps.hideMutedUsers === 'boolean') profileUpdates.hideMutedUsers = ps.hideMutedUsers;
 			if (ps.notificationRecieveConfig !== undefined) profileUpdates.notificationRecieveConfig = ps.notificationRecieveConfig;
 			if (typeof ps.isLocked === 'boolean') updates.isLocked = ps.isLocked;
 			if (typeof ps.isExplorable === 'boolean') updates.isExplorable = ps.isExplorable;

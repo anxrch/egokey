@@ -243,6 +243,11 @@ export class MiUserProfile {
 	})
 	public mutedInstances: string[];
 
+	@Column('boolean', {
+		default: true,
+	})
+	public hideMutedUsers: boolean;
+
 	@Column('jsonb', {
 		default: {},
 	})

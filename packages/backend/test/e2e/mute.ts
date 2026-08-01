@@ -345,7 +345,7 @@ describe('Mute', () => {
 			}
 		});
 
-		test('リモートのミュートユーザーがリアクション一覧と既存グループ通知に含まれない', async () => {
+		test('リモートのミュートユーザー表示設定が通知とリアクション一覧に適用される', async () => {
 			const remote = await signup({ host: 'remote.example.test' });
 			const eve = await signup();
 			const aliceNote = await post(alice, { text: 'hi' });
@@ -375,20 +375,20 @@ describe('Mute', () => {
 				remoteMuted = muteResult.status === 204;
 				assert.strictEqual(muteResult.status, 204);
 
-				const reactions = await api('notes/reactions', {
+				const hiddenReactions = await api('notes/reactions', {
 					noteId: aliceNote.id,
 					limit: 100,
 				}, alice);
-				assert.strictEqual(reactions.status, 200);
-				assert.strictEqual(reactions.body.some(reaction => reaction.user.id === bob.id), true);
-				assert.strictEqual(reactions.body.some(reaction => reaction.user.id === remote.id), false);
-				assert.strictEqual(reactions.body.some(reaction => reaction.user.id === eve.id), true);
+				assert.strictEqual(hiddenReactions.status, 200);
+				assert.strictEqual(hiddenReactions.body.some(reaction => reaction.user.id === bob.id), true);
+				assert.strictEqual(hiddenReactions.body.some(reaction => reaction.user.id === remote.id), false);
+				assert.strictEqual(hiddenReactions.body.some(reaction => reaction.user.id === eve.id), true);
 
-				const afterMute = await api('i/notifications-grouped', {
+				const hiddenNotifications = await api('i/notifications-grouped', {
 					limit: 100,
 					markAsRead: false,
 				}, alice);
-				const afterMuteGrouped = afterMute.body.find(notification => notification.type === 'reaction:grouped' && notification.note.id === aliceNote.id);
+				const afterMuteGrouped = hiddenNotifications.body.find(notification => notification.type === 'reaction:grouped' && notification.note.id === aliceNote.id);
 
 				if (afterMuteGrouped?.type !== 'reaction:grouped') {
 					assert.fail('expected the grouped reaction notification to remain after filtering');
@@ -396,9 +396,91 @@ describe('Mute', () => {
 				assert.strictEqual(afterMuteGrouped.reactions.some(reaction => reaction.user.id === bob.id), true);
 				assert.strictEqual(afterMuteGrouped.reactions.some(reaction => reaction.user.id === remote.id), false);
 				assert.strictEqual(afterMuteGrouped.reactions.some(reaction => reaction.user.id === eve.id), true);
+
+				const disableHiding = await api('i/update', { hideMutedUsers: false }, alice);
+				assert.strictEqual(disableHiding.status, 200);
+				assert.strictEqual(disableHiding.body.hideMutedUsers, false);
+
+				const visibleReactions = await api('notes/reactions', {
+					noteId: aliceNote.id,
+					limit: 100,
+				}, alice);
+				assert.strictEqual(visibleReactions.status, 200);
+				assert.strictEqual(visibleReactions.body.some(reaction => reaction.user.id === bob.id), true);
+				assert.strictEqual(visibleReactions.body.some(reaction => reaction.user.id === remote.id), true);
+				assert.strictEqual(visibleReactions.body.some(reaction => reaction.user.id === eve.id), true);
+
+				const visibleNotifications = await api('i/notifications-grouped', {
+					limit: 100,
+					markAsRead: false,
+				}, alice);
+				const visibleGrouped = visibleNotifications.body.find(notification => notification.type === 'reaction:grouped' && notification.note.id === aliceNote.id);
+
+				if (visibleGrouped?.type !== 'reaction:grouped') {
+					assert.fail('expected the grouped reaction notification after disabling hiding');
+				}
+				assert.strictEqual(visibleGrouped.reactions.some(reaction => reaction.user.id === bob.id), true);
+				assert.strictEqual(visibleGrouped.reactions.some(reaction => reaction.user.id === remote.id), true);
+				assert.strictEqual(visibleGrouped.reactions.some(reaction => reaction.user.id === eve.id), true);
+
+				const newNote = await post(alice, { text: 'hi' });
+				await react(bob, newNote, 'like');
+				await react(remote, newNote, 'like');
+				await setTimeout(100);
+
+				const visibleIndividualNotifications = await api('i/notifications', {
+					limit: 100,
+					markAsRead: false,
+				}, alice);
+				assert.strictEqual(visibleIndividualNotifications.status, 200);
+				assert.strictEqual(visibleIndividualNotifications.body.some(notification => notification.type === 'reaction' && notification.note.id === newNote.id && notification.userId === bob.id), true);
+				assert.strictEqual(visibleIndividualNotifications.body.some(notification => notification.type === 'reaction' && notification.note.id === newNote.id && notification.userId === remote.id), true);
+
+				const enableHiding = await api('i/update', { hideMutedUsers: true }, alice);
+				assert.strictEqual(enableHiding.status, 200);
+				assert.strictEqual(enableHiding.body.hideMutedUsers, true);
+
+				const hiddenAgainReactions = await api('notes/reactions', {
+					noteId: aliceNote.id,
+					limit: 100,
+				}, alice);
+				assert.strictEqual(hiddenAgainReactions.status, 200);
+				assert.strictEqual(hiddenAgainReactions.body.some(reaction => reaction.user.id === bob.id), true);
+				assert.strictEqual(hiddenAgainReactions.body.some(reaction => reaction.user.id === remote.id), false);
+				assert.strictEqual(hiddenAgainReactions.body.some(reaction => reaction.user.id === eve.id), true);
+
+				const hiddenAgainNotifications = await api('i/notifications', {
+					limit: 100,
+					markAsRead: false,
+				}, alice);
+				assert.strictEqual(hiddenAgainNotifications.status, 200);
+				assert.strictEqual(hiddenAgainNotifications.body.some(notification => notification.type === 'reaction' && notification.note.id === newNote.id && notification.userId === bob.id), true);
+				assert.strictEqual(hiddenAgainNotifications.body.some(notification => notification.type === 'reaction' && notification.note.id === newNote.id && notification.userId === remote.id), false);
+
+				const showAgain = await api('i/update', { hideMutedUsers: false }, alice);
+				assert.strictEqual(showAgain.status, 200);
+				assert.strictEqual(showAgain.body.hideMutedUsers, false);
+
+				const visibleAgainReactions = await api('notes/reactions', {
+					noteId: aliceNote.id,
+					limit: 100,
+				}, alice);
+				assert.strictEqual(visibleAgainReactions.status, 200);
+				assert.strictEqual(visibleAgainReactions.body.some(reaction => reaction.user.id === remote.id), true);
+
+				const visibleAgainNotifications = await api('i/notifications', {
+					limit: 100,
+					markAsRead: false,
+				}, alice);
+				assert.strictEqual(visibleAgainNotifications.status, 200);
+				assert.strictEqual(visibleAgainNotifications.body.some(notification => notification.type === 'reaction' && notification.note.id === newNote.id && notification.userId === remote.id), true);
 			} finally {
-				if (remoteMuted) {
-					await api('mute/delete', { userId: remote.id }, alice);
+				try {
+					await api('i/update', { hideMutedUsers: true }, alice);
+				} finally {
+					if (remoteMuted) {
+						await api('mute/delete', { userId: remote.id }, alice);
+					}
 				}
 			}
 		});

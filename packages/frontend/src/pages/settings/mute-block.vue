@@ -111,28 +111,40 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<template #icon><i class="ti ti-eye-off"></i></template>
 					<template #label>{{ i18n.ts.mutedUsers }}</template>
 
-					<MkPagination :paginator="mutingPaginator" withControl>
-						<template #empty><MkResult type="empty" :text="i18n.ts.noUsers"/></template>
+					<div class="_gaps_m">
+						<SearchMarker
+							:label="i18n.ts.hideMutedUsers"
+							:keywords="['mute', 'notification', 'reaction', 'hide', 'user']"
+						>
+							<MkSwitch :modelValue="$i.hideMutedUsers" @update:model-value="updateHideMutedUsers">
+								<template #label><SearchLabel>{{ i18n.ts.hideMutedUsers }}</SearchLabel></template>
+								<template #caption><SearchText>{{ i18n.ts.hideMutedUsersDescription }}</SearchText></template>
+							</MkSwitch>
+						</SearchMarker>
 
-						<template #default="{ items }">
-							<div class="_gaps_s">
-								<div v-for="item in items" :key="item.mutee.id" :class="[$style.userItem, { [$style.userItemOpend]: expandedMuteItems.includes(item.id) }]">
-									<div :class="$style.userItemMain">
-										<MkA :class="$style.userItemMainBody" :to="userPage(item.mutee)">
-											<MkUserCardMini :user="item.mutee"/>
-										</MkA>
-										<button class="_button" :class="$style.userToggle" @click="toggleMuteItem(item)"><i :class="$style.chevron" class="ti ti-chevron-down"></i></button>
-										<button class="_button" :class="$style.remove" @click="unmute(item.mutee, $event)"><i class="ti ti-x"></i></button>
-									</div>
-									<div v-if="expandedMuteItems.includes(item.id)" :class="$style.userItemSub">
-										<div>Muted at: <MkTime :time="item.createdAt" mode="detail"/></div>
-										<div v-if="item.expiresAt">Period: {{ new Date(item.expiresAt).toLocaleString() }}</div>
-										<div v-else>Period: {{ i18n.ts.indefinitely }}</div>
+						<MkPagination :paginator="mutingPaginator" withControl>
+							<template #empty><MkResult type="empty" :text="i18n.ts.noUsers"/></template>
+
+							<template #default="{ items }">
+								<div class="_gaps_s">
+									<div v-for="item in items" :key="item.mutee.id" :class="[$style.userItem, { [$style.userItemOpend]: expandedMuteItems.includes(item.id) }]">
+										<div :class="$style.userItemMain">
+											<MkA :class="$style.userItemMainBody" :to="userPage(item.mutee)">
+												<MkUserCardMini :user="item.mutee"/>
+											</MkA>
+											<button class="_button" :class="$style.userToggle" @click="toggleMuteItem(item)"><i :class="$style.chevron" class="ti ti-chevron-down"></i></button>
+											<button class="_button" :class="$style.remove" @click="unmute(item.mutee, $event)"><i class="ti ti-x"></i></button>
+										</div>
+										<div v-if="expandedMuteItems.includes(item.id)" :class="$style.userItemSub">
+											<div>Muted at: <MkTime :time="item.createdAt" mode="detail"/></div>
+											<div v-if="item.expiresAt">Period: {{ new Date(item.expiresAt).toLocaleString() }}</div>
+											<div v-else>Period: {{ i18n.ts.indefinitely }}</div>
+										</div>
 									</div>
 								</div>
-							</div>
-						</template>
-					</MkPagination>
+							</template>
+						</MkPagination>
+					</div>
 				</MkFolder>
 			</SearchMarker>
 
@@ -281,6 +293,12 @@ async function saveMutedWords(mutedWords: (string | string[])[]) {
 
 async function saveHardMutedWords(hardMutedWords: (string | string[])[]) {
 	await os.apiWithDialog('i/update', { hardMutedWords });
+}
+
+async function updateHideMutedUsers(value: boolean) {
+	await os.apiWithDialog('i/update', { hideMutedUsers: value }).then(i => {
+		$i.hideMutedUsers = i.hideMutedUsers;
+	});
 }
 
 const headerActions = computed(() => []);
