@@ -416,6 +416,14 @@ export const PREF_DEF = definePreferences({
 			return [...new Set(a.concat(b))];
 		},
 	},
+	// アバターデコレーションを非表示にするユーザーのID一覧。IDはサーバーごとに異なるためaccountDependentとする
+	mutingAvatarDecorationUsers: {
+		accountDependent: true,
+		default: [] as string[],
+		mergeStrategy: (a, b) => {
+			return [...new Set(a.concat(b))];
+		},
+	},
 	watermarkPresets: {
 		accountDependent: true,
 		default: [] as WatermarkPreset[],

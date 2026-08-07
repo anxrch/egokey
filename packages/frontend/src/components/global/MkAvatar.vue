@@ -46,7 +46,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</div>
 		</div>
 	</div>
-	<template v-if="showDecoration || showDecorationWithFloatingBtn">
+	<template v-if="(showDecoration || showDecorationWithFloatingBtn) && !decorationMuted">
 		<img
 			v-for="decoration in decorations ?? user.avatarDecorations"
 			:class="[$style.decoration, { [$style.decorationBlink]: getDecorationIsBrink(decoration) }]"
@@ -77,6 +77,7 @@ import { acct, userPage } from '@/filters/user.js';
 import MkUserOnlineIndicator from '@/components/MkUserOnlineIndicator.vue';
 import { prefer } from '@/preferences.js';
 import { scrollToVisibility } from '@/utility/scroll-to-visibility.js';
+import { isMuted as isDecorationMuted } from '@/utility/avatar-decoration-mute.js';
 
 const { showEl } = scrollToVisibility();
 
@@ -117,6 +118,9 @@ const emit = defineEmits<{
 const squareAvatars = ref((!prefer.s.setFederationAvatarShape && prefer.s.squareAvatars) || (prefer.s.setFederationAvatarShape && !props.user.setFederationAvatarShape && prefer.s.squareAvatars) || (prefer.s.setFederationAvatarShape && props.user.setFederationAvatarShape && props.user.isSquareAvatars));
 const showDecoration = (props.forceShowDecoration || prefer.s.showAvatarDecorations) && !props.isFloatingBtn;
 const showDecorationWithFloatingBtn = props.isFloatingBtn && prefer.s.showAvatarDecorations && prefer.s.friendlyUiShowAvatarDecorationsInNavBtn;
+
+// デコレーションを直接指定されている場合(自分用のプレビューなど)はミュートの対象外
+const decorationMuted = computed(() => props.decorations == null && !props.forceShowDecoration && isDecorationMuted(props.user.id));
 
 const bound = computed(() => props.link
 	? { to: userPage(props.user), target: props.target }

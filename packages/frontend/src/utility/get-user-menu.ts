@@ -21,6 +21,11 @@ import { genEmbedCode } from '@/utility/get-embed-code.js';
 import { prefer } from '@/preferences.js';
 import { getPluginHandlers } from '@/plugin.js';
 import { editNickname } from '@/utility/edit-nickname.js';
+import {
+	isMuted as isAvatarDecorationMuted,
+	mute as muteAvatarDecoration,
+	unmute as unmuteAvatarDecoration,
+} from '@/utility/avatar-decoration-mute.js';
 import { popup } from '@/os.js';
 
 export function getUserMenu(user: Misskey.entities.UserDetailed, router: Router = mainRouter) {
@@ -160,6 +165,14 @@ export function getUserMenu(user: Misskey.entities.UserDetailed, router: Router 
 			}).then(() => {
 				user.isMuted = true;
 			});
+		}
+	}
+
+	function toggleAvatarDecorationMute() {
+		if (isAvatarDecorationMuted(user.id)) {
+			unmuteAvatarDecoration(user.id);
+		} else {
+			muteAvatarDecoration(user.id);
 		}
 	}
 
@@ -619,6 +632,14 @@ export function getUserMenu(user: Misskey.entities.UserDetailed, router: Router 
 			text: user.isBlocking ? i18n.ts.unblock : i18n.ts.block,
 			action: toggleBlock,
 		});
+
+		if (user.avatarDecorations.length > 0 || isAvatarDecorationMuted(user.id)) {
+			menuItems.push({
+				icon: isAvatarDecorationMuted(user.id) ? 'ti ti-sparkles' : 'ti ti-stars-off',
+				text: isAvatarDecorationMuted(user.id) ? i18n.ts.avatarDecorationUnmute : i18n.ts.avatarDecorationMute,
+				action: toggleAvatarDecorationMute,
+			});
+		}
 
 		if (user.isFollowed) {
 			menuItems.push({

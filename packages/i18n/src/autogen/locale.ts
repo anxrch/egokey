@@ -6296,6 +6296,18 @@ export interface Locale extends ILocale {
      */
     "emojiUnmute": string;
     /**
+     * アイコンデコレーションをミュート
+     */
+    "avatarDecorationMute": string;
+    /**
+     * アイコンデコレーションのミュートを解除
+     */
+    "avatarDecorationUnmute": string;
+    /**
+     * ここに登録したユーザーのアイコンデコレーションは表示されなくなります。この設定は自分のクライアントにのみ適用されます。
+     */
+    "avatarDecorationMuteDescription": string;
+    /**
      * {x}をミュート
      */
     "muteX": ParameterizedString<"x">;

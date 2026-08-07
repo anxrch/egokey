@@ -62,6 +62,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</SearchMarker>
 
 			<SearchMarker
+				:label="i18n.ts.avatarDecorationMute"
+				:keywords="['avatar', 'icon', 'decoration', 'mute', 'hide', 'user']"
+			>
+				<MkFolder>
+					<template #icon><i class="ti ti-stars-off"></i></template>
+					<template #label>{{ i18n.ts.avatarDecorationMute }}</template>
+
+					<XAvatarDecorationMute/>
+				</MkFolder>
+			</SearchMarker>
+
+			<SearchMarker
 				:label="i18n.ts.instanceMute"
 				:keywords="['note', 'server', 'instance', 'host', 'federation', 'mute', 'hide']"
 			>
@@ -184,6 +196,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <script lang="ts" setup>
 import { ref, computed, watch, markRaw } from 'vue';
+import XAvatarDecorationMute from './mute-block.avatar-decoration-mute.vue';
 import XEmojiMute from './mute-block.emoji-mute.vue';
 import XInstanceMute from './mute-block.instance-mute.vue';
 import XWordMute from './mute-block.word-mute.vue';
