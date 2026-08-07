@@ -123,6 +123,47 @@ describe('Note', () => {
 		});
 	});
 
+	describe('Renote of a followers-only note', () => {
+		let carol: LoginUser;
+
+		beforeAll(async () => {
+			carol = await createAccount('a.test');
+
+			// Acceptが返ってくるまで待つ必要がある
+			await carol.client.request('following/create', { userId: bobInA.id });
+			await sleep(3000);
+		});
+
+		afterAll(async () => {
+			await carol.client.request('following/delete', { userId: bobInA.id });
+			await sleep();
+		});
+
+		/**
+		 * フォロワー限定ノートは `GET /notes/:id` が404を返すため、Announceのobjectに
+		 * URIだけを載せると受信側が解決できずAnnounceごと破棄されてしまう
+		 */
+		test('is delivered to remote followers', async () => {
+			const text = `followers only ${crypto.randomUUID()}`;
+			const note = (await bob.client.request('notes/create', {
+				text,
+				visibility: 'followers',
+			})).createdNote;
+			await bob.client.request('notes/create', { renoteId: note.id });
+			await sleep(3000);
+
+			const notes = await carol.client.request('users/notes', { userId: bobInA.id, withRenotes: true });
+
+			// まず元のノート自体が配送されていることを確認する(これが無いとフォローの失敗と区別できない)
+			assert(notes.some(n => n.text === text), 'the followers-only note itself was not delivered');
+
+			const renote = notes.find(n => n.renoteId != null && n.text == null);
+			assert(renote != null, 'the renote was not delivered to the remote follower');
+			strictEqual(renote.visibility, 'followers');
+			strictEqual(renote.renote?.text, text);
+		});
+	});
+
 	describe('Other props', () => {
 		test('localOnly', async () => {
 			const note = (await alice.client.request('notes/create', { text: 'a', localOnly: true })).createdNote;

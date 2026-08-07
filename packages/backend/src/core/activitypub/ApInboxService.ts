@@ -368,10 +368,19 @@ export class ApInboxService {
 		const targetUri = getApId(activity.object);
 		if (targetUri.startsWith('bear:')) return 'skip: bearcaps url not supported.';
 
-		const target = await resolver.resolve(activity.object).catch(e => {
+		let target: IObject;
+		try {
+			target = await resolver.resolve(activity.object);
+		} catch (e) {
+			// フォロワー限定ノートは `GET /notes/:id` が404を返すためフェッチでは解決できない。
+			// 配送先である以上既にこのサーバーに存在しているはずなので、その場合はURIのまま処理を続行する
+			if (await this.apNoteService.fetchNote(targetUri) != null) {
+				return await this.announceNote(actor, activity, targetUri);
+			}
+
 			this.logger.error(`Resolution failed: ${e}`);
 			throw e;
-		});
+		}
 
 		if (isPost(target)) return await this.announceNote(actor, activity, target);
 
@@ -379,8 +388,9 @@ export class ApInboxService {
 	}
 
 	@bindThis
-	private async announceNote(actor: MiRemoteUser, activity: IAnnounce, target: IPost, resolver?: Resolver): Promise<string | void> {
+	private async announceNote(actor: MiRemoteUser, activity: IAnnounce, target: IPost | string, resolver?: Resolver): Promise<string | void> {
 		const uri = getApId(activity);
+		const targetUri = getApId(target);
 
 		if (actor.isSuspended) {
 			return;
@@ -410,9 +420,9 @@ export class ApInboxService {
 				// 対象が4xxならスキップ
 				if (err instanceof StatusError) {
 					if (!err.isRetryable) {
-						return `Ignored announce target ${target.id} - ${err.statusCode}`;
+						return `Ignored announce target ${targetUri} - ${err.statusCode}`;
 					}
-					return `Error in announce target ${target.id} - ${err.statusCode}`;
+					return `Error in announce target ${targetUri} - ${err.statusCode}`;
 				}
 				throw err;
 			}

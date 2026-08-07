@@ -43,6 +43,7 @@ import { QueueService } from '@/core/QueueService.js';
 import { NoteEntityService } from '@/core/entities/NoteEntityService.js';
 import { UserEntityService } from '@/core/entities/UserEntityService.js';
 import { ApRendererService } from '@/core/activitypub/ApRendererService.js';
+import type { IPost } from '@/core/activitypub/type.js';
 import { ApDeliverManagerService } from '@/core/activitypub/ApDeliverManagerService.js';
 import { RemoteUserResolveService } from '@/core/RemoteUserResolveService.js';
 import { bindThis } from '@/decorators.js';
@@ -1019,10 +1020,24 @@ export class NoteCreateService implements OnApplicationShutdown {
 		if (data.localOnly) return null;
 
 		const content = this.isRenote(data) && !this.isQuote(data)
-			? this.apRendererService.renderAnnounce(data.renote.uri ? data.renote.uri : `${this.config.url}/notes/${data.renote.id}`, note)
+			? this.apRendererService.renderAnnounce(await this.renderAnnounceTarget(data.renote), note)
 			: this.apRendererService.renderCreate(await this.apRendererService.renderNote(note, false), note);
 
 		return this.apRendererService.addContext(content);
+	}
+
+	/**
+	 * Announceのobjectに載せる値を返す。
+	 * 通常はURIだけを載せるが、フォロワー限定ノートは `GET /notes/:id` が404を返すため、
+	 * 受け取った側がフェッチで解決できずAnnounceごと破棄されてしまう。
+	 * そのためフォロワー限定ノートに限りNoteオブジェクトそのものを埋め込む。
+	 * (Announce自体もフォロワーにしか配送されないため、これによる漏洩はない)
+	 */
+	@bindThis
+	private async renderAnnounceTarget(renote: MiNote): Promise<string | IPost> {
+		if (renote.uri) return renote.uri;
+		if (renote.visibility === 'followers') return await this.apRendererService.renderNote(renote, false);
+		return `${this.config.url}/notes/${renote.id}`;
 	}
 
 	@bindThis
