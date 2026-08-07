@@ -1,5 +1,16 @@
 # EgoKey changelog
 
+## 4.19.1-egokey.0
+
+**Released:** 2026-08-07
+**Based on Misskey:** 2025.12.2
+
+### Changes
+
+- Fixed a bug where notes could occasionally appear duplicated in the timeline. The streaming ahead-queue (used when new notes arrive while scrolled away from the top) could accumulate duplicate entries and insert both into the timeline once released.
+- The README now uses the built-in app icon PNG as the logo instead of a wordmark SVG.
+- Added a Korean summary of this fork's own features over CherryPick to the README, and restored the original CherryPick README below it as a preserved legacy section.
+
 ## 4.19.0-egokey.0
 
 **Released:** 2026-08-02
