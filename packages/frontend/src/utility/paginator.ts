@@ -371,7 +371,15 @@ export class Paginator<
 
 	public unshiftItems(newItems: T[], trim = true): void {
 		if (newItems.length === 0) return; // これやらないと余計なre-renderが走る
-		this.items.value.unshift(...newItems.filter(x => !this.items.value.some(y => y.id === x.id))); // ストリーミングやポーリングのタイミングによっては重複することがあるため
+		// ストリーミングやポーリングのタイミングによっては重複することがあるため、既存アイテムだけでなくnewItems内での重複も除去する
+		const seenIds = new Set<string>();
+		const dedupedNewItems = newItems.filter(x => {
+			if (this.items.value.some(y => y.id === x.id)) return false;
+			if (seenIds.has(x.id)) return false;
+			seenIds.add(x.id);
+			return true;
+		});
+		this.items.value.unshift(...dedupedNewItems);
 		if (trim) this.trim(true);
 		if (this.useShallowRef) triggerRef(this.items);
 	}
@@ -390,6 +398,10 @@ export class Paginator<
 	}
 
 	public enqueue(item: T): void {
+		// ストリーミングやポーリングのタイミングによっては重複することがあるため、既存アイテムとキュー内の重複を除去する
+		if (this.items.value.some(x => x.id === item.id)) return;
+		if (this.aheadQueue.some(x => x.id === item.id)) return;
+
 		this.aheadQueue.unshift(item);
 		if (this.aheadQueue.length > MAX_QUEUE_ITEMS) {
 			this.aheadQueue.pop();
